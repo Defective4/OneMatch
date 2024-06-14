@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>io.github.defective4</groupId>
+	<artifactId>onematch-parent</artifactId>
+	<version>1.0</version>
+	<packaging>pom</packaging>
+	<name>OneMatch</name>
+	<description>A simple game where you have to move one "match" to make the
+		equation true</description>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>${project.basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+	</build>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<exec.mainClass>io.github.defective4.onematch.game.Application</exec.mainClass>
+	</properties>
+	<modules>
+		<module>onematch-game</module>
+	</modules>
+</project>
