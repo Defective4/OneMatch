@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 public class NumberLogic {
 
     public enum Difficulty {
-        EASY(10), MEDIUM(30), HARD(75), HARDER(100);
+        EASIER(10), EASY(10), MEDIUM(30), HARD(75), HARDER(100);
 
         private final int max;
 
@@ -38,7 +38,7 @@ public class NumberLogic {
         }
     }
 
-    private final Random rand = new Random();
+    private final Random rand = GlobalRandom.getRand();
 
     private int debugIndex1, debugIndex2;
 
@@ -70,6 +70,8 @@ public class NumberLogic {
             second = rand.nextInt(difficulty.max);
             plus = rand.nextBoolean();
             result = plus ? first + second : first - second;
+            if (difficulty != Difficulty.EASIER && (first == 0 || second == 0 || result == 0) && rand.nextInt(100) < 66)
+                result = -1;
         } while (result < 0 || result >= difficulty.max && result != 11);
         return new Equation(first, second, result, plus);
     }
