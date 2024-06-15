@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 public class NumberLogic {
 
     public enum Difficulty {
-        EASY(10), HARD(75), HARDER(100), MEDIUM(30);
+        EASY(10), MEDIUM(30), HARD(75), HARDER(100);
 
         private final int max;
 
