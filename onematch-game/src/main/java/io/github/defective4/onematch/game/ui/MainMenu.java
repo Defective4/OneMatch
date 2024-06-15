@@ -52,7 +52,7 @@ public class MainMenu extends JFrame {
         btnNewGame.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(btnNewGame);
 
-        JButton button = new JButton("");
+        JButton button = new JButton();
         button.setToolTipText("Stats");
         button.setIcon(new ImageIcon(MainMenu.class.getResource("/icons/stats.png")));
         panel.add(button);
