@@ -10,11 +10,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 public class AsyncProgressDialog extends JDialog {
 
-    private JProgressBar progressBar;
+    private final JProgressBar progressBar;
 
     /**
      * Create the dialog.
@@ -24,7 +25,7 @@ public class AsyncProgressDialog extends JDialog {
         setResizable(false);
         setAlwaysOnTop(true);
         setTitle("Please wait...");
-        setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setModal(true);
         setBounds(100, 100, 323, 100);
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));

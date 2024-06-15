@@ -111,8 +111,9 @@ public class GameMatrix {
             List<Integer> toMod, toMod2;
             int to;
 
+            int signAttempts = 0;
             do {
-                to = rand.nextInt(4);
+                to = rand.nextInt(4) + 1;
                 switch (to) {
                     case 1: {
                         toMod = firstL;
@@ -132,7 +133,7 @@ public class GameMatrix {
                     }
                 }
 
-                to = rand.nextInt(4);
+                to = rand.nextInt(4) + 1;
                 switch (to) {
                     case 1: {
                         toMod2 = firstL;
@@ -151,14 +152,17 @@ public class GameMatrix {
                         break;
                     }
                 }
-            } while (toMod == toMod2);
+                signAttempts++;
+                if (signAttempts >= 100) return false;
+            } while (toMod == null && toMod2 == null);
 
             if (toMod == null) {
                 plus = false;
                 int seg;
                 int localAttempts = 0;
                 do {
-                    seg = rand.nextInt(14) + 1;
+                    seg = rand.nextInt(hasTwo() ? 14 : 7) + 1;
+                    localAttempts++;
                     if (localAttempts >= 100) return false;
                 } while (toMod2.contains(seg));
                 toMod2.add(seg);
@@ -167,22 +171,21 @@ public class GameMatrix {
                 int seg;
                 int localAttempts = 0;
                 do {
-                    seg = rand.nextInt(toMod.size());
+                    seg = rand.nextInt(hasTwo() ? 14 : 7) + 1;
                     localAttempts++;
                     if (localAttempts >= 100) return false;
                 } while (!toMod.contains(seg));
-
-                toMod.remove(seg);
+                toMod.remove((Object) seg);
             } else {
-                int index;
+                int rnd;
+                toMod.remove(rand.nextInt(toMod.size()));
                 int localAttempts = 0;
                 do {
-                    index = rand.nextInt(toMod.size());
+                    rnd = rand.nextInt(hasTwo() ? 14 : 7) + 1;
                     localAttempts++;
                     if (localAttempts >= 100) return false;
-                } while (toMod2.contains(toMod.get(index)));
-                int prev = toMod.remove(index);
-                toMod2.add(prev);
+                } while (toMod2.contains(rnd));
+                toMod2.add(rnd);
             }
 
             if (!firstTwo) firstL = firstL.stream().map(val -> val + 7).toList();

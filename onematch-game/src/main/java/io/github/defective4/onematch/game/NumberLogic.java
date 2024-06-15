@@ -40,6 +40,26 @@ public class NumberLogic {
 
     private final Random rand = new Random();
 
+    private int debugIndex1, debugIndex2;
+
+    public Equation generateValidDebugEquation(boolean plus, int max) {
+        Equation eq;
+        do {
+            eq = debugIndex1 + debugIndex2 > max ? new Equation(0, 1, 0, false)
+                    : new Equation(debugIndex1, debugIndex2, debugIndex1 + debugIndex2, plus);
+            debugIndex2++;
+            if (debugIndex2 > max) {
+                debugIndex1++;
+                debugIndex2 = 0;
+            }
+
+            if (debugIndex1 > max) {
+                debugIndex1 = 0;
+            }
+        } while (!eq.isValid());
+        return eq;
+    }
+
     public Equation generateValidEquation(Difficulty difficulty) {
         int first;
         int second;
