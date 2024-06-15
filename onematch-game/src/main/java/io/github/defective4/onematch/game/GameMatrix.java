@@ -3,14 +3,12 @@ package io.github.defective4.onematch.game;
 import java.util.List;
 import java.util.Random;
 
-import io.github.defective4.onematch.game.ui.components.MatchButton;
-
 public class GameMatrix {
     private byte[] currentHash = {};
-    private final MatchButton[] first, second, result;
+    private final Match[] first, second, result;
     private MatrixNumber firstDigit = MatrixNumber.EIGHT;
     private boolean plus;
-    private final MatchButton plusButton;
+    private final Match plusButton;
     private final Random rand = new Random();
     private MatrixNumber resultDigit = MatrixNumber.EIGHT;
     private MatrixNumber secondDigit = MatrixNumber.EIGHT;
@@ -24,16 +22,16 @@ public class GameMatrix {
         return currentHash;
     }
 
-    public GameMatrix(MatchButton plus, MatchButton[] first, MatchButton[] second, MatchButton[] result) {
+    public GameMatrix(Match plus, Match[] first, Match[] second, Match[] result) {
         plusButton = plus;
         this.first = first;
         this.second = second;
         this.result = result;
 
         plus.setBoardVisible(false);
-        for (MatchButton b : first) b.setBoardVisible(false);
-        for (MatchButton b : second) b.setBoardVisible(false);
-        for (MatchButton b : result) b.setBoardVisible(false);
+        for (Match b : first) b.setBoardVisible(false);
+        for (Match b : second) b.setBoardVisible(false);
+        for (Match b : result) b.setBoardVisible(false);
     }
 
     public void arrange(Equation eq) {
@@ -56,7 +54,7 @@ public class GameMatrix {
         plusButton.setFree(!plus);
     }
 
-    public MatchButton[] getFirst() {
+    public Match[] getFirst() {
         return first;
     }
 
@@ -64,11 +62,11 @@ public class GameMatrix {
         return firstDigit;
     }
 
-    public MatchButton getPlus() {
+    public Match getPlus() {
         return plusButton;
     }
 
-    public MatchButton[] getResult() {
+    public Match[] getResult() {
         return result;
     }
 
@@ -76,7 +74,7 @@ public class GameMatrix {
         return resultDigit;
     }
 
-    public MatchButton[] getSecond() {
+    public Match[] getSecond() {
         return second;
     }
 
@@ -207,9 +205,9 @@ public class GameMatrix {
         return true;
     }
 
-    private static void cast(MatchButton[] matrix, MatrixNumber digit) {
+    private static void cast(Match[] matrix, MatrixNumber digit) {
         int[] mx = digit.getSegments();
-        for (MatchButton btn : matrix) {
+        for (Match btn : matrix) {
             btn.setBoardVisible(false);
             if (btn.isMovable()) btn.setFree(true);
         }

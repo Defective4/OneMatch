@@ -12,9 +12,10 @@ import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 
 import io.github.defective4.onematch.game.Application;
+import io.github.defective4.onematch.game.Match;
 import io.github.defective4.onematch.game.ui.GameBoard;
 
-public class MatchButton extends JComponent {
+public class MatchButton extends JComponent implements Match {
 
     public enum Orientation {
         HORIZONTAL(48, 12), VERTICAL(12, 48);
@@ -87,6 +88,7 @@ public class MatchButton extends JComponent {
         return free;
     }
 
+    @Override
     public boolean isMovable() {
         return movable;
     }
@@ -95,6 +97,7 @@ public class MatchButton extends JComponent {
         return secondary;
     }
 
+    @Override
     public void setBoardVisible(boolean visible) {
         this.visible = visible;
         setVisible(visible);
@@ -110,6 +113,7 @@ public class MatchButton extends JComponent {
         setBounds(r.x, r.y, r.width, r.height);
     }
 
+    @Override
     public void setFree(boolean free) {
         this.free = free;
     }
