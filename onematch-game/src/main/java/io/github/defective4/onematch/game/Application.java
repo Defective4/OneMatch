@@ -15,6 +15,7 @@ import com.formdev.flatlaf.FlatLightLaf;
 import com.google.gson.Gson;
 
 import io.github.defective4.onematch.game.data.Options;
+import io.github.defective4.onematch.game.ui.ErrorDialog;
 import io.github.defective4.onematch.game.ui.GameBoard;
 import io.github.defective4.onematch.game.ui.MainMenu;
 import io.github.defective4.onematch.game.ui.SwingUtils;
@@ -32,11 +33,13 @@ public class Application {
             UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
+            ErrorDialog.show(null, e, "Couldn't set application's look and feel");
         }
         menu = new MainMenu();
 
         configDir = new File(System.getProperty("user.home"));
-        if (new File(configDir, ".config").isDirectory() || new File(configDir, "AppData/Roaming").isDirectory()) configDir = new File(configDir, ".config");
+        if (new File(configDir, ".config").isDirectory() || new File(configDir, "AppData/Roaming").isDirectory())
+            configDir = new File(configDir, ".config");
         configDir = new File(configDir, "onematch");
         configDir.mkdirs();
 
@@ -53,6 +56,7 @@ public class Application {
                 ops = new Gson().fromJson(reader, Options.class);
             } catch (Exception e) {
                 e.printStackTrace();
+                ErrorDialog.show(menu, e, "Couldn't read user configuration");
             }
         }
 
@@ -85,6 +89,7 @@ public class Application {
             os.write(new Gson().toJson(ops).getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
             e.printStackTrace();
+            ErrorDialog.show(menu, e, "Couldn't save user configuration");
         }
     }
 

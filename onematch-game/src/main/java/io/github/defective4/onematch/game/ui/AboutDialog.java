@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import io.github.defective4.onematch.game.data.Version;
@@ -21,7 +22,6 @@ import io.github.defective4.onematch.game.ui.components.JLinkLabel;
 
 public class AboutDialog extends JDialog {
 
-    private static final long serialVersionUID = 5724908706610048823L;
     private final JPanel contentPanel = new JPanel();
 
     /**
@@ -29,6 +29,7 @@ public class AboutDialog extends JDialog {
      */
     public AboutDialog(Window parent) {
         super(parent);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         setTitle("OneMatch - About");
         setModal(true);

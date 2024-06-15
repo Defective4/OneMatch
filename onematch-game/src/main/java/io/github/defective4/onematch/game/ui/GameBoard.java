@@ -32,8 +32,6 @@ import io.github.defective4.onematch.game.ui.components.MatchButton.Orientation;
 
 public class GameBoard extends JFrame {
 
-    private static final long serialVersionUID = 3399428042590585227L;
-
     private GameMatrix matrix;
 
     private boolean movingMode;

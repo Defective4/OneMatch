@@ -27,7 +27,6 @@ public class MatchButton extends JComponent {
         }
     }
 
-    private static final long serialVersionUID = 174706202795818566L;
     private boolean mouseOver;
     private boolean movable;
     private boolean visible, free;

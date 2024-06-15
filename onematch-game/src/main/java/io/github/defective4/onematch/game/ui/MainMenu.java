@@ -19,8 +19,6 @@ import io.github.defective4.onematch.game.Application;
 
 public class MainMenu extends JFrame {
 
-    private static final long serialVersionUID = 4123071020646759498L;
-
     /**
      * Create the frame.
      */

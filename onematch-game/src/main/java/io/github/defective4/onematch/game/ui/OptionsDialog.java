@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
@@ -23,7 +24,6 @@ import io.github.defective4.onematch.game.data.Options;
 
 public class OptionsDialog extends JDialog {
 
-    private static final long serialVersionUID = 886821869533155852L;
     private final JPanel contentPanel = new JPanel();
     private final JSlider difficulty;
     private final JCheckBox uniqueCheck;
@@ -33,6 +33,7 @@ public class OptionsDialog extends JDialog {
      */
     public OptionsDialog(Window parent) {
         super(parent);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("OneMatch - Options");
         setModal(true);
         setResizable(false);
