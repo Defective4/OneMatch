@@ -182,9 +182,9 @@ public class Application {
             do {
                 lastValidEquation = logic.generateValidEquation(ops.getDifficulty());
                 board.getMatrix().arrange(lastValidEquation);
-                board.getMatrix().rehash();
-                hash = board.getMatrix().getCurrentHash();
             } while (!board.getMatrix().makeInvalid());
+            board.getMatrix().rehash();
+            hash = board.getMatrix().getCurrentHash();
             if (hashAttempt++ > 100) break;
         } while (ops.unique && db.hasSolved(hash(hash)));
         board.getMatrix().draw();
