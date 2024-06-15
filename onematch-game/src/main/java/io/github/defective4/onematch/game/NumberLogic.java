@@ -31,6 +31,11 @@ public class NumberLogic {
             }
             return table;
         }
+
+        public String capitalize() {
+            String name = name();
+            return name.substring(0, 1) + name.substring(1).toLowerCase();
+        }
     }
 
     private final Random rand = new Random();

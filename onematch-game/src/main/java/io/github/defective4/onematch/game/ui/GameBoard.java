@@ -219,9 +219,11 @@ public class GameBoard extends JFrame {
     public boolean isMovingMode() {
         return movingMode;
     }
+
     public boolean isPlus() {
         return segPlus.isBoardVisible() && !segPlus.isFree();
     }
+
     public void rearrange() {
         boolean two = matrix == null ? true : matrix.hasTwo();
         int relativeX = 0;

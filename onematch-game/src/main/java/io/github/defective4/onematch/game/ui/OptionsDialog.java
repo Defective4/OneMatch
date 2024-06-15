@@ -81,7 +81,22 @@ public class OptionsDialog extends JDialog {
         panel.add(new JLabel(" "));
 
         JButton btnClearMemory = new JButton("Clear memory");
-        btnClearMemory.setEnabled(false);
+        btnClearMemory.setEnabled(Application.getInstance().getDb().hasAnySolved());
+        btnClearMemory.addActionListener(e -> {
+            if (JOptionPane
+                    .showConfirmDialog(this,
+                            "Are you sure you want to delete all solutions?\nThis will also reset your solved statistics!",
+                            "Are you sure?", JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                try {
+                    Application.getInstance().getDb().clearAllSolved();
+                    btnClearMemory.setEnabled(false);
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                    ErrorDialog.show(this, e2, "Failed to clear the database");
+                }
+            }
+        });
         panel.add(btnClearMemory);
 
         JPanel buttonPane = new JPanel();

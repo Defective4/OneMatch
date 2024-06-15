@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS solved (
+	hash TEXT(64) NOT NULL,
+	diff TEXT(16) NOT NULL,
+	CONSTRAINT solved_pk PRIMARY KEY (hash)
+);

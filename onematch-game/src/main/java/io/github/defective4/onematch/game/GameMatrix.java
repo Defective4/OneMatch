@@ -6,6 +6,7 @@ import java.util.Random;
 import io.github.defective4.onematch.game.ui.components.MatchButton;
 
 public class GameMatrix {
+    private byte[] currentHash = {};
     private final MatchButton[] first, second, result;
     private MatrixNumber firstDigit = MatrixNumber.EIGHT;
     private boolean plus;
@@ -13,6 +14,15 @@ public class GameMatrix {
     private final Random rand = new Random();
     private MatrixNumber resultDigit = MatrixNumber.EIGHT;
     private MatrixNumber secondDigit = MatrixNumber.EIGHT;
+
+    public void rehash() {
+        currentHash = (plus + "/" + firstDigit.getCombined() + "/" + secondDigit.getCombined() + "/"
+                + resultDigit.getCombined()).getBytes();
+    }
+
+    public byte[] getCurrentHash() {
+        return currentHash;
+    }
 
     public GameMatrix(MatchButton plus, MatchButton[] first, MatchButton[] second, MatchButton[] result) {
         plusButton = plus;

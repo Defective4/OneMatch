@@ -73,4 +73,8 @@ public class MatrixNumber {
         return new MatrixNumber(first, second);
     }
 
+    public String getCombined() {
+        return first.name() + (second == null ? "" : second.name());
+    }
+
 }
