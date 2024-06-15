@@ -29,16 +29,8 @@ public class MatchButton extends JComponent {
 
     private boolean mouseOver;
     private boolean movable;
-    private boolean visible, free;
     private boolean secondary;
-
-    public boolean isSecondary() {
-        return secondary;
-    }
-
-    public void setSecondary(boolean secondary) {
-        this.secondary = secondary;
-    }
+    private boolean visible, free;
 
     public MatchButton(Orientation orientation) {
         this(orientation, true);
@@ -99,6 +91,10 @@ public class MatchButton extends JComponent {
         return movable;
     }
 
+    public boolean isSecondary() {
+        return secondary;
+    }
+
     public void setBoardVisible(boolean visible) {
         this.visible = visible;
         setVisible(visible);
@@ -120,6 +116,10 @@ public class MatchButton extends JComponent {
 
     public void setMovable(boolean movable) {
         this.movable = movable;
+    }
+
+    public void setSecondary(boolean secondary) {
+        this.secondary = secondary;
     }
 
     @Override

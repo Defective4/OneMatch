@@ -15,12 +15,6 @@ public class SwingUtils {
         void interacted(Component cpt);
     }
 
-    public static Window showAndCenter(Window win) {
-        win.setVisible(true);
-        centerWindow(win);
-        return win;
-    }
-
     public static void centerWindow(Window win) {
         Dimension winSize = win.getSize();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -38,5 +32,11 @@ public class SwingUtils {
                 ((AbstractButton) cpt).addActionListener(e -> ls.interacted(cpt));
             else if (cpt instanceof JSlider) ((JSlider) cpt).addChangeListener(e -> ls.interacted(cpt));
         }
+    }
+
+    public static Window showAndCenter(Window win) {
+        win.setVisible(true);
+        centerWindow(win);
+        return win;
     }
 }

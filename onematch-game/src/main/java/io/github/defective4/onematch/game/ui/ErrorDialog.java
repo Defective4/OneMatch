@@ -15,8 +15,8 @@ import io.github.defective4.onematch.game.ui.components.JLinkButton;
 public class ErrorDialog extends JDialog {
 
     private final JPanel contentPanel = new JPanel();
-    private final JLabel message;
     private final Exception ex;
+    private final JLabel message;
 
     /**
      * Create the dialog.
@@ -97,11 +97,11 @@ public class ErrorDialog extends JDialog {
 
     }
 
-    public static void show(Window parent, Exception ex, String message) {
-        SwingUtils.showAndCenter(new ErrorDialog(parent, ex, message));
-    }
-
     public JLabel getMessage() {
         return message;
+    }
+
+    public static void show(Window parent, Exception ex, String message) {
+        SwingUtils.showAndCenter(new ErrorDialog(parent, ex, message));
     }
 }

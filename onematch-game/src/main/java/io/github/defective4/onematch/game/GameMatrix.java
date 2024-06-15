@@ -50,6 +50,10 @@ public class GameMatrix {
         return first;
     }
 
+    public MatrixNumber getFirstDigit() {
+        return firstDigit;
+    }
+
     public MatchButton getPlus() {
         return plusButton;
     }
@@ -58,25 +62,21 @@ public class GameMatrix {
         return result;
     }
 
+    public MatrixNumber getResultDigit() {
+        return resultDigit;
+    }
+
     public MatchButton[] getSecond() {
         return second;
+    }
+
+    public MatrixNumber getSecondDigit() {
+        return secondDigit;
     }
 
     public boolean hasTwo() {
         return getFirstDigit().getSecond() != null || getSecondDigit().getSecond() != null
                 || getResultDigit().getSecond() != null;
-    }
-
-    public MatrixNumber getFirstDigit() {
-        return firstDigit;
-    }
-
-    public MatrixNumber getResultDigit() {
-        return resultDigit;
-    }
-
-    public MatrixNumber getSecondDigit() {
-        return secondDigit;
     }
 
     public boolean makeInvalid() {

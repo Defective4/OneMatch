@@ -14,16 +14,6 @@ public class MatrixNumber {
         this.second = second;
     }
 
-    public static MatrixNumber getForDigit(int digit) {
-        MatrixDigit first = MatrixDigit.getForDigit(digit % 10);
-        if (first == null) return null;
-        return new MatrixNumber(first, digit / 10 > 0 ? MatrixDigit.getForDigit(digit / 10) : null);
-    }
-
-    public boolean isValid() {
-        return first != null;
-    }
-
     public MatrixDigit getFirst() {
         return first;
     }
@@ -43,8 +33,30 @@ public class MatrixNumber {
         return ar;
     }
 
+    public List<Integer> getSortedSegments() {
+        List<Integer> list = new ArrayList<>();
+        for (int seg : getSegments()) list.add(seg);
+        Collections.sort(list);
+        return list;
+    }
+
     public int getValue() {
         return first.getValue() + (second == null ? 0 : second.getValue() * 10);
+    }
+
+    public boolean isValid() {
+        return first != null;
+    }
+
+    @Override
+    public String toString() {
+        return "MatrixNumber [first=" + first + ", second=" + second + "]";
+    }
+
+    public static MatrixNumber getForDigit(int digit) {
+        MatrixDigit first = MatrixDigit.getForDigit(digit % 10);
+        if (first == null) return null;
+        return new MatrixNumber(first, digit / 10 > 0 ? MatrixDigit.getForDigit(digit / 10) : null);
     }
 
     public static MatrixNumber getForMatrix(int[] array) {
@@ -59,18 +71,6 @@ public class MatrixNumber {
         if (first == null) return null;
 
         return new MatrixNumber(first, second);
-    }
-
-    @Override
-    public String toString() {
-        return "MatrixNumber [first=" + first + ", second=" + second + "]";
-    }
-
-    public List<Integer> getSortedSegments() {
-        List<Integer> list = new ArrayList<>();
-        for (int seg : getSegments()) list.add(seg);
-        Collections.sort(list);
-        return list;
     }
 
 }

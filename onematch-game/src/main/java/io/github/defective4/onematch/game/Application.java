@@ -24,8 +24,16 @@ public class Application {
 
     private static final Application INSTANCE = new Application();
 
-    private final NumberLogic logic = new NumberLogic();
     private final GameBoard board;
+    private File configDir;
+    private final File configFile;
+
+    private Equation lastValidEquation;
+
+    private final NumberLogic logic = new NumberLogic();
+
+    private final MainMenu menu;
+
     private final Options ops;
 
     public Application() {
@@ -84,6 +92,19 @@ public class Application {
         });
     }
 
+    public GameBoard getBoard() {
+        return board;
+    }
+
+    public NumberLogic getLogic() {
+        return logic;
+    }
+    public NumberLogic getNumberLogic() {
+        return logic;
+    }
+    public Options getOptions() {
+        return ops;
+    }
     public void saveConfig(Options ops) {
         try (OutputStream os = Files.newOutputStream(configFile.toPath())) {
             os.write(new Gson().toJson(ops).getBytes(StandardCharsets.UTF_8));
@@ -93,29 +114,12 @@ public class Application {
         }
     }
 
-    public GameBoard getBoard() {
-        return board;
-    }
-
-    public NumberLogic getNumberLogic() {
-        return logic;
-    }
-
-    public NumberLogic getLogic() {
-        return logic;
-    }
-
-    public Options getOptions() {
-        return ops;
-    }
-
-    private final MainMenu menu;
-    private Equation lastValidEquation;
-    private File configDir;
-    private final File configFile;
-
     public void showBoard() {
         SwingUtils.showAndCenter(board);
+    }
+
+    public void showMainMenu() {
+        SwingUtils.showAndCenter(menu);
     }
 
     public void startNewGame() {
@@ -132,10 +136,6 @@ public class Application {
 
     public static Application getInstance() {
         return INSTANCE;
-    }
-
-    public void showMainMenu() {
-        SwingUtils.showAndCenter(menu);
     }
 
     public static void main(String[] args) {
