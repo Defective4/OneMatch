@@ -30,7 +30,9 @@ public class SwingUtils {
             if (cpt instanceof Container) deepAttach((Container) cpt, ls);
             if (cpt instanceof AbstractButton && ((AbstractButton) cpt).getActionListeners().length == 0)
                 ((AbstractButton) cpt).addActionListener(e -> ls.interacted(cpt));
-            else if (cpt instanceof JSlider) ((JSlider) cpt).addChangeListener(e -> ls.interacted(cpt));
+            else if (cpt instanceof JSlider) ((JSlider) cpt).addChangeListener(e -> {
+                if (!((JSlider) cpt).getValueIsAdjusting()) ls.interacted(cpt);
+            });
         }
     }
 
