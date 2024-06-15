@@ -186,10 +186,7 @@ public class Application {
             } while (!board.getMatrix().makeInvalid());
             board.getMatrix().rehash();
             hash = board.getMatrix().getCurrentHash();
-            if (hashAttempt++ > 100) {
-                System.out.print("NO MORE");
-                break;
-            }
+            if (hashAttempt++ > 100) break;
         } while (ops.unique && db.hasSolved(hash(hash)));
         board.getMatrix().draw();
         board.rearrange();
