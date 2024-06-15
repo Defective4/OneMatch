@@ -33,6 +33,7 @@ public class Application {
         } catch (Exception e) {
             e.printStackTrace();
             instance = null;
+            System.exit(0);
         }
         INSTANCE = instance;
     }
