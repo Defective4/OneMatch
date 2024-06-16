@@ -3,6 +3,7 @@ package io.github.defective4.onematch.game.ui;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.util.Map;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -16,6 +17,7 @@ import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import io.github.defective4.onematch.game.Application;
+import io.github.defective4.onematch.game.NumberLogic.Difficulty;
 
 public class MainMenu extends JFrame {
 
@@ -53,6 +55,13 @@ public class MainMenu extends JFrame {
         panel.add(btnNewGame);
 
         JButton button = new JButton();
+        button.addActionListener(e -> {
+            AsyncProgressDialog.run(this, "Fetching stats...", dial -> {
+                Map<Difficulty, Integer> stats = Application.getInstance().getDb().getStats();
+                dial.dispose();
+                new StatsDialog(this, stats).setVisible(true);
+            });
+        });
         button.setToolTipText("Stats");
         button.setIcon(new ImageIcon(MainMenu.class.getResource("/icons/stats.png")));
         panel.add(button);

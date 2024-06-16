@@ -25,7 +25,7 @@ public class NumberLogic {
             return name.substring(0, 1) + name.substring(1).toLowerCase();
         }
 
-        public int getId() {
+        public int getID() {
             return id;
         }
 

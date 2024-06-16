@@ -9,8 +9,15 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import io.github.defective4.onematch.game.Equation;
+import io.github.defective4.onematch.game.NumberLogic;
 import io.github.defective4.onematch.game.NumberLogic.Difficulty;
 
 public class UserDatabase {
@@ -32,6 +39,25 @@ public class UserDatabase {
 
     public File getFile() {
         return file;
+    }
+
+    public Map<NumberLogic.Difficulty, Integer> getStats() {
+        Map<NumberLogic.Difficulty, Integer> map = new LinkedHashMap<>();
+        List<Difficulty> diffs = new ArrayList<>(Arrays.asList(Difficulty.values()));
+        diffs.sort((d1, d2) -> d1.getID() - d2.getID());
+        diffs.forEach(diff -> map.put(diff, 0));
+
+        try (Statement st = mkStatement()) {
+            try (ResultSet set = st.executeQuery("select `difficulty` from `solved`")) {
+                while (set.next()) {
+                    Difficulty diff = Difficulty.getForID(set.getInt(1));
+                    map.put(diff, map.get(diff) + 1);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Collections.unmodifiableMap(map);
     }
 
     public boolean hasAnySolved() {
@@ -63,8 +89,8 @@ public class UserDatabase {
         try (Statement st = mkStatement()) {
             st
                     .execute(String
-                            .format("insert or ignore into `solved` (`invalid`, `equation`, `difficulty`) values (\"%s\", \"%s\", \"%s\")",
-                                    invalid, solved, diff.capitalize()));
+                            .format("insert or ignore into `solved` (`invalid`, `equation`, `difficulty`) values (\"%s\", \"%s\", %s)",
+                                    invalid, solved, diff.getID()));
         } catch (Exception e) {
             e.printStackTrace();
         }
