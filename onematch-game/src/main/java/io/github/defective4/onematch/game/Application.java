@@ -159,19 +159,17 @@ public class Application {
     public void startNewGame() {
         board.getBtnSubmit().setEnabled(false);
         board.start();
-        int hashAttempt = 0;
-        byte[] hash;
+        int eqAttempt = 0;
+        boolean invalidUQ = ops.invalidUniqueness;
         do {
             do {
-//                lastValidEquation = logic.generateValidEquation(ops.getDifficulty());
-                lastValidEquation = new Equation(1, 1, 2, true);
+                lastValidEquation = logic.generateValidEquation(ops.getDifficulty());
                 board.getMatrix().arrange(lastValidEquation);
             } while (!board.getMatrix().makeInvalid());
             lastInvalidEquation = board.getMatrix().getCurrentEquation();
-            if (hashAttempt++ > 100) break;
-        } while (ops.unique
-                && (recentEquations.containsEquation(lastValidEquation) || db.hasSolved(lastInvalidEquation, true)));
-        System.out.println(recentEquations);
+            if (eqAttempt++ > 100) break;
+        } while (ops.unique && (recentEquations.containsEquation(lastValidEquation)
+                || db.hasSolved(invalidUQ ? lastInvalidEquation : lastValidEquation, invalidUQ)));
         board.getMatrix().draw();
         board.rearrange();
         board.repaint();
