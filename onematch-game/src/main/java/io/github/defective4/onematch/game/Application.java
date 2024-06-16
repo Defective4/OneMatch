@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.security.MessageDigest;
 
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -42,7 +41,6 @@ public class Application {
     private File configDir;
     private final File configFile;
     private final UserDatabase db;
-    private final MessageDigest sha;
 
     private Equation lastValidEquation, lastInvalidEquation;
 
@@ -93,14 +91,6 @@ public class Application {
             throw e;
         }
 
-        try {
-            sha = MessageDigest.getInstance("SHA256");
-        } catch (Exception e) {
-            e.printStackTrace();
-            ErrorDialog.show(null, e, "Couldn't initialize SHA256 hash");
-            throw e;
-        }
-
         menu = new MainMenu();
 
         board = new GameBoard();
@@ -124,17 +114,6 @@ public class Application {
             }
             startNewGame();
         });
-    }
-
-    public String hash(byte[] data) {
-        byte[] hash = sha.digest(data);
-        StringBuilder bd = new StringBuilder(64);
-        for (byte b : hash) {
-            String hex = Integer.toHexString(b & 0xFF);
-            if (hex.length() != 2) hex = "0" + hex;
-            bd.append(hex);
-        }
-        return bd.toString();
     }
 
     public UserDatabase getDb() {
