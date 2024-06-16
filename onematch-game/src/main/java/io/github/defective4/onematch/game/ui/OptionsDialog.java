@@ -153,7 +153,17 @@ public class OptionsDialog extends JDialog {
         ActionListener uniqueCheckListener = e -> uniquenessBox.setEnabled(uniqueCheck.isSelected());
 
         JButton uniqBoxHelpButton = new JButton("?");
-        uniqBoxHelpButton.setEnabled(false);
+        uniqBoxHelpButton
+                .addActionListener(e -> JOptionPane
+                        .showOptionDialog(this,
+                                "Uniqueness setting enables you to decide how strict the game should be on avoiding duplicate equations.\n"
+                                        + "\n"
+                                        + "\"Solution\" (default) - Equations can repeat, but they will always have a different solution.\n"
+                                        + "\"Equation\" - Equations can't repeat, you will never get the same equation even if it could be solved in more than one way.",
+                                "Uniqueness setting", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                                null, new String[] {
+                                        "Ok"
+                                }, 0));
         uniquenessBoxPane.add(uniqBoxHelpButton);
         uniqueCheckListener.actionPerformed(null);
 
