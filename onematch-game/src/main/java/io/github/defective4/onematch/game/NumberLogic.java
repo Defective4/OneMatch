@@ -40,10 +40,10 @@ public class NumberLogic {
         }
 
         public static Dictionary<Integer, JComponent> makeSliderLabels() {
-            Difficulty[] diffs = values();
-            Hashtable<Integer, JComponent> table = new Hashtable<>(diffs.length);
-            for (int x = 0; x < diffs.length; x++) {
-                String diff = diffs[x].name();
+            int len = Difficulty.values().length;
+            Hashtable<Integer, JComponent> table = new Hashtable<>(len);
+            for (int x = 0; x < len; x++) {
+                String diff = Difficulty.getForID(x).name();
                 table.put(x, new JLabel(diff.substring(0, 1) + diff.substring(1).toLowerCase()));
             }
             return table;
