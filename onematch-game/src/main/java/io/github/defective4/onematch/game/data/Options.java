@@ -7,8 +7,7 @@ public class Options {
     public boolean unique = true;
 
     public Difficulty getDifficulty() {
-        Difficulty[] diffs = Difficulty.values();
-        return diffs[difficulty % diffs.length];
+        return Difficulty.getForID(difficulty);
     }
 
     public int getDifficultyID() {

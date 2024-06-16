@@ -10,11 +10,13 @@ import javax.swing.JLabel;
 public class NumberLogic {
 
     public enum Difficulty {
-        EASIER(10), EASY(10), MEDIUM(30), HARD(75), HARDER(100);
+        EASIER(0, 10), EASY(1, 10), HARD(3, 75), HARDER(4, 100), MEDIUM(2, 30);
 
+        private final int id;
         private final int max;
 
-        private Difficulty(int max) {
+        private Difficulty(int id, int max) {
+            this.id = id;
             this.max = max;
         }
 
@@ -23,8 +25,18 @@ public class NumberLogic {
             return name.substring(0, 1) + name.substring(1).toLowerCase();
         }
 
+        public int getId() {
+            return id;
+        }
+
         public int getMax() {
             return max;
+        }
+
+        public static Difficulty getForID(int id) {
+            if (id < 0) return EASIER;
+            for (Difficulty diff : values()) if (diff.id == id) return diff;
+            return HARDER;
         }
 
         public static Dictionary<Integer, JComponent> makeSliderLabels() {
