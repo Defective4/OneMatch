@@ -2,14 +2,14 @@ package io.github.defective4.onematch.game;
 
 public interface Match {
 
-    void setBoardVisible(boolean b);
-
-    void setFree(boolean b);
+    boolean isBoardVisible();
 
     boolean isFree();
 
-    boolean isBoardVisible();
-
     boolean isMovable();
+
+    void setBoardVisible(boolean b);
+
+    void setFree(boolean b);
 
 }

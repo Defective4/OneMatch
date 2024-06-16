@@ -25,6 +25,19 @@ public class Application {
 
     private static final Application INSTANCE;
 
+    private final GameBoard board;
+
+    private File configDir;
+    private final File configFile;
+    private final UserDatabase db;
+    private Equation lastValidEquation, lastInvalidEquation;
+
+    private final NumberLogic logic = new NumberLogic();
+
+    private final MainMenu menu;
+
+    private final Options ops;
+
     static {
         Application instance;
         try {
@@ -36,19 +49,6 @@ public class Application {
         }
         INSTANCE = instance;
     }
-
-    private final GameBoard board;
-    private File configDir;
-    private final File configFile;
-    private final UserDatabase db;
-
-    private Equation lastValidEquation, lastInvalidEquation;
-
-    private final NumberLogic logic = new NumberLogic();
-
-    private final MainMenu menu;
-
-    private final Options ops;
 
     public Application() throws Exception {
         try {
@@ -116,12 +116,12 @@ public class Application {
         });
     }
 
-    public UserDatabase getDb() {
-        return db;
-    }
-
     public GameBoard getBoard() {
         return board;
+    }
+
+    public UserDatabase getDb() {
+        return db;
     }
 
     public NumberLogic getLogic() {

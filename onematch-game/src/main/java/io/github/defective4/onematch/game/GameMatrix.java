@@ -44,6 +44,10 @@ public class GameMatrix {
         plusButton.setFree(!plus);
     }
 
+    public Equation getCurrentEquation() {
+        return new Equation(firstDigit.getValue(), secondDigit.getValue(), resultDigit.getValue(), isPlus());
+    }
+
     public Match[] getFirst() {
         return first;
     }
@@ -75,6 +79,10 @@ public class GameMatrix {
     public boolean hasTwo() {
         return getFirstDigit().getSecond() != null || getSecondDigit().getSecond() != null
                 || getResultDigit().getSecond() != null;
+    }
+
+    public boolean isPlus() {
+        return plusButton.isBoardVisible() && !plusButton.isFree();
     }
 
     public boolean makeInvalid() {
@@ -214,13 +222,5 @@ public class GameMatrix {
         int[] ar = new int[ls.size()];
         for (int x = 0; x < ar.length; x++) ar[x] = ls.get(x);
         return ar;
-    }
-
-    public Equation getCurrentEquation() {
-        return new Equation(firstDigit.getValue(), secondDigit.getValue(), resultDigit.getValue(), isPlus());
-    }
-
-    public boolean isPlus() {
-        return plusButton.isBoardVisible() && !plusButton.isFree();
     }
 }

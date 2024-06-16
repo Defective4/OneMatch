@@ -18,6 +18,11 @@ public class NumberLogic {
             this.max = max;
         }
 
+        public String capitalize() {
+            String name = name();
+            return name.substring(0, 1) + name.substring(1).toLowerCase();
+        }
+
         public int getMax() {
             return max;
         }
@@ -31,16 +36,11 @@ public class NumberLogic {
             }
             return table;
         }
-
-        public String capitalize() {
-            String name = name();
-            return name.substring(0, 1) + name.substring(1).toLowerCase();
-        }
     }
 
-    private final Random rand = GlobalRandom.getRand();
-
     private int debugIndex1, debugIndex2;
+
+    private final Random rand = GlobalRandom.getRand();
 
     public Equation generateValidDebugEquation(boolean plus, int max) {
         Equation eq;

@@ -14,8 +14,8 @@ import io.github.defective4.onematch.game.Equation;
 import io.github.defective4.onematch.game.NumberLogic.Difficulty;
 
 public class UserDatabase {
-    private final File file;
     private Connection connection;
+    private final File file;
 
     public UserDatabase(File file) throws Exception {
         this.file = file;
@@ -30,15 +30,8 @@ public class UserDatabase {
         }
     }
 
-    public void insertSolved(Equation invalid, Equation solved, Difficulty diff) {
-        try (Statement st = mkStatement()) {
-            st
-                    .execute(String
-                            .format("insert or ignore into `solved` (`invalid`, `equation`, `difficulty`) values (\"%s\", \"%s\", \"%s\")",
-                                    invalid, solved, diff.capitalize()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public File getFile() {
+        return file;
     }
 
     public boolean hasAnySolved() {
@@ -66,8 +59,15 @@ public class UserDatabase {
         return false;
     }
 
-    public File getFile() {
-        return file;
+    public void insertSolved(Equation invalid, Equation solved, Difficulty diff) {
+        try (Statement st = mkStatement()) {
+            st
+                    .execute(String
+                            .format("insert or ignore into `solved` (`invalid`, `equation`, `difficulty`) values (\"%s\", \"%s\", \"%s\")",
+                                    invalid, solved, diff.capitalize()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void ensureConnection() throws SQLException {

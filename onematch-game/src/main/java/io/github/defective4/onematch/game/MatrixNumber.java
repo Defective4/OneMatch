@@ -14,6 +14,10 @@ public class MatrixNumber {
         this.second = second;
     }
 
+    public String getCombined() {
+        return first.name() + (second == null ? "" : second.name());
+    }
+
     public MatrixDigit getFirst() {
         return first;
     }
@@ -71,10 +75,6 @@ public class MatrixNumber {
         if (first == null) return null;
 
         return new MatrixNumber(first, second);
-    }
-
-    public String getCombined() {
-        return first.name() + (second == null ? "" : second.name());
     }
 
 }

@@ -48,36 +48,36 @@ public class AsyncProgressDialog extends JDialog {
         panel.add(progressBar);
     }
 
-    public void setValue(int n) {
-        progressBar.setValue(n);
-    }
-
-    public void setMinimum(int n) {
-        progressBar.setMinimum(n);
-    }
-
-    public void setMaximum(int n) {
-        progressBar.setMaximum(n);
-    }
-
-    public void setIndeterminate(boolean newValue) {
-        progressBar.setIndeterminate(newValue);
-    }
-
-    public int getValue() {
-        return progressBar.getValue();
+    public int getMaximum() {
+        return progressBar.getMaximum();
     }
 
     public int getMinimum() {
         return progressBar.getMinimum();
     }
 
-    public int getMaximum() {
-        return progressBar.getMaximum();
+    public int getValue() {
+        return progressBar.getValue();
     }
 
     public boolean isIndeterminate() {
         return progressBar.isIndeterminate();
+    }
+
+    public void setIndeterminate(boolean newValue) {
+        progressBar.setIndeterminate(newValue);
+    }
+
+    public void setMaximum(int n) {
+        progressBar.setMaximum(n);
+    }
+
+    public void setMinimum(int n) {
+        progressBar.setMinimum(n);
+    }
+
+    public void setValue(int n) {
+        progressBar.setValue(n);
     }
 
     public static void run(Window parent, String label, Consumer<AsyncProgressDialog> consumer) {
