@@ -7,6 +7,7 @@ import java.awt.Toolkit;
 import java.awt.Window;
 
 import javax.swing.AbstractButton;
+import javax.swing.JComboBox;
 import javax.swing.JSlider;
 
 public class SwingUtils {
@@ -33,6 +34,9 @@ public class SwingUtils {
             else if (cpt instanceof JSlider) ((JSlider) cpt).addChangeListener(e -> {
                 if (!((JSlider) cpt).getValueIsAdjusting()) ls.interacted(cpt);
             });
+            else if (cpt instanceof JComboBox<?>) {
+                ((JComboBox<?>) cpt).addActionListener(e -> ls.interacted(cpt));
+            }
         }
     }
 
