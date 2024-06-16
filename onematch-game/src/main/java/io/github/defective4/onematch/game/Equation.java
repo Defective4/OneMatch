@@ -1,5 +1,7 @@
 package io.github.defective4.onematch.game;
 
+import java.util.Objects;
+
 public class Equation {
     private final int first, second, result;
     private final boolean plus;
@@ -9,6 +11,14 @@ public class Equation {
         this.second = second;
         this.result = result;
         this.plus = plus;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if ((obj == null) || (getClass() != obj.getClass())) return false;
+        Equation other = (Equation) obj;
+        return first == other.first && plus == other.plus && result == other.result && second == other.second;
     }
 
     public int getFirst() {
@@ -21,6 +31,11 @@ public class Equation {
 
     public int getSecond() {
         return second;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(first, plus, result, second);
     }
 
     public boolean isPlus() {

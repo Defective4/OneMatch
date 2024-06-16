@@ -15,6 +15,7 @@ import com.formdev.flatlaf.FlatLightLaf;
 import com.google.gson.Gson;
 
 import io.github.defective4.onematch.game.data.Options;
+import io.github.defective4.onematch.game.data.RecentEquations;
 import io.github.defective4.onematch.game.data.UserDatabase;
 import io.github.defective4.onematch.game.ui.ErrorDialog;
 import io.github.defective4.onematch.game.ui.GameBoard;
@@ -37,6 +38,7 @@ public class Application {
     private final MainMenu menu;
 
     private final Options ops;
+    private final RecentEquations recentEquations = new RecentEquations(10);
 
     static {
         Application instance;
@@ -106,6 +108,7 @@ public class Application {
                 }, 0);
             } else {
                 db.insertSolved(lastInvalidEquation, lastValidEquation, Application.this.ops.getDifficulty());
+                recentEquations.addEquation(lastValidEquation);
                 JOptionPane
                         .showOptionDialog(board, "Congratulations!\nYour answer is correct!", "Correct answer",
                                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[] {
@@ -160,12 +163,15 @@ public class Application {
         byte[] hash;
         do {
             do {
-                lastValidEquation = logic.generateValidEquation(ops.getDifficulty());
+//                lastValidEquation = logic.generateValidEquation(ops.getDifficulty());
+                lastValidEquation = new Equation(1, 1, 2, true);
                 board.getMatrix().arrange(lastValidEquation);
             } while (!board.getMatrix().makeInvalid());
             lastInvalidEquation = board.getMatrix().getCurrentEquation();
             if (hashAttempt++ > 100) break;
-        } while (ops.unique && db.hasSolved(lastInvalidEquation, true));
+        } while (ops.unique
+                && (recentEquations.containsEquation(lastValidEquation) || db.hasSolved(lastInvalidEquation, true)));
+        System.out.println(recentEquations);
         board.getMatrix().draw();
         board.rearrange();
         board.repaint();
