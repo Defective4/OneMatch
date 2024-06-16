@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import io.github.defective4.onematch.game.Equation;
 import io.github.defective4.onematch.game.NumberLogic.Difficulty;
 
 public class UserDatabase {
@@ -29,11 +30,12 @@ public class UserDatabase {
         }
     }
 
-    public void insertSolved(String hash, Difficulty diff) {
+    public void insertSolved(Equation invalid, Equation solved, Difficulty diff) {
         try (Statement st = mkStatement()) {
             st
-                    .execute("INSERT OR IGNORE INTO `solved` (`hash`, `diff`) VALUES (\"" + hash + "\", \""
-                            + diff.capitalize() + "\")");
+                    .execute(String
+                            .format("insert or ignore into `solved` (`invalid`, `equation`, `difficulty`) values (\"%s\", \"%s\", \"%s\")",
+                                    invalid, solved, diff.capitalize()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -41,7 +43,7 @@ public class UserDatabase {
 
     public boolean hasAnySolved() {
         try (Statement st = mkStatement()) {
-            try (ResultSet set = st.executeQuery("select `hash` from `solved`")) {
+            try (ResultSet set = st.executeQuery("select `invalid` from `solved`")) {
                 return set.next();
             }
         } catch (Exception e) {
@@ -50,9 +52,12 @@ public class UserDatabase {
         return false;
     }
 
-    public boolean hasSolved(String hash) {
+    public boolean hasSolved(Equation eq, boolean invalid) {
         try (Statement st = mkStatement()) {
-            try (ResultSet set = st.executeQuery("select `hash` from `solved` where `hash` = \"" + hash + "\"")) {
+            try (ResultSet set = st
+                    .executeQuery(String
+                            .format("select `invalid` from `solved` where `%s` = \"%s\"",
+                                    invalid ? "invalid" : "equation", eq))) {
                 return set.next();
             }
         } catch (Exception e) {

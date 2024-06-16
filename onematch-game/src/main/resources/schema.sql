@@ -1,5 +1,7 @@
 CREATE TABLE IF NOT EXISTS solved (
-	hash TEXT(64) NOT NULL,
-	diff TEXT(16) NOT NULL,
-	CONSTRAINT solved_pk PRIMARY KEY (hash)
+	invalid TEXT(8) NOT NULL,
+	equation TEXT(8) NOT NULL,
+	difficulty TEXT(10) NOT NULL,
+	CONSTRAINT solved_pk PRIMARY KEY (invalid)
 );
+CREATE INDEX IF NOT EXISTS solved_equation_IDX ON solved (equation);

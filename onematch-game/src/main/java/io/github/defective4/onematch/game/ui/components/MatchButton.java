@@ -80,10 +80,12 @@ public class MatchButton extends JComponent implements Match {
         }
     }
 
+    @Override
     public boolean isBoardVisible() {
         return visible;
     }
 
+    @Override
     public boolean isFree() {
         return free;
     }

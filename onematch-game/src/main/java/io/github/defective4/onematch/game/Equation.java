@@ -34,7 +34,7 @@ public class Equation {
 
     @Override
     public String toString() {
-        return first + (plus ? " + " : " - ") + second + " = " + result;
+        return first + (plus ? "+" : "-") + second + "=" + result;
     }
 
 }

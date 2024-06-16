@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Random;
 
 public class GameMatrix {
-    private byte[] currentHash = {};
     private final Match[] first, second, result;
     private MatrixNumber firstDigit = MatrixNumber.EIGHT;
     private boolean plus;
@@ -12,15 +11,6 @@ public class GameMatrix {
     private final Random rand = new Random();
     private MatrixNumber resultDigit = MatrixNumber.EIGHT;
     private MatrixNumber secondDigit = MatrixNumber.EIGHT;
-
-    public void rehash() {
-        currentHash = (plus + "/" + firstDigit.getCombined() + "/" + secondDigit.getCombined() + "/"
-                + resultDigit.getCombined()).getBytes();
-    }
-
-    public byte[] getCurrentHash() {
-        return currentHash;
-    }
 
     public GameMatrix(Match plus, Match[] first, Match[] second, Match[] result) {
         plusButton = plus;
@@ -224,5 +214,13 @@ public class GameMatrix {
         int[] ar = new int[ls.size()];
         for (int x = 0; x < ar.length; x++) ar[x] = ls.get(x);
         return ar;
+    }
+
+    public Equation getCurrentEquation() {
+        return new Equation(firstDigit.getValue(), secondDigit.getValue(), resultDigit.getValue(), isPlus());
+    }
+
+    public boolean isPlus() {
+        return plusButton.isBoardVisible() && !plusButton.isFree();
     }
 }

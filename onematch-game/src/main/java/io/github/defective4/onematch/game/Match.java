@@ -6,6 +6,10 @@ public interface Match {
 
     void setFree(boolean b);
 
+    boolean isFree();
+
+    boolean isBoardVisible();
+
     boolean isMovable();
 
 }

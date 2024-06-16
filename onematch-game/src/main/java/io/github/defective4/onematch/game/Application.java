@@ -44,7 +44,7 @@ public class Application {
     private final UserDatabase db;
     private final MessageDigest sha;
 
-    private Equation lastValidEquation;
+    private Equation lastValidEquation, lastInvalidEquation;
 
     private final NumberLogic logic = new NumberLogic();
 
@@ -115,7 +115,7 @@ public class Application {
                                         "Next"
                 }, 0);
             } else {
-                db.insertSolved(hash(board.getMatrix().getCurrentHash()), Application.this.ops.getDifficulty());
+                db.insertSolved(lastInvalidEquation, lastValidEquation, Application.this.ops.getDifficulty());
                 JOptionPane
                         .showOptionDialog(board, "Congratulations!\nYour answer is correct!", "Correct answer",
                                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[] {
@@ -184,10 +184,9 @@ public class Application {
                 lastValidEquation = logic.generateValidEquation(ops.getDifficulty());
                 board.getMatrix().arrange(lastValidEquation);
             } while (!board.getMatrix().makeInvalid());
-            board.getMatrix().rehash();
-            hash = board.getMatrix().getCurrentHash();
+            lastInvalidEquation = board.getMatrix().getCurrentEquation();
             if (hashAttempt++ > 100) break;
-        } while (ops.unique && db.hasSolved(hash(hash)));
+        } while (ops.unique && db.hasSolved(lastInvalidEquation, true));
         board.getMatrix().draw();
         board.rearrange();
         board.repaint();

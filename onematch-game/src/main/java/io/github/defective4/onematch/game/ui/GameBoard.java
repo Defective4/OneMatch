@@ -221,7 +221,7 @@ public class GameBoard extends JFrame {
     }
 
     public boolean isPlus() {
-        return segPlus.isBoardVisible() && !segPlus.isFree();
+        return matrix.isPlus();
     }
 
     public void rearrange() {
