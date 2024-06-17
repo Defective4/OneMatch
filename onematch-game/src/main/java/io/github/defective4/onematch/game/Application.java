@@ -165,12 +165,11 @@ public class Application {
         boolean invalidUQ = ops.invalidUniqueness;
         do {
             do {
-//                lastValidEquation = logic.generateValidEquation(ops.getDifficulty());
-                lastValidEquation = new Equation(8, 4, 4, false);
+                lastValidEquation = logic.generateValidEquation(ops.getDifficulty());
                 board.getMatrix().arrange(lastValidEquation);
             } while (!board.getMatrix().makeInvalid());
             lastInvalidEquation = board.getMatrix().getCurrentEquation();
-            if (eqAttempt++ > 10000) break;
+            if (eqAttempt++ > 1000) break;
         } while (ops.unique && db.hasSolved(invalidUQ ? lastInvalidEquation : lastValidEquation, invalidUQ));
         board.getMatrix().draw();
         board.rearrange();
