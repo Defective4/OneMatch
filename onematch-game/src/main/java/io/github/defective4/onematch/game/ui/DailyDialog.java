@@ -36,8 +36,8 @@ public class DailyDialog extends JDialog {
 
         JPanel dailyPane = new JPanel();
         tabbedPane.addTab("Daily challenges", null, dailyPane, null);
-        tabbedPane.setEnabledAt(0, false);
 
+        
         JPanel accountPane = new JPanel();
         accountPane.setLayout(new BoxLayout(accountPane, BoxLayout.Y_AXIS));
 
@@ -286,7 +286,6 @@ public class DailyDialog extends JDialog {
         });
 
         tabbedPane.addTab("Account", null, accountPane, null);
-        tabbedPane.setSelectedIndex(1);
     }
 
 }
