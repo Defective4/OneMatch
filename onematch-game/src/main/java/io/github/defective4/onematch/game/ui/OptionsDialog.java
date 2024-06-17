@@ -116,13 +116,13 @@ public class OptionsDialog extends JDialog {
                             JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                 try {
                     Application.getInstance().getDb().clearAllSolved();
+                    btnClearMemory.setEnabled(true);
                 } catch (Exception e2) {
                     e2.printStackTrace();
                     ErrorDialog.show(this, e2, "Failed to clear the database");
                 }
             }
         });
-        btnClearMemory.setEnabled(false);
         uniqueCheckPane.add(btnClearMemory);
 
         JPanel uniquenessBoxPane = new JPanel();
