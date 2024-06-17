@@ -14,6 +14,8 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 
 import io.github.defective4.onematch.core.NumberLogic.Difficulty;
+import io.github.defective4.onematch.game.Application;
+import io.github.defective4.onematch.game.ui.components.JLinkButton;
 import io.github.defective4.onematch.game.ui.components.UneditableTableModel;
 
 public class StatsDialog extends JDialog {
@@ -36,7 +38,7 @@ public class StatsDialog extends JDialog {
         Difficulty[] diffs = stats.keySet().toArray(new Difficulty[0]);
         for (int x = 0; x < diffs.length; x++) {
             data[x] = new String[] {
-                    diffs[x].capitalize(), Integer.toString(stats.get(diffs[x]))
+                    diffs[x].capitalize(), stats.get(diffs[x]) == 0 ? "None yet" : Integer.toString(stats.get(diffs[x]))
             };
         }
 
@@ -57,6 +59,13 @@ public class StatsDialog extends JDialog {
 
         JButton closeBtn = new JButton("Close");
         closeBtn.addActionListener(e -> dispose());
+
+        JLinkButton resetStatsLabel = new JLinkButton("Reset statistics");
+        resetStatsLabel.setActionListener(e -> {
+            dispose();
+            new OptionsDialog(Application.getInstance().getMenu()).setVisible(true);
+        });
+        buttonPane.add(resetStatsLabel);
         buttonPane.add(closeBtn);
     }
 

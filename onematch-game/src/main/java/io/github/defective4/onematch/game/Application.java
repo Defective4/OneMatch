@@ -133,6 +133,10 @@ public class Application {
         return logic;
     }
 
+    public MainMenu getMenu() {
+        return menu;
+    }
+
     public NumberLogic getNumberLogic() {
         return logic;
     }
