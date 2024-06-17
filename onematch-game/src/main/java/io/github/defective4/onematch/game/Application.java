@@ -48,6 +48,16 @@ public class Application {
     private final Version version;
     private final WebClient webClient;
 
+    private String webToken;
+
+    public String getWebToken() {
+        return webToken;
+    }
+
+    public void setWebToken(String webToken) {
+        this.webToken = webToken;
+    }
+
     static {
         Application instance;
         try {

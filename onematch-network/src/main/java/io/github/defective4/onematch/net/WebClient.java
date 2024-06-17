@@ -39,8 +39,12 @@ public class WebClient {
         this.rootURL = rootURL;
     }
 
-    public WebResponse register(String username, String password) throws IOException {
-        return post("api/register", "user", username, "password", password);
+    public WebResponse login(String username, String hashedPassword) throws IOException {
+        return post("api/login", "user", username, "password", hashedPassword);
+    }
+
+    public WebResponse register(String username, String hashedPassword) throws IOException {
+        return post("api/register", "user", username, "password", hashedPassword);
     }
 
     private WebResponse post(String suburl, String... args) throws IOException {

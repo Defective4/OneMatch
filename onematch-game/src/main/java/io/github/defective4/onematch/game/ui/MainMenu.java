@@ -20,6 +20,7 @@ import io.github.defective4.onematch.core.NumberLogic.Difficulty;
 import io.github.defective4.onematch.game.Application;
 
 public class MainMenu extends JFrame {
+    private final JButton btnDaily;
 
     /**
      * Create the frame.
@@ -72,7 +73,7 @@ public class MainMenu extends JFrame {
         button.setIcon(new ImageIcon(MainMenu.class.getResource("/icons/stats.png")));
         panel.add(button);
 
-        JButton btnDaily = new JButton("Daily Challenges");
+        btnDaily = new JButton("Daily Challenges");
         btnDaily.addActionListener(e -> AsyncProgressDialog.run(this, "Fetching daily challenges details", d -> {
             DailyDialog accountDialog = new DailyDialog(this);
             // TODO fetching
@@ -99,5 +100,9 @@ public class MainMenu extends JFrame {
         });
         panel.add(btnExit);
 
+    }
+
+    public JButton getBtnDaily() {
+        return btnDaily;
     }
 }

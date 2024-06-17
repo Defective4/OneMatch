@@ -64,9 +64,9 @@ public class DailyDialog extends JDialog {
 
         loginPane.add(new JLabel("Password"));
 
-        JPasswordField loginPasswordField = new JPasswordField();
-        loginPasswordField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        loginPane.add(loginPasswordField);
+        JPasswordField loginPassword = new JPasswordField();
+        loginPassword.setAlignmentX(Component.LEFT_ALIGNMENT);
+        loginPane.add(loginPassword);
 
         loginPane.add(new JLabel(" "));
 
@@ -154,7 +154,7 @@ public class DailyDialog extends JDialog {
             accountPane.repaint();
         });
 
-        DocumentListener ls = new DocumentListener() {
+        DocumentListener registerLs = new DocumentListener() {
 
             @Override
             public void changedUpdate(DocumentEvent e) {
@@ -179,9 +179,64 @@ public class DailyDialog extends JDialog {
             }
         };
 
-        registerUsername.getDocument().addDocumentListener(ls);
-        registerPassword.getDocument().addDocumentListener(ls);
-        confirmPassword.getDocument().addDocumentListener(ls);
+        registerUsername.getDocument().addDocumentListener(registerLs);
+        registerPassword.getDocument().addDocumentListener(registerLs);
+        confirmPassword.getDocument().addDocumentListener(registerLs);
+
+        DocumentListener loginLs = new DocumentListener() {
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                update();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                update();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                update();
+            }
+
+            private void update() {
+                btnLogIn
+                        .setEnabled(!loginUsername.getText().isBlank()
+                                && !new String(loginPassword.getPassword()).isBlank());
+            }
+        };
+
+        loginUsername.getDocument().addDocumentListener(loginLs);
+        loginPassword.getDocument().addDocumentListener(loginLs);
+
+        btnLogIn.addActionListener(e -> {
+            AsyncProgressDialog.run(parent, "Logging in...", dial -> {
+                try {
+                    WebResponse response = Application
+                            .getInstance()
+                            .getWebClient()
+                            .login(loginUsername.getText(), SHA256.hash(new String(loginPassword.getPassword())));
+                    dial.dispose();
+                    if (response.getCode() == 200) {
+                        dispose();
+                        Application.getInstance().setWebToken(response.getResponseString());
+                        JOptionPane
+                                .showOptionDialog(Application.getInstance().getMenu(), "Successfully logged in!",
+                                        "Logged in", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                                        null, new String[] {
+                                                "Continue"
+                        }, null);
+                        Application.getInstance().getMenu().getBtnDaily().doClick();
+                    } else {
+                        ErrorDialog.show(this, response.getResponseString(), "Couldn't log in!");
+                    }
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                    ExceptionDialog.show(this, e1, "Couldn't finish logging in!");
+                }
+            });
+        });
 
         btnRegister.addActionListener(e -> {
             if (!new String(registerPassword.getPassword()).equals(new String(confirmPassword.getPassword()))) {
@@ -211,7 +266,15 @@ public class DailyDialog extends JDialog {
                                     SHA256.hash(new String(registerPassword.getPassword())));
                     dial.dispose();
                     if (response.getCode() == 200) {
-                        // TODO
+                        dispose();
+                        Application.getInstance().setWebToken(response.getResponseString());
+                        JOptionPane
+                                .showOptionDialog(Application.getInstance().getMenu(), "Successfully registered!",
+                                        "Registration complete", JOptionPane.OK_CANCEL_OPTION,
+                                        JOptionPane.INFORMATION_MESSAGE, null, new String[] {
+                                                "Continue"
+                        }, null);
+                        Application.getInstance().getMenu().getBtnDaily().doClick();
                     } else {
                         ErrorDialog.show(this, response.getResponseString(), "Couldn't register!");
                     }
