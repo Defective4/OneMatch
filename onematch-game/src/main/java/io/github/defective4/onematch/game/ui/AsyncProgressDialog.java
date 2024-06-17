@@ -88,6 +88,6 @@ public class AsyncProgressDialog extends JDialog {
                 dialog.dispose();
             }).start();
         });
-        dialog.setVisible(true);
+        SwingUtils.showAndCenter(dialog);
     }
 }

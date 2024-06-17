@@ -6,102 +6,59 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Window;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-
-import io.github.defective4.onematch.game.ui.components.JCopyButton;
-import io.github.defective4.onematch.game.ui.components.JLinkButton;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 public class ErrorDialog extends JDialog {
 
     private final JPanel contentPanel = new JPanel();
-    private final Exception ex;
-    private final JLabel message;
 
-    /**
-     * Create the dialog.
-     *
-     * @param message2
-     */
-    public ErrorDialog(Window parent, Exception ex, String msgText) {
+    private ErrorDialog(Window parent, String message, String secondaryMessage) {
         super(parent);
-        this.ex = ex;
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setModal(true);
         setResizable(false);
-        setTitle("An error occured");
-        setBounds(100, 100, 377, 242);
+        setBounds(100, 100, 300, 176);
+        setTitle("Error");
         getContentPane().setLayout(new BorderLayout());
-        contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-        getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
-        contentPanel.add(tabbedPane);
-
-        JPanel panel = new JPanel();
-        tabbedPane.addTab("Overview", null, panel, null);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-        message = new JLabel(msgText);
-        panel.add(message);
-
-        panel.add(new JLabel(" "));
-
-        JScrollPane scrollPane = new JScrollPane();
-        panel.add(scrollPane);
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-        JTextArea exception = new JTextArea(ex.toString());
-        exception.setAlignmentX(Component.LEFT_ALIGNMENT);
-        panel.add(exception);
-        exception.setForeground(new Color(139, 0, 0));
-        exception.setLineWrap(true);
-        exception.setEditable(false);
-
-        JLinkButton straceButton = new JLinkButton("New label");
-        straceButton.setText("Show stack trace");
-        straceButton.setActionListener(e -> tabbedPane.setSelectedIndex(1));
-        panel.add(straceButton);
-
-        JPanel tracePanel = new JPanel();
-        tabbedPane.addTab("Stack trace", null, tracePanel, null);
-        tracePanel.setLayout(new BoxLayout(tracePanel, BoxLayout.Y_AXIS));
-
-        JScrollPane scrollPane_1 = new JScrollPane();
-        scrollPane_1.setAlignmentX(Component.LEFT_ALIGNMENT);
-        tracePanel.add(scrollPane_1);
-
-        JTextArea stacktrace = new JTextArea();
-        stacktrace.setEditable(false);
-        stacktrace.setForeground(new Color(139, 0, 0));
-        stacktrace.setAlignmentX(0.0f);
-
-        stacktrace.append(ex.toString() + "\n");
-        for (StackTraceElement el : ex.getStackTrace()) {
-            stacktrace.append(el.toString() + "\n");
+        if (secondaryMessage != null) {
+            JLabel messageLabel = new JLabel(secondaryMessage);
+            contentPanel.add(messageLabel);
         }
 
-        scrollPane_1.setViewportView(stacktrace);
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+        contentPanel.add(scrollPane);
 
-        tracePanel.add(new JCopyButton(stacktrace.getText(), this));
+        JTextArea messageArea = new JTextArea();
+        messageArea.setLineWrap(true);
+        messageArea.setForeground(new Color(139, 0, 0));
+        messageArea.setEditable(false);
+        messageArea.setText(message);
+        messageArea.setWrapStyleWord(true);
+        scrollPane.setViewportView(messageArea);
 
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        getContentPane()
+                .add(new JOptionPane(contentPanel, JOptionPane.ERROR_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null,
+                        new String[0]), BorderLayout.CENTER);
         getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
-        JButton okButton = new JButton("Close");
+        JButton okButton = new JButton("OK");
         okButton.addActionListener(e -> dispose());
         buttonPane.add(okButton);
         getRootPane().setDefaultButton(okButton);
-
     }
 
-    public JLabel getMessage() {
-        return message;
-    }
-
-    public static void show(Window parent, Exception ex, String message) {
-        SwingUtils.showAndCenter(new ErrorDialog(parent, ex, message));
+    public static void show(Window parent, String message, String secondaryMessage) {
+        SwingUtils.showAndCenter(new ErrorDialog(parent, message, secondaryMessage));
     }
 }

@@ -5,8 +5,6 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Window;
-import java.io.IOException;
-import java.io.InputStream;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -17,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
+import io.github.defective4.onematch.game.Application;
 import io.github.defective4.onematch.game.data.Version;
 import io.github.defective4.onematch.game.ui.components.JLinkLabel;
 
@@ -35,12 +34,7 @@ public class AboutDialog extends JDialog {
         setModal(true);
         setResizable(false);
 
-        Version v = new Version();
-        try (InputStream is = getClass().getResourceAsStream("/version.properties")) {
-            v.load(is);
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
+        Version v = Application.getInstance().getVersion();
 
         setBounds(100, 100, 330, 194);
         getContentPane().setLayout(new BorderLayout());

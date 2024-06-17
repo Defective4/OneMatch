@@ -5,6 +5,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.Window;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.AbstractButton;
 import javax.swing.JComboBox;
@@ -41,8 +43,14 @@ public class SwingUtils {
     }
 
     public static Window showAndCenter(Window win) {
+        win.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                if (win.getParent() == null) centerWindow(win);
+                else win.setLocationRelativeTo(win.getParent());
+            }
+        });
         win.setVisible(true);
-        centerWindow(win);
         return win;
     }
 }

@@ -26,5 +26,6 @@
 	<modules>
 		<module>onematch-game</module>
 		<module>onematch-core</module>
+		<module>onematch-network</module>
 	</modules>
 </project>

@@ -45,7 +45,7 @@ public class MainMenu extends JFrame {
             } catch (Exception e2) {
                 e2.printStackTrace();
                 setVisible(true);
-                ErrorDialog.show(this, e2, "Couldn't initialize game board!");
+                ExceptionDialog.show(this, e2, "Couldn't initialize game board!");
             }
         });
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 15));
@@ -65,7 +65,7 @@ public class MainMenu extends JFrame {
             AsyncProgressDialog.run(this, "Fetching stats...", dial -> {
                 Map<Difficulty, Integer> stats = Application.getInstance().getDb().getStats();
                 dial.dispose();
-                new StatsDialog(this, stats).setVisible(true);
+                SwingUtils.showAndCenter(new StatsDialog(this, stats));
             });
         });
         button.setToolTipText("Stats");
@@ -74,20 +74,20 @@ public class MainMenu extends JFrame {
 
         JButton btnDaily = new JButton("Daily Challenges");
         btnDaily.addActionListener(e -> AsyncProgressDialog.run(this, "Fetching daily challenges details", d -> {
-            AccountDialog accountDialog = new AccountDialog(this);
+            DailyDialog accountDialog = new DailyDialog(this);
             // TODO fetching
             d.dispose();
-            accountDialog.setVisible(true);
+            SwingUtils.showAndCenter(accountDialog);
         }));
         panel.add(btnDaily);
 
         JButton btnOptions = new JButton("Options");
-        btnOptions.addActionListener(e -> new OptionsDialog(this).setVisible(true));
+        btnOptions.addActionListener(e -> SwingUtils.showAndCenter(new OptionsDialog(this)));
         btnOptions.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(btnOptions);
 
         JButton btnAbout = new JButton("About");
-        btnAbout.addActionListener(e -> new AboutDialog(this).setVisible(true));
+        btnAbout.addActionListener(e -> SwingUtils.showAndCenter(new AboutDialog(this)));
         panel.add(btnAbout);
 
         JButton btnExit = new JButton("Exit");

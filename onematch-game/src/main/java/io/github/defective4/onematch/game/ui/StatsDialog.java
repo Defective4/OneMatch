@@ -63,7 +63,7 @@ public class StatsDialog extends JDialog {
         JLinkButton resetStatsLabel = new JLinkButton("Reset statistics");
         resetStatsLabel.setActionListener(e -> {
             dispose();
-            new OptionsDialog(Application.getInstance().getMenu()).setVisible(true);
+            SwingUtils.showAndCenter(new OptionsDialog(Application.getInstance().getMenu()));
         });
         buttonPane.add(resetStatsLabel);
         buttonPane.add(closeBtn);

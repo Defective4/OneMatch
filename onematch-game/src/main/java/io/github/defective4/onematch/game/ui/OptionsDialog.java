@@ -119,7 +119,7 @@ public class OptionsDialog extends JDialog {
                     btnClearMemory.setEnabled(false);
                 } catch (Exception e2) {
                     e2.printStackTrace();
-                    ErrorDialog.show(this, e2, "Failed to clear the database");
+                    ExceptionDialog.show(this, e2, "Failed to clear the database");
                 }
             }
         });

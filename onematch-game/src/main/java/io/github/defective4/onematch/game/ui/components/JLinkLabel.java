@@ -5,7 +5,7 @@ import java.net.URI;
 
 import javax.swing.JOptionPane;
 
-import io.github.defective4.onematch.game.ui.ErrorDialog;
+import io.github.defective4.onematch.game.ui.ExceptionDialog;
 
 public class JLinkLabel extends JLinkButton {
 
@@ -22,7 +22,7 @@ public class JLinkLabel extends JLinkButton {
                 }, 0);
             } catch (Exception e2) {
                 e2.printStackTrace();
-                ErrorDialog.show(null, e2, "Couldn't open\n" + link + "\nin your default browser.");
+                ExceptionDialog.show(null, e2, "Couldn't open\n" + link + "\nin your default browser.");
             }
         });
     }

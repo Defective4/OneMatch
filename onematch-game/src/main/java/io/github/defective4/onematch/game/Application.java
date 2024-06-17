@@ -2,6 +2,7 @@ package io.github.defective4.onematch.game;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
@@ -19,10 +20,12 @@ import io.github.defective4.onematch.core.NumberLogic;
 import io.github.defective4.onematch.core.data.RecentEquations;
 import io.github.defective4.onematch.game.data.Options;
 import io.github.defective4.onematch.game.data.UserDatabase;
-import io.github.defective4.onematch.game.ui.ErrorDialog;
+import io.github.defective4.onematch.game.data.Version;
+import io.github.defective4.onematch.game.ui.ExceptionDialog;
 import io.github.defective4.onematch.game.ui.GameBoard;
 import io.github.defective4.onematch.game.ui.MainMenu;
 import io.github.defective4.onematch.game.ui.SwingUtils;
+import io.github.defective4.onematch.net.WebClient;
 
 public class Application {
 
@@ -42,6 +45,9 @@ public class Application {
     private final Options ops;
     private final RecentEquations recentEquations = new RecentEquations(10);
 
+    private final Version version;
+    private final WebClient webClient;
+
     static {
         Application instance;
         try {
@@ -59,8 +65,15 @@ public class Application {
             UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
-            ErrorDialog.show(null, e, "Couldn't set application's look and feel");
+            ExceptionDialog.show(null, e, "Couldn't set application's look and feel");
         }
+
+        version = new Version();
+        try (InputStream is = getClass().getResourceAsStream("/version.properties")) {
+            version.load(is);
+        }
+
+        webClient = new WebClient(version.getAPI());
 
         configDir = new File(System.getProperty("user.home"));
         if (new File(configDir, ".config").isDirectory() || new File(configDir, "AppData/Roaming").isDirectory())
@@ -81,7 +94,7 @@ public class Application {
                 ops = new Gson().fromJson(reader, Options.class);
             } catch (Exception e) {
                 e.printStackTrace();
-                ErrorDialog.show(null, e, "Couldn't read user configuration");
+                ExceptionDialog.show(null, e, "Couldn't read user configuration");
             }
         }
 
@@ -91,7 +104,7 @@ public class Application {
             db = new UserDatabase(new File(configDir, "db.sqlite"));
         } catch (Exception e) {
             e.printStackTrace();
-            ErrorDialog.show(null, e, "Couldn't initialize user database!");
+            ExceptionDialog.show(null, e, "Couldn't initialize user database!");
             throw e;
         }
 
@@ -145,12 +158,20 @@ public class Application {
         return ops;
     }
 
+    public Version getVersion() {
+        return version;
+    }
+
+    public WebClient getWebClient() {
+        return webClient;
+    }
+
     public void saveConfig(Options ops) {
         try (OutputStream os = Files.newOutputStream(configFile.toPath())) {
             os.write(new Gson().toJson(ops).getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
             e.printStackTrace();
-            ErrorDialog.show(menu, e, "Couldn't save user configuration");
+            ExceptionDialog.show(menu, e, "Couldn't save user configuration");
         }
     }
 

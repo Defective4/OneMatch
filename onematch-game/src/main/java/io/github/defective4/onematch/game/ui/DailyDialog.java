@@ -3,32 +3,28 @@ package io.github.defective4.onematch.game.ui;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Window;
+import java.io.IOException;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
+import io.github.defective4.onematch.core.SHA256;
+import io.github.defective4.onematch.game.Application;
 import io.github.defective4.onematch.game.ui.components.JLinkButton;
+import io.github.defective4.onematch.net.WebClient.WebResponse;
 
-public class AccountDialog extends JDialog {
-    private JTextField textField;
-    private JPasswordField passwordField;
-    private final JPasswordField confirmPasswordField;
+public class DailyDialog extends JDialog {
 
     /**
      * Create the dialog.
      *
      * @param parent
      */
-    public AccountDialog(Window parent) {
+    public DailyDialog(Window parent) {
         super(parent);
+        setLocationRelativeTo(parent);
         setResizable(false);
         setModal(true);
         setTitle("OneMatch - Daily Challenges");
@@ -59,18 +55,18 @@ public class AccountDialog extends JDialog {
 
         loginPane.add(new JLabel("Username"));
 
-        textField = new JTextField();
-        textField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        loginPane.add(textField);
-        textField.setColumns(10);
+        JTextField loginUsername = new JTextField();
+        loginUsername.setAlignmentX(Component.LEFT_ALIGNMENT);
+        loginPane.add(loginUsername);
+        loginUsername.setColumns(10);
 
         loginPane.add(new JLabel(" "));
 
         loginPane.add(new JLabel("Password"));
 
-        passwordField = new JPasswordField();
-        passwordField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        loginPane.add(passwordField);
+        JPasswordField loginPasswordField = new JPasswordField();
+        loginPasswordField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        loginPane.add(loginPasswordField);
 
         loginPane.add(new JLabel(" "));
 
@@ -102,26 +98,26 @@ public class AccountDialog extends JDialog {
 
         registerPane.add(new JLabel("Username"));
 
-        textField = new JTextField();
-        textField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        registerPane.add(textField);
-        textField.setColumns(10);
+        JTextField registerUsername = new JTextField();
+        registerUsername.setAlignmentX(Component.LEFT_ALIGNMENT);
+        registerPane.add(registerUsername);
+        registerUsername.setColumns(10);
 
         registerPane.add(new JLabel(" "));
 
         registerPane.add(new JLabel("Password"));
 
-        passwordField = new JPasswordField();
-        passwordField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        registerPane.add(passwordField);
+        JPasswordField registerPassword = new JPasswordField();
+        registerPassword.setAlignmentX(Component.LEFT_ALIGNMENT);
+        registerPane.add(registerPassword);
 
         registerPane.add(new JLabel(" "));
 
         registerPane.add(new JLabel("Confirm Password"));
 
-        confirmPasswordField = new JPasswordField();
-        confirmPasswordField.setAlignmentX(0.0f);
-        registerPane.add(confirmPasswordField);
+        JPasswordField confirmPassword = new JPasswordField();
+        confirmPassword.setAlignmentX(0.0f);
+        registerPane.add(confirmPassword);
 
         registerPane.add(new JLabel(" "));
 
@@ -156,6 +152,65 @@ public class AccountDialog extends JDialog {
             accountPane.add(loginPane);
             accountPane.revalidate();
             accountPane.repaint();
+        });
+
+        DocumentListener ls = new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                update();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                update();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                update();
+            }
+
+            private void update() {
+                btnRegister
+                        .setEnabled(!registerUsername.getText().isBlank()
+                                && !new String(registerPassword.getPassword()).isBlank()
+                                && !new String(confirmPassword.getPassword()).isBlank());
+            }
+        };
+
+        registerUsername.getDocument().addDocumentListener(ls);
+        registerPassword.getDocument().addDocumentListener(ls);
+        confirmPassword.getDocument().addDocumentListener(ls);
+
+        btnRegister.addActionListener(e -> {
+            if (!new String(registerPassword.getPassword()).equals(new String(confirmPassword.getPassword()))) {
+                JOptionPane
+                        .showOptionDialog(this, "The passwords don't match!", "Passwords aren't the same",
+                                JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[] {
+                                        "Ok"
+                }, null);
+                return;
+            }
+
+            AsyncProgressDialog.run(this, "Registering...", dial -> {
+                try {
+                    WebResponse response = Application
+                            .getInstance()
+                            .getWebClient()
+                            .register(registerUsername.getText(),
+                                    SHA256.hash(new String(registerPassword.getPassword())));
+                    dial.dispose();
+                    if (response.getCode() == 200) {
+                        // TODO
+                    } else {
+                        ErrorDialog.show(this, response.getResponseString(), "Couldn't register!");
+                    }
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                    ExceptionDialog.show(this, e1, "Couldn't finish registration!");
+                }
+            });
         });
 
         tabbedPane.addTab("Account", null, accountPane, null);
