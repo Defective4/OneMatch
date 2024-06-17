@@ -25,5 +25,6 @@
 	</properties>
 	<modules>
 		<module>onematch-game</module>
+		<module>onematch-core</module>
 	</modules>
 </project>

@@ -38,5 +38,10 @@
 			<artifactId>sqlite-jdbc</artifactId>
 			<version>3.43.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>io.github.defective4</groupId>
+			<artifactId>onematch-core</artifactId>
+			<version>1.0</version>
+		</dependency>
 	</dependencies>
 </project>

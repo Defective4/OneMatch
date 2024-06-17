@@ -10,9 +10,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import io.github.defective4.onematch.core.NumberLogic;
+import io.github.defective4.onematch.core.NumberLogic.Difficulty;
 import io.github.defective4.onematch.game.Application;
-import io.github.defective4.onematch.game.NumberLogic;
-import io.github.defective4.onematch.game.NumberLogic.Difficulty;
 import io.github.defective4.onematch.game.data.Options;
 
 public class OptionsDialog extends JDialog {
@@ -116,7 +116,7 @@ public class OptionsDialog extends JDialog {
                             JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                 try {
                     Application.getInstance().getDb().clearAllSolved();
-                    btnClearMemory.setEnabled(true);
+                    btnClearMemory.setEnabled(false);
                 } catch (Exception e2) {
                     e2.printStackTrace();
                     ErrorDialog.show(this, e2, "Failed to clear the database");

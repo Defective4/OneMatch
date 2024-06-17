@@ -16,9 +16,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.github.defective4.onematch.game.Equation;
-import io.github.defective4.onematch.game.NumberLogic;
-import io.github.defective4.onematch.game.NumberLogic.Difficulty;
+import io.github.defective4.onematch.core.Equation;
+import io.github.defective4.onematch.core.NumberLogic;
+import io.github.defective4.onematch.core.NumberLogic.Difficulty;
 
 public class UserDatabase {
     private Connection connection;

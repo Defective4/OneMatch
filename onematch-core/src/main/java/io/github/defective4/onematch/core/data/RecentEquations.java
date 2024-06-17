@@ -1,9 +1,9 @@
-package io.github.defective4.onematch.game.data;
+package io.github.defective4.onematch.core.data;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.defective4.onematch.game.Equation;
+import io.github.defective4.onematch.core.Equation;
 
 public class RecentEquations {
     private final int capacity;

@@ -11,8 +11,8 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
 
+import io.github.defective4.onematch.core.Match;
 import io.github.defective4.onematch.game.Application;
-import io.github.defective4.onematch.game.Match;
 import io.github.defective4.onematch.game.ui.GameBoard;
 
 public class MatchButton extends JComponent implements Match {

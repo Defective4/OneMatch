@@ -1,6 +1,6 @@
 package io.github.defective4.onematch.game.data;
 
-import io.github.defective4.onematch.game.NumberLogic.Difficulty;
+import io.github.defective4.onematch.core.NumberLogic.Difficulty;
 
 public class Options {
     public int difficulty = 1;

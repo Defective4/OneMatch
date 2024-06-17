@@ -23,10 +23,10 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
+import io.github.defective4.onematch.core.Equation;
+import io.github.defective4.onematch.core.GameMatrix;
+import io.github.defective4.onematch.core.MatrixNumber;
 import io.github.defective4.onematch.game.Application;
-import io.github.defective4.onematch.game.Equation;
-import io.github.defective4.onematch.game.GameMatrix;
-import io.github.defective4.onematch.game.MatrixNumber;
 import io.github.defective4.onematch.game.ui.components.MatchButton;
 import io.github.defective4.onematch.game.ui.components.MatchButton.Orientation;
 

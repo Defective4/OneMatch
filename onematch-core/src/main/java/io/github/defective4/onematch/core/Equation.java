@@ -1,4 +1,4 @@
-package io.github.defective4.onematch.game;
+package io.github.defective4.onematch.core;
 
 import java.util.Objects;
 
@@ -16,7 +16,7 @@ public class Equation {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if ((obj == null) || (getClass() != obj.getClass())) return false;
+        if (obj == null || getClass() != obj.getClass()) return false;
         Equation other = (Equation) obj;
         return first == other.first && plus == other.plus && result == other.result && second == other.second;
     }

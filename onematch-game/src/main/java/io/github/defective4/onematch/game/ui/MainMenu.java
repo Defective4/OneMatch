@@ -16,8 +16,8 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
+import io.github.defective4.onematch.core.NumberLogic.Difficulty;
 import io.github.defective4.onematch.game.Application;
-import io.github.defective4.onematch.game.NumberLogic.Difficulty;
 
 public class MainMenu extends JFrame {
 

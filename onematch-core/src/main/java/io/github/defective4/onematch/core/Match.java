@@ -1,4 +1,4 @@
-package io.github.defective4.onematch.game;
+package io.github.defective4.onematch.core;
 
 public interface Match {
 

@@ -14,8 +14,10 @@ import javax.swing.UnsupportedLookAndFeelException;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.google.gson.Gson;
 
+import io.github.defective4.onematch.core.Equation;
+import io.github.defective4.onematch.core.NumberLogic;
+import io.github.defective4.onematch.core.data.RecentEquations;
 import io.github.defective4.onematch.game.data.Options;
-import io.github.defective4.onematch.game.data.RecentEquations;
 import io.github.defective4.onematch.game.data.UserDatabase;
 import io.github.defective4.onematch.game.ui.ErrorDialog;
 import io.github.defective4.onematch.game.ui.GameBoard;
