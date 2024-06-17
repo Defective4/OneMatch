@@ -76,9 +76,14 @@ public class MainMenu extends JFrame {
         btnDaily = new JButton("Daily Challenges");
         btnDaily.addActionListener(e -> AsyncProgressDialog.run(this, "Fetching daily challenges details", d -> {
             DailyDialog accountDialog = new DailyDialog(this);
-            // TODO fetching
+            try {
+                accountDialog.fetchAll();
+                SwingUtils.showAndCenter(accountDialog);
+            } catch (Exception e2) {
+                e2.printStackTrace();
+                ExceptionDialog.show(this, e2, "Couldn't connect with daily challenges server.");
+            }
             d.dispose();
-            SwingUtils.showAndCenter(accountDialog);
         }));
         panel.add(btnDaily);
 

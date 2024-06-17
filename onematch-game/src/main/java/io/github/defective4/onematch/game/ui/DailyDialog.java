@@ -4,18 +4,31 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Window;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
 
 import io.github.defective4.onematch.core.SHA256;
 import io.github.defective4.onematch.game.Application;
 import io.github.defective4.onematch.game.ui.components.JLinkButton;
+import io.github.defective4.onematch.game.ui.components.UneditableTableModel;
+import io.github.defective4.onematch.net.ChallengesMeta;
 import io.github.defective4.onematch.net.WebClient.WebResponse;
 
 public class DailyDialog extends JDialog {
+
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH);
+
+    private JTable table;
+    private ChallengesMeta meta;
 
     /**
      * Create the dialog.
@@ -24,7 +37,6 @@ public class DailyDialog extends JDialog {
      */
     public DailyDialog(Window parent) {
         super(parent);
-        setLocationRelativeTo(parent);
         setResizable(false);
         setModal(true);
         setTitle("OneMatch - Daily Challenges");
@@ -35,9 +47,55 @@ public class DailyDialog extends JDialog {
         getContentPane().add(tabbedPane);
 
         JPanel dailyPane = new JPanel();
+        dailyPane.setBorder(new EmptyBorder(16, 16, 16, 16));
         tabbedPane.addTab("Daily challenges", null, dailyPane, null);
+        dailyPane.setLayout(new BoxLayout(dailyPane, BoxLayout.Y_AXIS));
 
-        
+        JLabel lblDailyChallenges = new JLabel("Daily challenges");
+        lblDailyChallenges.setFont(new Font("SansSerif", Font.BOLD, 24));
+        dailyPane.add(lblDailyChallenges);
+
+        dailyPane.add(new JLabel(" "));
+
+        JPanel panel = new JPanel();
+        panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel
+                .setBorder(new TitledBorder(null, "Current daily challenge", TitledBorder.LEADING, TitledBorder.TOP,
+                        null, null));
+        dailyPane.add(panel);
+
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+
+        table = new JTable();
+        panel.add(table);
+
+        JPanel buttonPane = new JPanel();
+        buttonPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+        dailyPane.add(buttonPane);
+        buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.X_AXIS));
+
+        JButton btnPlay = new JButton("Play");
+        buttonPane.add(btnPlay);
+        btnPlay.setEnabled(false);
+
+        buttonPane.add(new JLabel(" "));
+
+        JButton btnLeaderboards = new JButton("Leaderboards");
+        buttonPane.add(btnLeaderboards);
+
+        dailyPane.add(new JLabel(" "));
+
+        JPanel playPane = new JPanel();
+        playPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+        dailyPane.add(playPane);
+        playPane.setLayout(new BoxLayout(playPane, BoxLayout.X_AXIS));
+
+        playPane.add(new JLabel("To participate you have to "));
+
+        JLinkButton lblSignIn = new JLinkButton("Sign In");
+        lblSignIn.setActionListener(e -> tabbedPane.setSelectedIndex(1));
+        playPane.add(lblSignIn);
+
         JPanel accountPane = new JPanel();
         accountPane.setLayout(new BoxLayout(accountPane, BoxLayout.Y_AXIS));
 
@@ -288,4 +346,19 @@ public class DailyDialog extends JDialog {
         tabbedPane.addTab("Account", null, accountPane, null);
     }
 
+    public void fetchAll() throws Exception {
+        meta = Application.getInstance().getWebClient().getMeta();
+        String[][] data = new String[3][2];
+        data[0][0] = "Difficulty";
+        data[1][0] = "Equations";
+        data[2][0] = "Last updated";
+
+        if (meta != null) {
+            data[0][1] = meta.difficulty;
+            data[1][1] = Integer.toString(meta.count);
+            data[2][1] = DATE_FORMAT.format(new Date(meta.time));
+        }
+
+        table.setModel(new UneditableTableModel(new DefaultTableModel(data, new String[2])));
+    }
 }

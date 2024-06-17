@@ -3,11 +3,15 @@ package io.github.defective4.onematch.net;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+
+import com.google.gson.Gson;
 
 public class WebClient {
     public static class WebResponse {
@@ -37,6 +41,12 @@ public class WebClient {
 
     public WebClient(String rootURL) {
         this.rootURL = rootURL;
+    }
+
+    public ChallengesMeta getMeta() throws IOException {
+        try (Reader reader = new InputStreamReader(URI.create(rootURL + "/api/daily/meta").toURL().openStream())) {
+            return new Gson().fromJson(reader, ChallengesMeta.class);
+        }
     }
 
     public WebResponse login(String username, String hashedPassword) throws IOException {
