@@ -37,10 +37,16 @@ public class MainMenu extends JFrame {
 
         JButton btnNewGame = new JButton("New Game");
         btnNewGame.addActionListener(e -> {
-            setVisible(false);
-            Application instance = Application.getInstance();
-            instance.startNewGame();
-            instance.showBoard();
+            try {
+                setVisible(false);
+                Application instance = Application.getInstance();
+                instance.startNewGame();
+                instance.showBoard();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+                setVisible(true);
+                ErrorDialog.show(this, e2, "Couldn't initialize game board!");
+            }
         });
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 15));
 

@@ -84,7 +84,7 @@ public class NumberLogic {
             result = plus ? first + second : first - second;
             if (difficulty != Difficulty.EASIER && (first == 0 || second == 0 || result == 0) && rand.nextInt(100) < 90)
                 result = -1;
-        } while (result < 0 || result >= difficulty.max && result != 11);
+        } while (result < 0 || result >= difficulty.max);
         return new Equation(first, second, result, plus);
     }
 }

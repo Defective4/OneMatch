@@ -7,8 +7,6 @@ import java.util.List;
 public enum MatrixDigit {
     EIGHT(8, new int[] {
             1, 2, 3, 4, 5, 6, 7
-    }), ELEVEN(11, new int[] {
-            2, 3, 5, 6
     }), FIVE(5, new int[] {
             1, 2, 4, 6, 7
     }), FOUR(4, new int[] {
