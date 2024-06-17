@@ -193,6 +193,15 @@ public class DailyDialog extends JDialog {
                 return;
             }
 
+            if (registerPassword.getPassword().length <= 4) {
+                JOptionPane
+                        .showOptionDialog(this, "Your password is too short!", "Short password",
+                                JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[] {
+                                        "Ok"
+                }, null);
+                return;
+            }
+
             AsyncProgressDialog.run(this, "Registering...", dial -> {
                 try {
                     WebResponse response = Application
