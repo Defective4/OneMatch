@@ -72,8 +72,13 @@ public class MainMenu extends JFrame {
         button.setIcon(new ImageIcon(MainMenu.class.getResource("/icons/stats.png")));
         panel.add(button);
 
-        JButton btnDaily = new JButton("Daily Challenge");
-        btnDaily.setEnabled(false);
+        JButton btnDaily = new JButton("Daily Challenges");
+        btnDaily.addActionListener(e -> AsyncProgressDialog.run(this, "Fetching daily challenges details", d -> {
+            AccountDialog accountDialog = new AccountDialog(this);
+            // TODO fetching
+            d.dispose();
+            accountDialog.setVisible(true);
+        }));
         panel.add(btnDaily);
 
         JButton btnOptions = new JButton("Options");
