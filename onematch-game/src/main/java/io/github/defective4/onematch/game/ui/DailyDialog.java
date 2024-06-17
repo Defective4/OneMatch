@@ -74,9 +74,11 @@ public class DailyDialog extends JDialog {
         dailyPane.add(buttonPane);
         buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.X_AXIS));
 
+        String token = Application.getInstance().getWebToken();
+
         JButton btnPlay = new JButton("Play");
         buttonPane.add(btnPlay);
-        btnPlay.setEnabled(false);
+        btnPlay.setEnabled(token != null);
 
         buttonPane.add(new JLabel(" "));
 
@@ -90,11 +92,13 @@ public class DailyDialog extends JDialog {
         dailyPane.add(playPane);
         playPane.setLayout(new BoxLayout(playPane, BoxLayout.X_AXIS));
 
-        playPane.add(new JLabel("To participate you have to "));
+        if (token == null) {
+            playPane.add(new JLabel("To participate you have to "));
 
-        JLinkButton lblSignIn = new JLinkButton("Sign In");
-        lblSignIn.setActionListener(e -> tabbedPane.setSelectedIndex(1));
-        playPane.add(lblSignIn);
+            JLinkButton lblSignIn = new JLinkButton("Sign In");
+            lblSignIn.setActionListener(e -> tabbedPane.setSelectedIndex(1));
+            playPane.add(lblSignIn);
+        }
 
         JPanel accountPane = new JPanel();
         accountPane.setLayout(new BoxLayout(accountPane, BoxLayout.Y_AXIS));
