@@ -129,6 +129,18 @@ public class DailyDialog extends JDialog {
         buttonPane.add(new JLabel(" "));
 
         JButton btnLeaderboards = new JButton("Leaderboards");
+        btnLeaderboards.addActionListener(e -> AsyncProgressDialog.run(this, "Fetching leaderboards...", prog -> {
+            try {
+                DailyLeaderboardsDialog dialog = new DailyLeaderboardsDialog(this);
+                dialog.fetch();
+                prog.dispose();
+                SwingUtils.showAndCenter(dialog);
+            } catch (Exception e3) {
+                prog.dispose();
+                e3.printStackTrace();
+                ExceptionDialog.show(this, e3, "Couldn't fetch leaderboards");
+            }
+        }));
         buttonPane.add(btnLeaderboards);
 
         dailyPane.add(new JLabel(" "));
