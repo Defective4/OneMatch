@@ -82,12 +82,18 @@ public class DailyDialog extends JDialog {
 
         JButton btnPlay = new JButton("Play");
         btnPlay.addActionListener(e -> {
-            if (JOptionPane
-                    .showOptionDialog(this, "You are about to attempt today's daily challenge.\n"
-                            + "After clicking \"Continue\" you will be presented with problem(s) to solve and the timer will start until you submit the solution.\n"
-                            + "Are you ready?", "Daily challenge", JOptionPane.YES_NO_CANCEL_OPTION,
-                            JOptionPane.INFORMATION_MESSAGE, null, new String[] {
-                                    "Go back", "Continue"
+            if (JOptionPane.showOptionDialog(this, new JLabel[] {
+                    new JLabel("You are about to attempt today's daily challenge."),
+                    new JLabel("After clicking \"Continue\" you will be presented with problem(s) to solve"),
+                    new JLabel("and the timer will start until you submit the solution."),
+                    new JLabel("You have only one attempt!") {
+                        {
+                            setFont(getFont().deriveFont(Font.BOLD));
+                        }
+                    }, new JLabel("Are you ready?")
+            }, "Daily challenge", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
+                    new String[] {
+                            "Go back", "Continue"
             }, 0) == 1) {
                 AsyncProgressDialog.run(this, "Fetching daily challenge...", dial -> {
                     try {

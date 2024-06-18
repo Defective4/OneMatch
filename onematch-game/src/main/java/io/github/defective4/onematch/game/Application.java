@@ -26,12 +26,15 @@ import io.github.defective4.onematch.core.data.RecentEquations;
 import io.github.defective4.onematch.game.data.Options;
 import io.github.defective4.onematch.game.data.UserDatabase;
 import io.github.defective4.onematch.game.data.Version;
+import io.github.defective4.onematch.game.ui.AsyncProgressDialog;
+import io.github.defective4.onematch.game.ui.ErrorDialog;
 import io.github.defective4.onematch.game.ui.ExceptionDialog;
 import io.github.defective4.onematch.game.ui.GameBoard;
 import io.github.defective4.onematch.game.ui.MainMenu;
 import io.github.defective4.onematch.game.ui.SwingUtils;
 import io.github.defective4.onematch.net.WebClient;
 import io.github.defective4.onematch.net.WebClient.Challenge;
+import io.github.defective4.onematch.net.WebClient.WebResponse;
 
 public class Application {
 
@@ -204,7 +207,30 @@ public class Application {
             dailySolved.add(solved);
             if (dailySolved.size() >= chal.size()) {
                 board.setVisible(false);
-                showMainMenu(); // TODO
+                AsyncProgressDialog.run(null, "Submitting your solutions...", dial -> {
+                    try {
+                        WebResponse response = webClient.submit(dailySolved, webToken);
+                        dial.dispose();
+                        showMainMenu();
+                        if (response.getCode() == 200) {
+                            // TODO results
+                            JOptionPane
+                                    .showOptionDialog(menu, "Your solution was submitted!", "Submitted!",
+                                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
+                                            new String[] {
+                                                    "Ok"
+                            }, null);
+                        } else {
+                            ErrorDialog.show(menu, response.getResponseString(), "Server rejected your submission");
+                        }
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                        dial.dispose();
+                        ExceptionDialog.show(null, e1, "Could not submit your solution, sorry!");
+                    }
+
+                });
+                showMainMenu();
             } else {
                 startDailyChallenge(chal.get(dailySolved.size()));
             }

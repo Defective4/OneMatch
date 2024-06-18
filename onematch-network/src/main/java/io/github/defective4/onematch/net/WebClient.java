@@ -22,14 +22,29 @@ import com.google.gson.JsonObject;
 
 public class WebClient {
     public static class Challenge {
-        private final int[] first, second, third;
+        private final int[] first, second, result;
         private final boolean plus;
 
         public Challenge(boolean plus, int[] first, int[] second, int[] third) {
             this.plus = plus;
             this.first = first;
             this.second = second;
-            this.third = third;
+            result = third;
+        }
+
+        public JsonObject toJson() {
+            JsonObject obj = new JsonObject();
+            JsonArray first = new JsonArray();
+            JsonArray second = new JsonArray();
+            JsonArray result = new JsonArray();
+            for (int i : this.first) first.add(i);
+            for (int i : this.second) second.add(i);
+            for (int i : this.result) result.add(i);
+            obj.add("first", first);
+            obj.add("second", second);
+            obj.add("result", result);
+            obj.addProperty("plus", plus);
+            return obj;
         }
 
         public int[] getFirst() {
@@ -41,7 +56,7 @@ public class WebClient {
         }
 
         public int[] getThird() {
-            return third;
+            return result;
         }
 
         public boolean isPlus() {
@@ -51,7 +66,7 @@ public class WebClient {
         @Override
         public String toString() {
             return "Challenge [plus=" + plus + ", first=" + Arrays.toString(first) + ", second="
-                    + Arrays.toString(second) + ", third=" + Arrays.toString(third) + "]";
+                    + Arrays.toString(second) + ", third=" + Arrays.toString(result) + "]";
         }
 
         public static List<Challenge> parse(JsonObject root) throws Exception {
@@ -100,13 +115,22 @@ public class WebClient {
     }
 
     private enum RequestMethod {
-        GET, POST
+        GET, POST, PUT
     }
 
     private final String rootURL;
 
     public WebClient(String rootURL) {
         this.rootURL = rootURL;
+    }
+
+    public WebResponse submit(List<Challenge> solved, String token) throws IOException {
+        JsonArray challenges = new JsonArray();
+        for (Challenge challenge : solved) challenges.add(challenge.toJson());
+        JsonObject container = new JsonObject();
+        container.add("solved", challenges);
+        return put("api/daily/submit", token, new Gson().toJson(container).getBytes(StandardCharsets.UTF_8),
+                "application/json");
     }
 
     public WebResponse getChallenges(String token) throws Exception {
@@ -127,28 +151,27 @@ public class WebClient {
         return post("api/register", null, "user", username, "password", hashedPassword);
     }
 
+    private WebResponse put(String suburl, String token, byte[] data, String type) throws IOException {
+        HttpURLConnection connection = makeConnection(RequestMethod.PUT, suburl, token);
+        if (type != null) connection.setRequestProperty("Content-Type", type);
+        connection.connect();
+        try (OutputStream os = connection.getOutputStream()) {
+            os.write(data);
+        }
+        return readResponse(connection);
+    }
+
     private WebResponse get(String suburl, String token) throws IOException {
         HttpURLConnection connection = makeConnection(RequestMethod.GET, suburl, token);
         connection.connect();
-
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        byte[] tmp = new byte[1024];
-        int read;
-
-        int code = connection.getResponseCode();
-
-        if (code < 400 || connection.getErrorStream() != null)
-            try (InputStream is = code >= 400 ? connection.getErrorStream() : connection.getInputStream()) {
-                while ((read = is.read(tmp)) > 0) buffer.write(tmp, 0, read);
-            }
-        connection.disconnect();
-
-        return new WebResponse(code, buffer.toByteArray());
+        return readResponse(connection);
     }
 
     private HttpURLConnection makeConnection(RequestMethod method, String suburl, String token) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) URI.create(rootURL + "/" + suburl).toURL().openConnection();
         if (method != RequestMethod.GET) connection.setDoOutput(true);
+        if (method == RequestMethod.POST)
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         connection.setRequestMethod(method.name());
         connection.addRequestProperty("User-Agent", "OneMatch");
         if (token != null) connection.addRequestProperty("Authorization", token);
@@ -169,6 +192,10 @@ public class WebClient {
             os.write(String.join("&", argList).getBytes(StandardCharsets.UTF_8));
         }
 
+        return readResponse(connection);
+    }
+
+    private static WebResponse readResponse(HttpURLConnection connection) throws IOException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         byte[] tmp = new byte[1024];
         int read;
@@ -182,6 +209,5 @@ public class WebClient {
         connection.disconnect();
 
         return new WebResponse(code, buffer.toByteArray());
-
     }
 }
