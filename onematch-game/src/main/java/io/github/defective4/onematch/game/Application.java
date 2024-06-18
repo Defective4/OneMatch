@@ -221,7 +221,9 @@ public class Application {
                                                     "Ok"
                             }, null);
                         } else {
-                            ErrorDialog.show(menu, response.getResponseString(), "Server rejected your submission");
+                            ErrorDialog
+                                    .show(menu, response.getCode() > 500 ? "Internal Server Error"
+                                            : response.getResponseString(), "Server rejected your submission");
                         }
                     } catch (Exception e1) {
                         e1.printStackTrace();
