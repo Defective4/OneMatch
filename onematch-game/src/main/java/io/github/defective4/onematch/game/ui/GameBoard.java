@@ -204,6 +204,10 @@ public class GameBoard extends JFrame {
     }
 
     public MatrixNumber getNumber(int index) {
+        return MatrixNumber.getForMatrix(getRawSegments(index));
+    }
+
+    public int[] getRawSegments(int index) {
         int[] mx = new int[14];
         int idx = 0;
         MatchButton[] btns = getSegments(index);
@@ -213,7 +217,7 @@ public class GameBoard extends JFrame {
                 mx[idx++] = x + 1;
             }
         }
-        return MatrixNumber.getForMatrix(Arrays.copyOf(mx, idx));
+        return Arrays.copyOf(mx, idx);
     }
 
     public boolean isMovingMode() {

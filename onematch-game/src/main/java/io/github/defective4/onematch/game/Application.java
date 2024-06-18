@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -40,17 +41,19 @@ public class Application {
 
     private File configDir;
     private final File configFile;
+    private final List<Challenge> dailySolved = new ArrayList<>();
     private final UserDatabase db;
+
     private Equation lastValidEquation, lastInvalidEquation;
 
     private final NumberLogic logic = new NumberLogic();
 
     private final MainMenu menu;
-
     private final Options ops;
-    private final RecentEquations recentEquations = new RecentEquations(10);
 
+    private final RecentEquations recentEquations = new RecentEquations(10);
     private final Version version;
+
     private final WebClient webClient;
 
     private String webToken;
@@ -177,21 +180,36 @@ public class Application {
         SwingUtils.showAndCenter(menu);
     }
 
-    public void startDailyChallenge(List<Challenge> chal) {
-        JButton submit = board.getBtnSubmit();
-        for (ActionListener ls : submit.getActionListeners()) submit.removeActionListener(ls);
-        submit.setEnabled(false);
+    public void startDailyChallenge(Challenge chal) {
+        board.getBtnSubmit().setEnabled(false);
         board.start();
-        Challenge c = chal.get(0);
-        MatrixNumber first = MatrixNumber.getForMatrix(c.getFirst());
-        MatrixNumber second = MatrixNumber.getForMatrix(c.getSecond());
-        MatrixNumber result = MatrixNumber.getForMatrix(c.getThird());
+        MatrixNumber first = MatrixNumber.getForMatrix(chal.getFirst());
+        MatrixNumber second = MatrixNumber.getForMatrix(chal.getSecond());
+        MatrixNumber result = MatrixNumber.getForMatrix(chal.getThird());
         if (first == null || second == null || result == null) throw new IllegalStateException();
-        Equation eq = new Equation(first.getValue(), second.getValue(), result.getValue(), c.isPlus());
+        Equation eq = new Equation(first.getValue(), second.getValue(), result.getValue(), chal.isPlus());
         board.getMatrix().arrange(eq);
         board.getMatrix().draw();
         board.rearrange();
         board.repaint();
+    }
+
+    public void startDailyChallenges(List<Challenge> chal) {
+        dailySolved.clear();
+        JButton submit = board.getBtnSubmit();
+        for (ActionListener ls : submit.getActionListeners()) submit.removeActionListener(ls);
+        submit.addActionListener(e -> {
+            Challenge solved = new Challenge(board.isPlus(), board.getRawSegments(1), board.getRawSegments(2),
+                    board.getRawSegments(3));
+            dailySolved.add(solved);
+            if (dailySolved.size() >= chal.size()) {
+                board.setVisible(false);
+                showMainMenu(); // TODO
+            } else {
+                startDailyChallenge(chal.get(dailySolved.size()));
+            }
+        });
+        startDailyChallenge(chal.get(0));
     }
 
     public void startNewGame() {

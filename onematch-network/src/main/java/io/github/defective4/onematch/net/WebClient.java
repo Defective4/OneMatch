@@ -53,7 +53,7 @@ public class WebClient {
             return "Challenge [plus=" + plus + ", first=" + Arrays.toString(first) + ", second="
                     + Arrays.toString(second) + ", third=" + Arrays.toString(third) + "]";
         }
-        
+
         public static List<Challenge> parse(JsonObject root) throws Exception {
             List<Challenge> chal = new ArrayList<>();
             JsonArray challenges = root.getAsJsonArray("challenges");

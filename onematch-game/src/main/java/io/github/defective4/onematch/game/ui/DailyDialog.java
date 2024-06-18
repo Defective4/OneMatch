@@ -99,7 +99,7 @@ public class DailyDialog extends JDialog {
                             try {
                                 List<Challenge> challenges = Challenge
                                         .parse(JsonParser.parseString(response.getResponseString()).getAsJsonObject());
-                                Application.getInstance().startDailyChallenge(challenges);
+                                Application.getInstance().startDailyChallenges(challenges);
                                 dispose();
                                 Application.getInstance().getMenu().setVisible(false);
                                 Application.getInstance().showBoard();
