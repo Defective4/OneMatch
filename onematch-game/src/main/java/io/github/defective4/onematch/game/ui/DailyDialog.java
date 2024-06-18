@@ -99,7 +99,10 @@ public class DailyDialog extends JDialog {
                             try {
                                 List<Challenge> challenges = Challenge
                                         .parse(JsonParser.parseString(response.getResponseString()).getAsJsonObject());
-
+                                Application.getInstance().startDailyChallenge(challenges);
+                                dispose();
+                                Application.getInstance().getMenu().setVisible(false);
+                                Application.getInstance().showBoard();
                             } catch (Exception e2) {
                                 e2.printStackTrace();
                                 ExceptionDialog.show(this, e2, "Couldn't parse daily challenge");

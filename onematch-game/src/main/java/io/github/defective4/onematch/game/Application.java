@@ -1,5 +1,6 @@
 package io.github.defective4.onematch.game;
 
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileReader;
 import java.io.InputStream;
@@ -7,7 +8,9 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -16,6 +19,7 @@ import com.formdev.flatlaf.FlatLightLaf;
 import com.google.gson.Gson;
 
 import io.github.defective4.onematch.core.Equation;
+import io.github.defective4.onematch.core.MatrixNumber;
 import io.github.defective4.onematch.core.NumberLogic;
 import io.github.defective4.onematch.core.data.RecentEquations;
 import io.github.defective4.onematch.game.data.Options;
@@ -26,6 +30,7 @@ import io.github.defective4.onematch.game.ui.GameBoard;
 import io.github.defective4.onematch.game.ui.MainMenu;
 import io.github.defective4.onematch.game.ui.SwingUtils;
 import io.github.defective4.onematch.net.WebClient;
+import io.github.defective4.onematch.net.WebClient.Challenge;
 
 public class Application {
 
@@ -113,27 +118,6 @@ public class Application {
         menu = new MainMenu();
 
         board = new GameBoard();
-        board.getBtnSubmit().addActionListener(e -> {
-            board.getBtnSubmit().setEnabled(false);
-            boolean valid = board.validateSolution();
-            if (!valid) {
-                JOptionPane
-                        .showOptionDialog(board, "Your answer is invalid!\n The solution was " + lastValidEquation,
-                                "Invalid solution", JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE, null,
-                                new String[] {
-                                        "Next"
-                }, 0);
-            } else {
-                db.insertSolved(lastInvalidEquation, lastValidEquation, Application.this.ops.getDifficulty());
-                recentEquations.addEquation(lastValidEquation);
-                JOptionPane
-                        .showOptionDialog(board, "Congratulations!\nYour answer is correct!", "Correct answer",
-                                JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[] {
-                                        "Next"
-                }, 0);
-            }
-            startNewGame();
-        });
     }
 
     public GameBoard getBoard() {
@@ -193,8 +177,49 @@ public class Application {
         SwingUtils.showAndCenter(menu);
     }
 
+    public void startDailyChallenge(List<Challenge> chal) {
+        JButton submit = board.getBtnSubmit();
+        for (ActionListener ls : submit.getActionListeners()) submit.removeActionListener(ls);
+        submit.setEnabled(false);
+        board.start();
+        Challenge c = chal.get(0);
+        MatrixNumber first = MatrixNumber.getForMatrix(c.getFirst());
+        MatrixNumber second = MatrixNumber.getForMatrix(c.getSecond());
+        MatrixNumber result = MatrixNumber.getForMatrix(c.getThird());
+        if (first == null || second == null || result == null) throw new IllegalStateException();
+        Equation eq = new Equation(first.getValue(), second.getValue(), result.getValue(), c.isPlus());
+        board.getMatrix().arrange(eq);
+        board.getMatrix().draw();
+        board.rearrange();
+        board.repaint();
+    }
+
     public void startNewGame() {
-        board.getBtnSubmit().setEnabled(false);
+        JButton submit = board.getBtnSubmit();
+        for (ActionListener ls : submit.getActionListeners()) submit.removeActionListener(ls);
+
+        submit.addActionListener(e -> {
+            submit.setEnabled(false);
+            boolean valid = board.validateSolution();
+            if (!valid) {
+                JOptionPane
+                        .showOptionDialog(board, "Your answer is invalid!\n The solution was " + lastValidEquation,
+                                "Invalid solution", JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE, null,
+                                new String[] {
+                                        "Next"
+                }, 0);
+            } else {
+                db.insertSolved(lastInvalidEquation, lastValidEquation, Application.this.ops.getDifficulty());
+                recentEquations.addEquation(lastValidEquation);
+                JOptionPane
+                        .showOptionDialog(board, "Congratulations!\nYour answer is correct!", "Correct answer",
+                                JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[] {
+                                        "Next"
+                }, 0);
+            }
+            startNewGame();
+        });
+        submit.setEnabled(false);
         board.start();
         int eqAttempt = 0;
         boolean invalidUQ = ops.invalidUniqueness;
