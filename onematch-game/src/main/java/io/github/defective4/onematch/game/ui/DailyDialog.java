@@ -289,7 +289,8 @@ public class DailyDialog extends JDialog {
                                         null, new String[] {
                                                 "Continue"
                         }, null);
-                        Application.getInstance().getMenu().getBtnDaily().doClick();
+                        SwingUtilities
+                                .invokeLater(() -> { Application.getInstance().getMenu().getBtnDaily().doClick(); });
                     } else {
                         ErrorDialog.show(this, response.getResponseString(), "Couldn't log in!");
                     }
@@ -336,7 +337,8 @@ public class DailyDialog extends JDialog {
                                         JOptionPane.INFORMATION_MESSAGE, null, new String[] {
                                                 "Continue"
                         }, null);
-                        Application.getInstance().getMenu().getBtnDaily().doClick();
+                        SwingUtilities
+                                .invokeLater(() -> { Application.getInstance().getMenu().getBtnDaily().doClick(); });
                     } else {
                         ErrorDialog.show(this, response.getResponseString(), "Couldn't register!");
                     }
