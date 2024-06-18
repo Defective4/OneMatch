@@ -213,11 +213,16 @@ public class Application {
                         dial.dispose();
                         showMainMenu();
                         if (response.getCode() == 200) {
-                            // TODO results
+                            double time = Long.parseLong(response.getResponseString());
+                            time /= 1000000000d;
+                            time = (int) (time * 10);
+                            time /= 10d;
+
                             JOptionPane
-                                    .showOptionDialog(menu, "Your solution was submitted!", "Submitted!",
-                                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
-                                            new String[] {
+                                    .showOptionDialog(menu,
+                                            "Your solution was submitted!\n" + "Your time: " + time + " seconds.",
+                                            "Submitted!", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                                            null, new String[] {
                                                     "Ok"
                             }, null);
                         } else {
