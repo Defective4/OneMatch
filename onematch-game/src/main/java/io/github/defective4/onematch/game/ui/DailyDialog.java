@@ -1,6 +1,8 @@
 package io.github.defective4.onematch.game.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Window;
 import java.io.IOException;
@@ -406,6 +408,17 @@ public class DailyDialog extends JDialog {
                 }
             });
         });
+
+        JPanel bottomButtonPane = new JPanel();
+        bottomButtonPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+        FlowLayout fl_bottomButtonPane = new FlowLayout(FlowLayout.RIGHT);
+        fl_bottomButtonPane.setVgap(60);
+        bottomButtonPane.setLayout(fl_bottomButtonPane);
+        dailyPane.add(bottomButtonPane, BorderLayout.SOUTH);
+
+        JButton okButton = new JButton("Close");
+        okButton.addActionListener(e -> dispose());
+        bottomButtonPane.add(okButton);
 
         tabbedPane.addTab("Account", null, accountPane, null);
     }

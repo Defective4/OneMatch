@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -228,6 +229,7 @@ public class Application {
                         } else {
                             ErrorDialog.show(menu, response.getResponseString(), "Server rejected your submission");
                         }
+                        SwingUtilities.invokeLater(() -> { menu.getBtnDaily().doClick(); });
                     } catch (Exception e1) {
                         e1.printStackTrace();
                         dial.dispose();
