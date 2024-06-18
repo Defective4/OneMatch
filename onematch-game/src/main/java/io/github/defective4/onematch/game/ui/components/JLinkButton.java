@@ -25,6 +25,12 @@ public class JLinkButton extends JLabel {
         addMouseListener(new MouseAdapter() {
 
             @Override
+            public void mouseClicked(MouseEvent e) {
+                if (actionListener != null)
+                    actionListener.actionPerformed(new ActionEvent(JLinkButton.this, e.getID(), "click"));
+            }
+
+            @Override
             public void mouseEntered(MouseEvent e) {
                 JLinkButton.super.setFont(
                         originalFont.deriveFont(Map.of(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON)));
@@ -34,20 +40,7 @@ public class JLinkButton extends JLabel {
             public void mouseExited(MouseEvent e) {
                 JLinkButton.super.setFont(originalFont);
             }
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (actionListener != null)
-                    actionListener.actionPerformed(new ActionEvent(JLinkButton.this, e.getID(), "click"));
-            }
         });
-    }
-
-    @Override
-    public void setFont(Font font) {
-        if (font == null) throw new IllegalArgumentException("font can't be null!");
-        super.setFont(font);
-        originalFont = font;
     }
 
     public ActionListener getActionListener() {
@@ -56,6 +49,13 @@ public class JLinkButton extends JLabel {
 
     public void setActionListener(ActionListener actionListener) {
         this.actionListener = actionListener;
+    }
+
+    @Override
+    public void setFont(Font font) {
+        if (font == null) throw new IllegalArgumentException("font can't be null!");
+        super.setFont(font);
+        originalFont = font;
     }
 
 }

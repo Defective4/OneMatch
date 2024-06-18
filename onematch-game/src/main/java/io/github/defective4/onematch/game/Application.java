@@ -50,14 +50,6 @@ public class Application {
 
     private String webToken;
 
-    public String getWebToken() {
-        return webToken;
-    }
-
-    public void setWebToken(String webToken) {
-        this.webToken = webToken;
-    }
-
     static {
         Application instance;
         try {
@@ -176,6 +168,10 @@ public class Application {
         return webClient;
     }
 
+    public String getWebToken() {
+        return webToken;
+    }
+
     public void saveConfig(Options ops) {
         try (OutputStream os = Files.newOutputStream(configFile.toPath())) {
             os.write(new Gson().toJson(ops).getBytes(StandardCharsets.UTF_8));
@@ -183,6 +179,10 @@ public class Application {
             e.printStackTrace();
             ExceptionDialog.show(menu, e, "Couldn't save user configuration");
         }
+    }
+
+    public void setWebToken(String webToken) {
+        this.webToken = webToken;
     }
 
     public void showBoard() {

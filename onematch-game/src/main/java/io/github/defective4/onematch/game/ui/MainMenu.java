@@ -78,12 +78,13 @@ public class MainMenu extends JFrame {
             DailyDialog accountDialog = new DailyDialog(this);
             try {
                 accountDialog.fetchAll();
+                d.dispose();
                 SwingUtils.showAndCenter(accountDialog);
             } catch (Exception e2) {
                 e2.printStackTrace();
+                d.dispose();
                 ExceptionDialog.show(this, e2, "Couldn't connect with daily challenges server.");
             }
-            d.dispose();
         }));
         panel.add(btnDaily);
 

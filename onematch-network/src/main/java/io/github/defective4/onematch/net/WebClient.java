@@ -10,10 +10,72 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 public class WebClient {
+    public static class Challenge {
+        private final int[] first, second, third;
+        private final boolean plus;
+
+        public Challenge(boolean plus, int[] first, int[] second, int[] third) {
+            this.plus = plus;
+            this.first = first;
+            this.second = second;
+            this.third = third;
+        }
+
+        public int[] getFirst() {
+            return first;
+        }
+
+        public int[] getSecond() {
+            return second;
+        }
+
+        public int[] getThird() {
+            return third;
+        }
+
+        public boolean isPlus() {
+            return plus;
+        }
+
+        @Override
+        public String toString() {
+            return "Challenge [plus=" + plus + ", first=" + Arrays.toString(first) + ", second="
+                    + Arrays.toString(second) + ", third=" + Arrays.toString(third) + "]";
+        }
+
+        public static List<Challenge> parse(JsonObject root) throws Exception {
+            List<Challenge> chal = new ArrayList<>();
+            JsonArray challenges = root.getAsJsonArray("challenges");
+            for (JsonElement el : challenges) if (el.isJsonObject()) {
+                JsonObject challengeObject = el.getAsJsonObject();
+                boolean plus = challengeObject.get("plus").getAsBoolean();
+                JsonArray firstObject = challengeObject.getAsJsonArray("first");
+                JsonArray secondObject = challengeObject.getAsJsonArray("second");
+                JsonArray resultObject = challengeObject.getAsJsonArray("result");
+                int[] first = new int[firstObject.size()];
+                int[] second = new int[secondObject.size()];
+                int[] result = new int[resultObject.size()];
+                for (int x = 0; x < first.length; x++) first[x] = firstObject.get(x).getAsInt();
+                for (int x = 0; x < second.length; x++) second[x] = secondObject.get(x).getAsInt();
+                for (int x = 0; x < result.length; x++) result[x] = resultObject.get(x).getAsInt();
+                chal.add(new Challenge(plus, first, second, result));
+            } else throw new IllegalStateException();
+
+            return Collections.unmodifiableList(chal);
+        }
+    }
+
     public static class WebResponse {
         private final int code;
         private final byte[] response;
@@ -37,10 +99,18 @@ public class WebClient {
 
     }
 
+    private enum RequestMethod {
+        GET, POST
+    }
+
     private final String rootURL;
 
     public WebClient(String rootURL) {
         this.rootURL = rootURL;
+    }
+
+    public WebResponse getChallenges(String token) throws Exception {
+        return get("api/daily", token);
     }
 
     public ChallengesMeta getMeta() throws IOException {
@@ -50,19 +120,44 @@ public class WebClient {
     }
 
     public WebResponse login(String username, String hashedPassword) throws IOException {
-        return post("api/login", "user", username, "password", hashedPassword);
+        return post("api/login", null, "user", username, "password", hashedPassword);
     }
 
     public WebResponse register(String username, String hashedPassword) throws IOException {
-        return post("api/register", "user", username, "password", hashedPassword);
+        return post("api/register", null, "user", username, "password", hashedPassword);
     }
 
-    private WebResponse post(String suburl, String... args) throws IOException {
-        if (args.length % 2 != 0) throw new IllegalArgumentException("Not a map");
-        HttpURLConnection connection = (HttpURLConnection) URI.create(rootURL + "/" + suburl).toURL().openConnection();
-        connection.setDoOutput(true);
-        connection.addRequestProperty("User-Agent", "OneMatch");
+    private WebResponse get(String suburl, String token) throws IOException {
+        HttpURLConnection connection = makeConnection(RequestMethod.GET, suburl, token);
+        connection.connect();
 
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        byte[] tmp = new byte[1024];
+        int read;
+
+        int code = connection.getResponseCode();
+
+        if (code < 400 || connection.getErrorStream() != null)
+            try (InputStream is = code >= 400 ? connection.getErrorStream() : connection.getInputStream()) {
+                while ((read = is.read(tmp)) > 0) buffer.write(tmp, 0, read);
+            }
+        connection.disconnect();
+
+        return new WebResponse(code, buffer.toByteArray());
+    }
+
+    private HttpURLConnection makeConnection(RequestMethod method, String suburl, String token) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) URI.create(rootURL + "/" + suburl).toURL().openConnection();
+        if (method != RequestMethod.GET) connection.setDoOutput(true);
+        connection.setRequestMethod(method.name());
+        connection.addRequestProperty("User-Agent", "OneMatch");
+        if (token != null) connection.addRequestProperty("Authorization", token);
+        return connection;
+    }
+
+    private WebResponse post(String suburl, String token, String... args) throws IOException {
+        if (args.length % 2 != 0) throw new IllegalArgumentException("Not a map");
+        HttpURLConnection connection = makeConnection(RequestMethod.POST, suburl, token);
         String[] argList = new String[args.length / 2];
         for (int x = 0; x < args.length; x += 2) {
             argList[x / 2] = args[x] + "=" + URLEncoder.encode(args[x + 1], StandardCharsets.UTF_8);

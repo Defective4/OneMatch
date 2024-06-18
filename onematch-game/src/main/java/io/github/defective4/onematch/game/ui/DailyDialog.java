@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.*;
@@ -16,19 +17,22 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
+import com.google.gson.JsonParser;
+
 import io.github.defective4.onematch.core.SHA256;
 import io.github.defective4.onematch.game.Application;
 import io.github.defective4.onematch.game.ui.components.JLinkButton;
 import io.github.defective4.onematch.game.ui.components.UneditableTableModel;
 import io.github.defective4.onematch.net.ChallengesMeta;
+import io.github.defective4.onematch.net.WebClient.Challenge;
 import io.github.defective4.onematch.net.WebClient.WebResponse;
 
 public class DailyDialog extends JDialog {
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH);
 
-    private JTable table;
     private ChallengesMeta meta;
+    private JTable table;
 
     /**
      * Create the dialog.
@@ -77,6 +81,39 @@ public class DailyDialog extends JDialog {
         String token = Application.getInstance().getWebToken();
 
         JButton btnPlay = new JButton("Play");
+        btnPlay.addActionListener(e -> {
+            if (JOptionPane
+                    .showOptionDialog(this, "You are about to attempt today's daily challenge.\n"
+                            + "After clicking \"Continue\" you will be presented with problem(s) to solve and the timer will start until you submit the solution.\n"
+                            + "Are you ready?", "Daily challenge", JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.INFORMATION_MESSAGE, null, new String[] {
+                                    "Go back", "Continue"
+            }, 0) == 1) {
+                AsyncProgressDialog.run(this, "Fetching daily challenge...", dial -> {
+                    try {
+                        WebResponse response = Application.getInstance().getWebClient().getChallenges(token);
+                        dial.dispose();
+                        if (response.getCode() != 200) {
+                            ErrorDialog.show(this, response.getResponseString(), "Couldn't download daily challenge");
+                        } else {
+                            try {
+                                List<Challenge> challenges = Challenge
+                                        .parse(JsonParser.parseString(response.getResponseString()).getAsJsonObject());
+
+                            } catch (Exception e2) {
+                                e2.printStackTrace();
+                                ExceptionDialog.show(this, e2, "Couldn't parse daily challenge");
+                            }
+                        }
+                    } catch (Exception e1) {
+                        dial.dispose();
+                        e1.printStackTrace();
+                        ExceptionDialog.show(this, e1, "Couldn't download daily challenge!");
+                    }
+
+                });
+            }
+        });
         buttonPane.add(btnPlay);
         btnPlay.setEnabled(token != null);
 
@@ -248,7 +285,7 @@ public class DailyDialog extends JDialog {
         DocumentListener loginLs = new DocumentListener() {
 
             @Override
-            public void removeUpdate(DocumentEvent e) {
+            public void changedUpdate(DocumentEvent e) {
                 update();
             }
 
@@ -258,7 +295,7 @@ public class DailyDialog extends JDialog {
             }
 
             @Override
-            public void changedUpdate(DocumentEvent e) {
+            public void removeUpdate(DocumentEvent e) {
                 update();
             }
 
