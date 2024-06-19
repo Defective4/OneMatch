@@ -19,8 +19,8 @@ import javax.swing.table.DefaultTableModel;
 
 import io.github.defective4.onematch.game.Application;
 import io.github.defective4.onematch.game.ui.components.UneditableTableModel;
-import io.github.defective4.onematch.net.WebClient.Leaderboards;
-import io.github.defective4.onematch.net.WebClient.Leaderboards.AllTimeEntry;
+import io.github.defective4.onematch.net.Leaderboards;
+import io.github.defective4.onematch.net.Leaderboards.AllTimeEntry;
 
 public class DailyLeaderboardsDialog extends JDialog {
 

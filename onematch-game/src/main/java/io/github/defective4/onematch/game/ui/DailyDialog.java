@@ -25,8 +25,8 @@ import io.github.defective4.onematch.core.SHA256;
 import io.github.defective4.onematch.game.Application;
 import io.github.defective4.onematch.game.ui.components.JLinkButton;
 import io.github.defective4.onematch.game.ui.components.UneditableTableModel;
+import io.github.defective4.onematch.net.Challenge;
 import io.github.defective4.onematch.net.ChallengesMeta;
-import io.github.defective4.onematch.net.WebClient.Challenge;
 import io.github.defective4.onematch.net.WebClient.WebResponse;
 
 public class DailyDialog extends JDialog {

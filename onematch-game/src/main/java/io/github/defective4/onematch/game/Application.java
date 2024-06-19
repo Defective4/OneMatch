@@ -33,8 +33,8 @@ import io.github.defective4.onematch.game.ui.ExceptionDialog;
 import io.github.defective4.onematch.game.ui.GameBoard;
 import io.github.defective4.onematch.game.ui.MainMenu;
 import io.github.defective4.onematch.game.ui.SwingUtils;
+import io.github.defective4.onematch.net.Challenge;
 import io.github.defective4.onematch.net.WebClient;
-import io.github.defective4.onematch.net.WebClient.Challenge;
 import io.github.defective4.onematch.net.WebClient.WebResponse;
 
 public class Application {
