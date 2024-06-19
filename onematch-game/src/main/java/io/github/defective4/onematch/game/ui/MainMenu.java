@@ -25,7 +25,7 @@ public class MainMenu extends JFrame {
     /**
      * Create the frame.
      */
-    public MainMenu() {
+    public MainMenu(Application app) {
         setTitle("OneMatch - Main Menu");
         setResizable(false);
         setBounds(100, 100, 378, 257);
@@ -40,7 +40,7 @@ public class MainMenu extends JFrame {
         btnNewGame.addActionListener(e -> {
             try {
                 setVisible(false);
-                Application instance = Application.getInstance();
+                Application instance = app;
                 instance.startNewGame();
                 instance.showBoard();
             } catch (Exception e2) {
@@ -64,9 +64,9 @@ public class MainMenu extends JFrame {
         JButton button = new JButton();
         button.addActionListener(e -> {
             AsyncProgressDialog.run(this, "Fetching stats...", dial -> {
-                Map<Difficulty, Integer> stats = Application.getInstance().getDb().getStats();
+                Map<Difficulty, Integer> stats = app.getDatabase().getStats();
                 dial.dispose();
-                SwingUtils.showAndCenter(new StatsDialog(this, stats));
+                SwingUtils.showAndCenter(new StatsDialog(this, stats, app));
             });
         });
         button.setToolTipText("Stats");
@@ -75,7 +75,7 @@ public class MainMenu extends JFrame {
 
         btnDaily = new JButton("Daily Challenges");
         btnDaily.addActionListener(e -> AsyncProgressDialog.run(this, "Fetching daily challenges details", d -> {
-            DailyDialog accountDialog = new DailyDialog(this);
+            DailyDialog accountDialog = new DailyDialog(this, app);
             try {
                 accountDialog.fetchAll();
                 d.dispose();
@@ -89,12 +89,12 @@ public class MainMenu extends JFrame {
         panel.add(btnDaily);
 
         JButton btnOptions = new JButton("Options");
-        btnOptions.addActionListener(e -> SwingUtils.showAndCenter(new OptionsDialog(this)));
+        btnOptions.addActionListener(e -> SwingUtils.showAndCenter(new OptionsDialog(this, app)));
         btnOptions.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(btnOptions);
 
         JButton btnAbout = new JButton("About");
-        btnAbout.addActionListener(e -> SwingUtils.showAndCenter(new AboutDialog(this)));
+        btnAbout.addActionListener(e -> SwingUtils.showAndCenter(new AboutDialog(this, app.getVersion())));
         panel.add(btnAbout);
 
         JButton btnExit = new JButton("Exit");

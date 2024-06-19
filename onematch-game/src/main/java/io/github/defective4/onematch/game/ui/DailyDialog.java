@@ -36,18 +36,23 @@ public class DailyDialog extends JDialog {
     private ChallengesMeta meta;
     private JTable table;
 
+    private final Application app;
+
     /**
      * Create the dialog.
      *
      * @param parent
      */
-    public DailyDialog(Window parent) {
+    public DailyDialog(Window parent, Application app) {
         super(parent);
+        this.app = app;
         setResizable(false);
         setModal(true);
         setTitle("OneMatch - Daily Challenges");
         setBounds(100, 100, 328, 374);
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
+
+        String token = app.getWebToken();
 
         JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
         getContentPane().add(tabbedPane);
@@ -80,8 +85,6 @@ public class DailyDialog extends JDialog {
         dailyPane.add(buttonPane);
         buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.X_AXIS));
 
-        String token = Application.getInstance().getWebToken();
-
         JButton btnPlay = new JButton("Play");
         btnPlay.addActionListener(e -> {
             if (JOptionPane.showOptionDialog(this, new JLabel[] {
@@ -99,7 +102,7 @@ public class DailyDialog extends JDialog {
             }, 0) == 1) {
                 AsyncProgressDialog.run(this, "Fetching daily challenge...", dial -> {
                     try {
-                        WebResponse response = Application.getInstance().getWebClient().getChallenges(token);
+                        WebResponse response = app.getWebClient().getChallenges(token);
                         dial.dispose();
                         if (response.getCode() != 200) {
                             ErrorDialog.show(this, response.getResponseString(), "Couldn't download daily challenge");
@@ -107,10 +110,10 @@ public class DailyDialog extends JDialog {
                             try {
                                 List<Challenge> challenges = Challenge
                                         .parse(JsonParser.parseString(response.getResponseString()).getAsJsonObject());
-                                Application.getInstance().startDailyChallenges(challenges);
+                                app.startDailyChallenges(challenges);
                                 dispose();
-                                Application.getInstance().getMenu().setVisible(false);
-                                Application.getInstance().showBoard();
+                                app.getMenu().setVisible(false);
+                                app.showBoard();
                             } catch (Exception e2) {
                                 e2.printStackTrace();
                                 ExceptionDialog.show(this, e2, "Couldn't parse daily challenge");
@@ -133,7 +136,7 @@ public class DailyDialog extends JDialog {
         JButton btnLeaderboards = new JButton("Leaderboards");
         btnLeaderboards.addActionListener(e -> AsyncProgressDialog.run(this, "Fetching leaderboards...", prog -> {
             try {
-                DailyLeaderboardsDialog dialog = new DailyLeaderboardsDialog(this);
+                DailyLeaderboardsDialog dialog = new DailyLeaderboardsDialog(this, app);
                 dialog.fetch();
                 prog.dispose();
                 SwingUtils.showAndCenter(dialog);
@@ -335,22 +338,20 @@ public class DailyDialog extends JDialog {
         btnLogIn.addActionListener(e -> {
             AsyncProgressDialog.run(parent, "Logging in...", dial -> {
                 try {
-                    WebResponse response = Application
-                            .getInstance()
+                    WebResponse response = app
                             .getWebClient()
                             .login(loginUsername.getText(), SHA256.hash(new String(loginPassword.getPassword())));
                     dial.dispose();
                     if (response.getCode() == 200) {
                         dispose();
-                        Application.getInstance().setWebToken(response.getResponseString());
+                        app.setWebToken(response.getResponseString());
                         JOptionPane
-                                .showOptionDialog(Application.getInstance().getMenu(), "Successfully logged in!",
-                                        "Logged in", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE,
-                                        null, new String[] {
+                                .showOptionDialog(app.getMenu(), "Successfully logged in!", "Logged in",
+                                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
+                                        new String[] {
                                                 "Continue"
                         }, null);
-                        SwingUtilities
-                                .invokeLater(() -> { Application.getInstance().getMenu().getBtnDaily().doClick(); });
+                        SwingUtilities.invokeLater(() -> { app.getMenu().getBtnDaily().doClick(); });
                     } else {
                         ErrorDialog.show(this, response.getResponseString(), "Couldn't log in!");
                     }
@@ -382,23 +383,21 @@ public class DailyDialog extends JDialog {
 
             AsyncProgressDialog.run(this, "Registering...", dial -> {
                 try {
-                    WebResponse response = Application
-                            .getInstance()
+                    WebResponse response = app
                             .getWebClient()
                             .register(registerUsername.getText(),
                                     SHA256.hash(new String(registerPassword.getPassword())));
                     dial.dispose();
                     if (response.getCode() == 200) {
                         dispose();
-                        Application.getInstance().setWebToken(response.getResponseString());
+                        app.setWebToken(response.getResponseString());
                         JOptionPane
-                                .showOptionDialog(Application.getInstance().getMenu(), "Successfully registered!",
-                                        "Registration complete", JOptionPane.OK_CANCEL_OPTION,
-                                        JOptionPane.INFORMATION_MESSAGE, null, new String[] {
+                                .showOptionDialog(app.getMenu(), "Successfully registered!", "Registration complete",
+                                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
+                                        new String[] {
                                                 "Continue"
                         }, null);
-                        SwingUtilities
-                                .invokeLater(() -> { Application.getInstance().getMenu().getBtnDaily().doClick(); });
+                        SwingUtilities.invokeLater(() -> { app.getMenu().getBtnDaily().doClick(); });
                     } else {
                         ErrorDialog.show(this, response.getResponseString(), "Couldn't register!");
                     }
@@ -424,7 +423,7 @@ public class DailyDialog extends JDialog {
     }
 
     public void fetchAll() throws Exception {
-        meta = Application.getInstance().getWebClient().getMeta();
+        meta = app.getWebClient().getMeta();
         String[][] data = new String[3][2];
         data[0][0] = "Difficulty";
         data[1][0] = "Equations";

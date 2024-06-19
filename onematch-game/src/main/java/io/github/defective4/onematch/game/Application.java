@@ -122,7 +122,7 @@ public class Application {
             throw e;
         }
 
-        menu = new MainMenu();
+        menu = new MainMenu(this);
 
         board = new GameBoard();
     }
@@ -131,7 +131,7 @@ public class Application {
         return board;
     }
 
-    public UserDatabase getDb() {
+    public UserDatabase getDatabase() {
         return db;
     }
 

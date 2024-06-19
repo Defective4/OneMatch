@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
-import io.github.defective4.onematch.game.Application;
 import io.github.defective4.onematch.game.data.Version;
 import io.github.defective4.onematch.game.ui.components.JLinkLabel;
 
@@ -26,15 +25,13 @@ public class AboutDialog extends JDialog {
     /**
      * Create the dialog.
      */
-    public AboutDialog(Window parent) {
+    public AboutDialog(Window parent, Version v) {
         super(parent);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         setTitle("OneMatch - About");
         setModal(true);
         setResizable(false);
-
-        Version v = Application.getInstance().getVersion();
 
         setBounds(100, 100, 330, 194);
         getContentPane().setLayout(new BorderLayout());

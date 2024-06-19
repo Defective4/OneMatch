@@ -14,6 +14,7 @@ import io.github.defective4.onematch.core.NumberLogic;
 import io.github.defective4.onematch.core.NumberLogic.Difficulty;
 import io.github.defective4.onematch.game.Application;
 import io.github.defective4.onematch.game.data.Options;
+import io.github.defective4.onematch.game.data.UserDatabase;
 
 public class OptionsDialog extends JDialog {
 
@@ -21,12 +22,14 @@ public class OptionsDialog extends JDialog {
     private final JSlider difficulty;
     private final JCheckBox uniqueCheck;
     private JComboBox<Boolean> uniquenessBox;
+    private final Application app;
 
     /**
      * Create the dialog.
      */
-    public OptionsDialog(Window parent) {
+    public OptionsDialog(Window parent, Application app) {
         super(parent);
+        this.app = app;
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("OneMatch - Options");
         setModal(true);
@@ -37,7 +40,8 @@ public class OptionsDialog extends JDialog {
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        Options ops = Application.getInstance().getOptions();
+        Options ops = app.getOptions();
+        UserDatabase database = app.getDatabase();
 
         difficulty = new JSlider();
         difficulty.setSnapToTicks(true);
@@ -107,7 +111,7 @@ public class OptionsDialog extends JDialog {
         uniqueCheckPane.add(new JLabel(" "));
 
         JButton btnClearMemory = new JButton("Clear memory");
-        btnClearMemory.setEnabled(Application.getInstance().getDb().hasAnySolved());
+        btnClearMemory.setEnabled(database.hasAnySolved());
         btnClearMemory.addActionListener(e -> {
             if (JOptionPane
                     .showConfirmDialog(this,
@@ -115,7 +119,7 @@ public class OptionsDialog extends JDialog {
                             "Are you sure?", JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                 try {
-                    Application.getInstance().getDb().clearAllSolved();
+                    app.getDatabase().clearAllSolved();
                     btnClearMemory.setEnabled(false);
                 } catch (Exception e2) {
                     e2.printStackTrace();
@@ -175,6 +179,6 @@ public class OptionsDialog extends JDialog {
         ops.difficulty = difficulty.getValue();
         ops.unique = uniqueCheck.isSelected();
         ops.invalidUniqueness = (boolean) uniquenessBox.getSelectedItem();
-        Application.getInstance().saveConfig(ops);
+        app.saveConfig(ops);
     }
 }

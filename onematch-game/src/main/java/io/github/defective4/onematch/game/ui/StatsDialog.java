@@ -22,7 +22,7 @@ import io.github.defective4.onematch.game.ui.components.UneditableTableModel;
 public class StatsDialog extends JDialog {
     private final JPanel contentPanel = new JPanel();
 
-    public StatsDialog(Window parent, Map<Difficulty, Integer> stats) {
+    public StatsDialog(Window parent, Map<Difficulty, Integer> stats, Application app) {
         super(parent);
         if (stats == null) stats = Map.of(Difficulty.MEDIUM, 0);
         setTitle("OneMatch - Statistics");
@@ -64,7 +64,7 @@ public class StatsDialog extends JDialog {
         JLinkButton resetStatsLabel = new JLinkButton("Reset statistics");
         resetStatsLabel.setActionListener(e -> {
             dispose();
-            SwingUtils.showAndCenter(new OptionsDialog(Application.getInstance().getMenu()));
+            SwingUtils.showAndCenter(new OptionsDialog(app.getMenu(), app));
         });
         buttonPane.add(resetStatsLabel);
         buttonPane.add(closeBtn);

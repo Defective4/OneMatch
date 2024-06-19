@@ -31,13 +31,16 @@ public class DailyLeaderboardsDialog extends JDialog {
     private final DefaultTableModel allModel = new DefaultTableModel(new String[] {
             "#", "User", "Solved ch.", "Best time", "Streak"
     }, 0);
-    private JTable allTable;
+    private final JTable allTable;
+
+    private final Application app;
 
     /**
      * Create the dialog.
      */
-    public DailyLeaderboardsDialog(Window parent) {
+    public DailyLeaderboardsDialog(Window parent, Application app) {
         super(parent);
+        this.app = app;
         setModal(true);
         setTitle("OneMatch - Daily Leaderboards");
         setResizable(false);
@@ -47,7 +50,6 @@ public class DailyLeaderboardsDialog extends JDialog {
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
-
         JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
         contentPanel.add(tabbedPane);
 
@@ -92,7 +94,7 @@ public class DailyLeaderboardsDialog extends JDialog {
         int place;
 
         place = 0;
-        Leaderboards leaderboards = Application.getInstance().getWebClient().getAllLeaderboards();
+        Leaderboards leaderboards = app.getWebClient().getAllLeaderboards();
         for (Map.Entry<String, String> entry : leaderboards.daily.entrySet()) {
             dailyModel.addRow(new String[] {
                     Integer.toString(++place), entry.getKey(), entry.getValue()
