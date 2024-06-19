@@ -24,7 +24,7 @@ public class DailyLeaderboardsDialog extends JDialog {
 
     private final JPanel contentPanel = new JPanel();
     private final DefaultTableModel model = new DefaultTableModel(new String[] {
-            "User", "Time"
+            "#", "User", "Time"
     }, 0);
     private final JTable table;
 
@@ -49,7 +49,9 @@ public class DailyLeaderboardsDialog extends JDialog {
         tabbedPane.addTab("Today's times", null, scrollPane, null);
 
         table = new JTable();
+        table.setShowHorizontalLines(true);
         table.setModel(new UneditableTableModel(model));
+        table.getColumnModel().getColumn(0).setPreferredWidth(16);
         scrollPane.setViewportView(table);
 
         JPanel panel = new JPanel();
@@ -66,13 +68,14 @@ public class DailyLeaderboardsDialog extends JDialog {
     }
 
     public void fetch() throws IOException {
+        int place = 0;
         for (Map.Entry<String, String> entry : Application
                 .getInstance()
                 .getWebClient()
                 .getDailyLeaderboard()
                 .entrySet()) {
             model.addRow(new String[] {
-                    entry.getKey(), entry.getValue()
+                    Integer.toString(++place), entry.getKey(), entry.getValue()
             });
         }
     }

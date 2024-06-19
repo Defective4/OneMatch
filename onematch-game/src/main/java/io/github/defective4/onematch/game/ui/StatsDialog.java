@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import io.github.defective4.onematch.core.NumberLogic.Difficulty;
 import io.github.defective4.onematch.game.Application;
@@ -33,22 +34,22 @@ public class StatsDialog extends JDialog {
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        String[][] data = new String[stats.size()][];
-
-        Difficulty[] diffs = stats.keySet().toArray(new Difficulty[0]);
-        for (int x = 0; x < diffs.length; x++) {
-            data[x] = new String[] {
-                    diffs[x].capitalize(), stats.get(diffs[x]) == 0 ? "None yet" : Integer.toString(stats.get(diffs[x]))
-            };
-        }
-
         JScrollPane scrollPane = new JScrollPane();
         contentPanel.add(scrollPane);
 
-        JTable table = new JTable(data, new String[] {
+        DefaultTableModel model = new DefaultTableModel(new String[] {
                 "Difficulty", "Solved equations"
-        });
-        table.setModel(new UneditableTableModel(table.getModel()));
+        }, 0);
+        Difficulty[] diffs = stats.keySet().toArray(new Difficulty[0]);
+        for (Difficulty diff : diffs) {
+            model.addRow(new String[] {
+                    diff.capitalize(), stats.get(diff) == 0 ? "None yet" : Integer.toString(stats.get(diff))
+            });
+        }
+        JTable table = new JTable();
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        table.setShowHorizontalLines(true);
+        table.setModel(new UneditableTableModel(model));
         table.setRowSelectionAllowed(false);
 
         scrollPane.setViewportView(table);
