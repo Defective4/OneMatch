@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +21,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 public class WebClient {
     public static class Challenge {
@@ -127,13 +126,21 @@ public class WebClient {
         this.rootURL = rootURL;
     }
 
-    public Map<String, String> getDailyLeaderboard() throws IOException {
+    public static class Leaderboards {
+
+        public static class AllTimeEntry {
+            public int solved, streak;
+            public String time = "";
+        }
+
+        public Map<String, String> daily = new HashMap<>();
+        public Map<String, AllTimeEntry> all = new HashMap<>();
+    }
+
+    public Leaderboards getAllLeaderboards() throws IOException {
         try (Reader reader = new InputStreamReader(
-                URI.create(rootURL + "/api/daily/leaderboard").toURL().openStream())) {
-            JsonObject obj = JsonParser.parseReader(reader).getAsJsonObject();
-            Map<String, String> leaderboard = new LinkedHashMap<String, String>();
-            for (String key : obj.keySet()) leaderboard.put(key, obj.get(key).getAsString());
-            return Collections.unmodifiableMap(leaderboard);
+                URI.create(rootURL + "/api/daily/leaderboards").toURL().openStream())) {
+            return new Gson().fromJson(reader, Leaderboards.class);
         }
     }
 

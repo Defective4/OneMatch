@@ -19,14 +19,19 @@ import javax.swing.table.DefaultTableModel;
 
 import io.github.defective4.onematch.game.Application;
 import io.github.defective4.onematch.game.ui.components.UneditableTableModel;
+import io.github.defective4.onematch.net.WebClient.Leaderboards;
+import io.github.defective4.onematch.net.WebClient.Leaderboards.AllTimeEntry;
 
 public class DailyLeaderboardsDialog extends JDialog {
 
-    private final JPanel contentPanel = new JPanel();
-    private final DefaultTableModel model = new DefaultTableModel(new String[] {
+    private final DefaultTableModel dailyModel = new DefaultTableModel(new String[] {
             "#", "User", "Time"
     }, 0);
-    private final JTable table;
+
+    private final DefaultTableModel allModel = new DefaultTableModel(new String[] {
+            "#", "User", "Solved ch.", "Best time", "Streak"
+    }, 0);
+    private JTable allTable;
 
     /**
      * Create the dialog.
@@ -36,8 +41,9 @@ public class DailyLeaderboardsDialog extends JDialog {
         setModal(true);
         setTitle("OneMatch - Daily Leaderboards");
         setResizable(false);
-        setBounds(100, 100, 263, 300);
+        setBounds(100, 100, 358, 300);
         getContentPane().setLayout(new BorderLayout());
+        JPanel contentPanel = new JPanel();
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
@@ -45,18 +51,33 @@ public class DailyLeaderboardsDialog extends JDialog {
         JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
         contentPanel.add(tabbedPane);
 
-        JScrollPane scrollPane = new JScrollPane();
-        tabbedPane.addTab("Today's times", null, scrollPane, null);
+        JPanel dailyRootPane = new JPanel();
+        dailyRootPane.setBorder(new EmptyBorder(0, 48, 0, 48));
+        tabbedPane.addTab("Today's times", null, dailyRootPane, null);
+        dailyRootPane.setLayout(new BoxLayout(dailyRootPane, BoxLayout.X_AXIS));
 
-        table = new JTable();
-        table.setShowHorizontalLines(true);
-        table.setModel(new UneditableTableModel(model));
-        table.getColumnModel().getColumn(0).setPreferredWidth(16);
-        scrollPane.setViewportView(table);
+        JScrollPane dailyPane = new JScrollPane();
+        dailyRootPane.add(dailyPane);
 
-        JPanel panel = new JPanel();
-        tabbedPane.addTab("All times", null, panel, null);
-        tabbedPane.setEnabledAt(1, false);
+        JTable dailyTable = new JTable();
+        dailyTable.setShowHorizontalLines(true);
+        dailyTable.setModel(new UneditableTableModel(dailyModel));
+        dailyTable
+                .getColumnModel()
+                .getColumn(0)
+                .setPreferredWidth(dailyTable.getFontMetrics(dailyTable.getFont()).stringWidth("999"));
+        dailyPane.setViewportView(dailyTable);
+
+        JScrollPane allTimesPane = new JScrollPane();
+        tabbedPane.addTab("All times", null, allTimesPane, null);
+
+        allTable = new JTable();
+        allTable.setModel(new UneditableTableModel(allModel));
+        allTable
+                .getColumnModel()
+                .getColumn(0)
+                .setPreferredWidth(allTable.getFontMetrics(allTable.getFont()).stringWidth("9999"));
+        allTimesPane.setViewportView(allTable);
 
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -68,14 +89,22 @@ public class DailyLeaderboardsDialog extends JDialog {
     }
 
     public void fetch() throws IOException {
-        int place = 0;
-        for (Map.Entry<String, String> entry : Application
-                .getInstance()
-                .getWebClient()
-                .getDailyLeaderboard()
-                .entrySet()) {
-            model.addRow(new String[] {
+        int place;
+
+        place = 0;
+        Leaderboards leaderboards = Application.getInstance().getWebClient().getAllLeaderboards();
+        for (Map.Entry<String, String> entry : leaderboards.daily.entrySet()) {
+            dailyModel.addRow(new String[] {
                     Integer.toString(++place), entry.getKey(), entry.getValue()
+            });
+        }
+
+        place = 0;
+        for (Map.Entry<String, Leaderboards.AllTimeEntry> entry : leaderboards.all.entrySet()) {
+            AllTimeEntry allTimeEntry = entry.getValue();
+            allModel.addRow(new String[] {
+                    Integer.toString(++place), entry.getKey(), Integer.toString(allTimeEntry.solved), allTimeEntry.time,
+                    Integer.toString(allTimeEntry.streak)
             });
         }
     }
