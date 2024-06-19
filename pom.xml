@@ -34,7 +34,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<exec.mainClass>io.github.defective4.onematch.game.Application</exec.mainClass>
 	</properties>
-	
+
 	<modules>
 		<module>onematch-game</module>
 		<module>onematch-core</module>
