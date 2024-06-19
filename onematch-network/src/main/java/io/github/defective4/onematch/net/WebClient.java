@@ -129,6 +129,16 @@ public class WebClient {
     public static class Leaderboards {
 
         public static class AllTimeEntry {
+
+            public AllTimeEntry() {
+            }
+
+            public AllTimeEntry(int solved, int streak, String time) {
+                this.solved = solved;
+                this.streak = streak;
+                this.time = time;
+            }
+
             public int solved, streak;
             public String time = "";
         }
