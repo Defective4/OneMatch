@@ -66,6 +66,18 @@ public class WebClient {
                 "application/json");
     }
 
+    public WebResponse getAudioCaptcha() throws IOException {
+        return get("api/captcha/audio", null);
+    }
+
+    public WebResponse refreshCaptcha() throws IOException {
+        return get("api/captcha/refresh", null);
+    }
+
+    public WebResponse getCaptchaStatus() throws IOException {
+        return get("api/captcha", null);
+    }
+
     public WebResponse getChallenges(String token) throws Exception {
         return get("api/daily", token);
     }

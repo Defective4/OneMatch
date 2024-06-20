@@ -381,30 +381,33 @@ public class DailyDialog extends JDialog {
                 return;
             }
 
-            AsyncProgressDialog.run(this, "Registering...", dial -> {
-                try {
-                    WebResponse response = app
-                            .getWebClient()
-                            .register(registerUsername.getText(),
-                                    SHA256.hash(new String(registerPassword.getPassword())));
-                    dial.dispose();
-                    if (response.getCode() == 200) {
-                        dispose();
-                        app.setWebToken(response.getResponseString());
-                        JOptionPane
-                                .showOptionDialog(app.getMenu(), "Successfully registered!", "Registration complete",
-                                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
-                                        new String[] {
-                                                "Continue"
-                        }, null);
-                        SwingUtilities.invokeLater(() -> { app.getMenu().getBtnDaily().doClick(); });
-                    } else {
-                        ErrorDialog.show(this, response.getResponseString(), "Couldn't register!");
+            AsyncProgressDialog.run(this, "Checking captcha...", dialC -> {
+                if (!CaptchaDialog.verifyCaptcha(this, dialC)) return;
+                AsyncProgressDialog.run(this, "Registering...", dial -> {
+                    try {
+                        WebResponse response = app
+                                .getWebClient()
+                                .register(registerUsername.getText(),
+                                        SHA256.hash(new String(registerPassword.getPassword())));
+                        dial.dispose();
+                        if (response.getCode() == 200) {
+                            dispose();
+                            app.setWebToken(response.getResponseString());
+                            JOptionPane
+                                    .showOptionDialog(app.getMenu(), "Successfully registered!",
+                                            "Registration complete", JOptionPane.OK_CANCEL_OPTION,
+                                            JOptionPane.INFORMATION_MESSAGE, null, new String[] {
+                                                    "Continue"
+                            }, null);
+                            SwingUtilities.invokeLater(() -> { app.getMenu().getBtnDaily().doClick(); });
+                        } else {
+                            ErrorDialog.show(this, response.getResponseString(), "Couldn't register!");
+                        }
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                        ExceptionDialog.show(this, e1, "Couldn't finish registration!");
                     }
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                    ExceptionDialog.show(this, e1, "Couldn't finish registration!");
-                }
+                });
             });
         });
 
