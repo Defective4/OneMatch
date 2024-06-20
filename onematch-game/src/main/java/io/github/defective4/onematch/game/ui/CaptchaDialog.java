@@ -86,6 +86,7 @@ public class CaptchaDialog extends JDialog {
         refreshButton.setIcon(new ImageIcon(CaptchaDialog.class.getResource("/icons/refresh.png")));
         if (app != null)
             refreshButton.addActionListener(e -> AsyncProgressDialog.run(this, "Refreshing captcha...", dial -> {
+                answerField.grabFocus();
                 try {
                     WebResponse resp = app.getWebClient().refreshCaptcha();
                     dial.dispose();
@@ -114,6 +115,7 @@ public class CaptchaDialog extends JDialog {
         audioButton.setIcon(new ImageIcon(CaptchaDialog.class.getResource("/icons/audio.png")));
         if (app != null)
             audioButton.addActionListener(e -> AsyncProgressDialog.run(this, "Downloading audio sample...", dial -> {
+                answerField.grabFocus();
                 try {
                     audioPlayer = AudioSystem.getClip();
                     audioPlayer.addLineListener(new LineListener() {
