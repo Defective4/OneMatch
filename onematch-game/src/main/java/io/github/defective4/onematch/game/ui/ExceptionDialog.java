@@ -30,7 +30,7 @@ public class ExceptionDialog extends JDialog {
         setModal(true);
         setResizable(false);
         setTitle("An error occured");
-        setBounds(100, 100, 377, 242);
+        setBounds(100, 100, 377, 264);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -42,6 +42,8 @@ public class ExceptionDialog extends JDialog {
         JPanel panel = new JPanel();
         tabbedPane.addTab("Overview", null, panel, null);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        
+        panel.add(new JLabel(" "));
 
         message = new JLabel(msgText);
         panel.add(message);
