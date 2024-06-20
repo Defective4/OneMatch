@@ -335,7 +335,8 @@ public class DailyDialog extends JDialog {
         loginUsername.getDocument().addDocumentListener(loginLs);
         loginPassword.getDocument().addDocumentListener(loginLs);
 
-        btnLogIn.addActionListener(e -> {
+        btnLogIn.addActionListener(e -> AsyncProgressDialog.run(this, "Checking captcha...", dialC -> {
+            if (!CaptchaDialog.verifyCaptcha(this, dialC)) return;
             AsyncProgressDialog.run(parent, "Logging in...", dial -> {
                 try {
                     WebResponse response = app
@@ -360,7 +361,7 @@ public class DailyDialog extends JDialog {
                     ExceptionDialog.show(this, e1, "Couldn't finish logging in!");
                 }
             });
-        });
+        }));
 
         btnRegister.addActionListener(e -> {
             if (!new String(registerPassword.getPassword()).equals(new String(confirmPassword.getPassword()))) {

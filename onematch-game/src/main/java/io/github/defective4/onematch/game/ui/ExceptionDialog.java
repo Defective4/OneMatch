@@ -42,7 +42,7 @@ public class ExceptionDialog extends JDialog {
         JPanel panel = new JPanel();
         tabbedPane.addTab("Overview", null, panel, null);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        
+
         panel.add(new JLabel(" "));
 
         message = new JLabel(msgText);

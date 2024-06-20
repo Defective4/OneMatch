@@ -22,6 +22,10 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 
 import io.github.defective4.onematch.game.Application;
 import io.github.defective4.onematch.game.ui.components.CaptchaDisplay;
@@ -174,8 +178,58 @@ public class CaptchaDialog extends JDialog {
         buttonPane.add(cancelButton);
 
         JButton okButton = new JButton("Check");
+        okButton.addActionListener(e -> AsyncProgressDialog.run(this, "Checking captcha...", dial -> {
+            try {
+                WebResponse response = app.getWebClient().postCaptcha(answerField.getText());
+                dial.dispose();
+                if (response.getCode() == 204) {
+                    canContinue = true;
+                    dispose();
+                } else {
+                    ErrorDialog.show(this, "Captcha validation failed!", null);
+                    ByteArrayInputStream buffer = new ByteArrayInputStream(response.getResponse());
+                    BufferedImage img = ImageIO.read(buffer);
+                    captchaDisplay.setCaptcha(img);
+                    cachedAudio = null;
+                    if (audioPlayer != null) audioPlayer.close();
+                    answerField.setText("");
+                }
+            } catch (Exception ex) {
+                dial.dispose();
+                ex.printStackTrace();
+                ExceptionDialog.show(this, ex, "Couldn't check captcha");
+            }
+        }));
         okButton.setEnabled(false);
         buttonPane.add(okButton);
+
+        answerField.getDocument().addUndoableEditListener(new UndoableEditListener() {
+            @Override
+            public void undoableEditHappened(UndoableEditEvent e) {
+                if (!answerField.getText().matches("[0-9]{0,6}") && e.getEdit().canUndo()) e.getEdit().undo();
+            }
+        });
+
+        answerField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                update();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                update();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                update();
+            }
+
+            private void update() {
+                okButton.setEnabled(!answerField.getText().isBlank());
+            }
+        });
     }
 
     public static boolean verifyCaptcha(Window parent, JDialog dialC) {
@@ -208,6 +262,6 @@ public class CaptchaDialog extends JDialog {
         }
 
         SwingUtils.showAndCenter(dialog);
-        return false;
+        return dialog.canContinue;
     }
 }
