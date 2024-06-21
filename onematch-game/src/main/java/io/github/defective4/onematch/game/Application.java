@@ -208,6 +208,7 @@ public class Application {
             dailySolved.add(solved);
             if (dailySolved.size() >= chal.size()) {
                 board.setVisible(false);
+                board.stopTimer();
                 AsyncProgressDialog.run(null, "Submitting your solutions...", dial -> {
                     try {
                         WebResponse response = webClient.submit(dailySolved, webToken);
@@ -242,6 +243,7 @@ public class Application {
                 startDailyChallenge(chal.get(dailySolved.size()));
             }
         });
+        board.startTimer();
         startDailyChallenge(chal.get(0));
     }
 

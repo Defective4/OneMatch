@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -32,6 +34,9 @@ import io.github.defective4.onematch.game.ui.components.MatchButton.Orientation;
 
 public class GameBoard extends JFrame {
 
+    private final Timer timer = new Timer(true);
+    private TimerTask timerTask;
+    private int time;
     private final JPanel board;
 
     private final JButton btnExit;
@@ -100,6 +105,8 @@ public class GameBoard extends JFrame {
 
     private MatchButton segU_3;
 
+    private final JLabel timerLabel;
+
     public GameBoard() {
         setTitle("OneMatch game board");
         setResizable(false);
@@ -156,6 +163,7 @@ public class GameBoard extends JFrame {
                     .showConfirmDialog(this, "Are you sure you want to exit this game?", "Exit?",
                             JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == 0) {
                 setVisible(false);
+                stopTimer();
                 Application.getInstance().showMainMenu();
             }
         };
@@ -178,6 +186,37 @@ public class GameBoard extends JFrame {
         panel.add(btnSubmit);
         btnSubmit.setEnabled(false);
         btnSubmit.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        panel.add(new JLabel("   "));
+
+        timerLabel = new JLabel("");
+        timerLabel.setVisible(false);
+        panel.add(timerLabel);
+    }
+
+    public void startTimer() {
+        if (timerTask == null) {
+            time = 0;
+            timerLabel.setVisible(true);
+            timerTask = new TimerTask() {
+
+                @Override
+                public void run() {
+                    time += 1;
+                    timerLabel.setText(time / 10d + "s");
+                    System.out.print(1);
+                }
+            };
+            timer.scheduleAtFixedRate(timerTask, 100, 100);
+        }
+    }
+
+    public void stopTimer() {
+        if (timerTask != null) {
+            timerTask.cancel();
+            timerTask = null;
+        }
+        timerLabel.setVisible(false);
     }
 
     public List<MatchButton> getAllButtons() {
