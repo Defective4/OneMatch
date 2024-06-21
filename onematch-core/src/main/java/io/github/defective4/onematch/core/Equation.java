@@ -52,4 +52,24 @@ public class Equation {
         return first + (plus ? "+" : "-") + second + "=" + result;
     }
 
+    public static Equation parse(String str) {
+        int index = str.indexOf('+');
+        boolean plus = true;
+        if (index < 0) {
+            index = str.indexOf('-');
+            plus = false;
+        }
+        if (index < 0) return null;
+        int eqIndex = str.indexOf('=');
+        if (eqIndex < 0) return null;
+        try {
+            int first = Integer.parseInt(str.substring(0, index));
+            int second = Integer.parseInt(str.substring(index + 1, eqIndex));
+            int result = Integer.parseInt(str.substring(eqIndex + 1));
+            return new Equation(first, second, result, plus);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }
