@@ -8,6 +8,7 @@ public class Options {
     public boolean unique = true;
     public boolean showTimerDaily = true;
     public boolean showTimerNormal = false;
+    public String token = null;
 
     public Difficulty getDifficulty() {
         return Difficulty.getForID(difficulty);

@@ -60,8 +60,6 @@ public class Application {
 
     private final WebClient webClient;
 
-    private String webToken;
-
     static {
         Application instance;
         try {
@@ -160,7 +158,7 @@ public class Application {
     }
 
     public String getWebToken() {
-        return webToken;
+        return ops.token;
     }
 
     public void saveConfig(Options ops) {
@@ -173,7 +171,8 @@ public class Application {
     }
 
     public void setWebToken(String webToken) {
-        this.webToken = webToken;
+        ops.token = webToken;
+        saveConfig(ops);
     }
 
     public void showBoard() {
@@ -212,7 +211,7 @@ public class Application {
                 board.stopTimer();
                 AsyncProgressDialog.run(null, "Submitting your solutions...", dial -> {
                     try {
-                        WebResponse response = webClient.submit(dailySolved, webToken);
+                        WebResponse response = webClient.submit(dailySolved, getWebToken());
                         dial.dispose();
                         showMainMenu();
                         if (response.getCode() == 200) {
