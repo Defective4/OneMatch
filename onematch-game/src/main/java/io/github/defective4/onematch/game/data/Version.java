@@ -11,4 +11,8 @@ public class Version extends Properties {
     public String getVersion() {
         return getProperty("version", "Unknown");
     }
+
+    public String getAPIVersion() {
+        return getProperty("api_version", "0");
+    }
 }

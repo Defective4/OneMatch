@@ -87,7 +87,7 @@ public class Application {
             version.load(is);
         }
 
-        webClient = new WebClient(version.getAPI());
+        webClient = new WebClient(version.getAPI(), version.getAPIVersion());
 
         configDir = new File(System.getProperty("user.home"));
         if (new File(configDir, ".config").isDirectory() || new File(configDir, "AppData/Roaming").isDirectory())

@@ -44,10 +44,11 @@ public class WebClient {
         GET, POST, PUT
     }
 
-    private final String rootURL;
+    private final String rootURL, apiVersion;
 
-    public WebClient(String rootURL) {
+    public WebClient(String rootURL, String apiVersion) {
         this.rootURL = rootURL;
+        this.apiVersion = apiVersion;
     }
 
     public Leaderboards getAllLeaderboards() throws IOException {
@@ -122,7 +123,7 @@ public class WebClient {
         if (method == RequestMethod.POST)
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         connection.setRequestMethod(method.name());
-        connection.addRequestProperty("User-Agent", "OneMatch");
+        connection.addRequestProperty("User-Agent", "OneMatch-" + apiVersion);
         if (token != null) connection.addRequestProperty("Authorization", token);
         return connection;
     }
