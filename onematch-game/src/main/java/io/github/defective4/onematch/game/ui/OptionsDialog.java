@@ -23,6 +23,8 @@ public class OptionsDialog extends JDialog {
     private final JCheckBox uniqueCheck;
     private JComboBox<Boolean> uniquenessBox;
     private final Application app;
+    private JCheckBox checkDailyTimer;
+    private JCheckBox checkNormalTimer;
 
     /**
      * Create the dialog.
@@ -34,7 +36,7 @@ public class OptionsDialog extends JDialog {
         setTitle("OneMatch - Options");
         setModal(true);
         setResizable(false);
-        setBounds(100, 100, 296, 216);
+        setBounds(100, 100, 296, 288);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -172,6 +174,29 @@ public class OptionsDialog extends JDialog {
         uniqueCheckListener.actionPerformed(null);
 
         SwingUtils.deepAttach(contentPanel, e -> btnConfirm.setEnabled(true));
+
+        JPanel timerPanel = new JPanel();
+        timerPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        timerPanel.setBorder(new TitledBorder(null, "Timer", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        contentPanel.add(timerPanel);
+        timerPanel.setLayout(new BoxLayout(timerPanel, BoxLayout.Y_AXIS));
+
+        timerPanel.add(new JLabel(" Show timer in:"));
+
+        JPanel timerChecksPanel = new JPanel();
+        timerChecksPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        timerPanel.add(timerChecksPanel);
+        timerChecksPanel.setLayout(new BoxLayout(timerChecksPanel, BoxLayout.X_AXIS));
+
+        checkDailyTimer = new JCheckBox("Daily challenges");
+        checkDailyTimer.setSelected(ops.showTimerDaily);
+        timerChecksPanel.add(checkDailyTimer);
+
+        timerChecksPanel.add(new JLabel("   "));
+
+        checkNormalTimer = new JCheckBox("Normal game");
+        checkNormalTimer.setSelected(ops.showTimerNormal);
+        timerChecksPanel.add(checkNormalTimer);
         uniqueCheck.addActionListener(uniqueCheckListener);
     }
 
@@ -179,6 +204,8 @@ public class OptionsDialog extends JDialog {
         ops.difficulty = difficulty.getValue();
         ops.unique = uniqueCheck.isSelected();
         ops.invalidUniqueness = (boolean) uniquenessBox.getSelectedItem();
+        ops.showTimerDaily = checkDailyTimer.isSelected();
+        ops.showTimerNormal = checkNormalTimer.isSelected();
         app.saveConfig(ops);
     }
 }

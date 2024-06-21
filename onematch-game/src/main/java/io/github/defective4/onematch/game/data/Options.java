@@ -6,6 +6,8 @@ public class Options {
     public int difficulty = 1;
     public boolean invalidUniqueness = true;
     public boolean unique = true;
+    public boolean showTimerDaily = true;
+    public boolean showTimerNormal = false;
 
     public Difficulty getDifficulty() {
         return Difficulty.getForID(difficulty);

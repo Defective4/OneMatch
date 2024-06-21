@@ -204,7 +204,6 @@ public class GameBoard extends JFrame {
                 public void run() {
                     time += 1;
                     timerLabel.setText(time / 10d + "s");
-                    System.out.print(1);
                 }
             };
             timer.scheduleAtFixedRate(timerTask, 100, 100);
@@ -216,6 +215,7 @@ public class GameBoard extends JFrame {
             timerTask.cancel();
             timerTask = null;
         }
+        timerLabel.setText("");
         timerLabel.setVisible(false);
     }
 

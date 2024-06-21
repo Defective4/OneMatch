@@ -196,6 +196,7 @@ public class Application {
         board.getMatrix().draw();
         board.rearrange();
         board.repaint();
+        if (ops.showTimerDaily) board.startTimer();
     }
 
     public void startDailyChallenges(List<Challenge> chal) {
@@ -243,7 +244,6 @@ public class Application {
                 startDailyChallenge(chal.get(dailySolved.size()));
             }
         });
-        board.startTimer();
         startDailyChallenge(chal.get(0));
     }
 
@@ -252,6 +252,7 @@ public class Application {
         for (ActionListener ls : submit.getActionListeners()) submit.removeActionListener(ls);
 
         submit.addActionListener(e -> {
+            board.stopTimer();
             submit.setEnabled(false);
             boolean valid = board.validateSolution();
             if (!valid) {
@@ -287,6 +288,7 @@ public class Application {
         board.getMatrix().draw();
         board.rearrange();
         board.repaint();
+        if (ops.showTimerNormal) board.startTimer();
     }
 
     public static Application getInstance() {
