@@ -364,7 +364,41 @@ public class AccountDialog extends JDialog {
         secPanel.setLayout(new BoxLayout(secPanel, BoxLayout.Y_AXIS));
 
         JButton btnLogOutFrom = new JButton("Log out from all devices");
-        btnLogOutFrom.setEnabled(false);
+        btnLogOutFrom.addActionListener(e -> {
+            JPanel passPane = new JPanel();
+            passPane.setLayout(new BoxLayout(passPane, BoxLayout.X_AXIS));
+
+            JPasswordField confirmPass = new JPasswordField();
+
+            passPane.add(new JLabel("Enter your password to confirm:   "));
+            passPane.add(confirmPassword);
+
+            if (JOptionPane.showConfirmDialog(this, new Object[] {
+                    "Are you sure that you want to log out on all devices except your current one?\n"
+                            + "You will be able to log in using your username and password.",
+                    passPane
+            }, "Logging out", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                AsyncProgressDialog.run(this, "Logging out...", dial -> {
+                    try {
+                        WebResponse response = app
+                                .getWebClient()
+                                .logoutEverywhere(app.getWebToken(),
+                                        SHA256.hash(new String(confirmPassword.getPassword())));
+                        if (response.getCode() == 200) {
+                            app.setWebToken(response.getResponseString());
+                            dispose();
+                            SwingUtilities.invokeLater(() -> { app.getMenu().getBtnAccount().doClick(); });
+                        } else {
+                            ErrorDialog.show(this, response.getResponseString(), "Couldn't log out");
+                        }
+                    } catch (Exception e2) {
+                        dial.dispose();
+                        e2.printStackTrace();
+                        ExceptionDialog.show(this, e2, "Couldn't log out");
+                    }
+                });
+            }
+        });
         secPanel.add(btnLogOutFrom);
 
         secPanel.add(new JLabel(" "));

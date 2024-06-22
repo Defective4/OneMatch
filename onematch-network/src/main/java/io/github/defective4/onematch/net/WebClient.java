@@ -58,6 +58,10 @@ public class WebClient {
         }
     }
 
+    public WebResponse logoutEverywhere(String token, String hashedPassword) throws IOException {
+        return post("api/user/logout", token, "password", hashedPassword);
+    }
+
     public WebResponse getUserProfile(String token) throws IOException {
         return get("api/user/profile", token);
     }
