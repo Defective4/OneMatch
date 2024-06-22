@@ -1,6 +1,7 @@
 package io.github.defective4.onematch.game.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -34,9 +35,10 @@ public class DailyDialog extends JDialog {
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH);
 
     private ChallengesMeta meta;
-    private JTable table;
+    private JTable metaTable;
 
     private final Application app;
+    private JTable userTable;
 
     /**
      * Create the dialog.
@@ -77,8 +79,9 @@ public class DailyDialog extends JDialog {
 
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
-        table = new JTable();
-        panel.add(table);
+        metaTable = new JTable();
+        metaTable.setShowHorizontalLines(true);
+        panel.add(metaTable);
 
         JPanel buttonPane = new JPanel();
         buttonPane.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -424,21 +427,117 @@ public class DailyDialog extends JDialog {
         bottomButtonPane.add(okButton);
 
         tabbedPane.addTab("Account", null, accountPane, null);
+
+        JPanel panel_1 = new JPanel();
+        tabbedPane.addTab("Account", null, panel_1, null);
+        panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
+
+        JTabbedPane accountTabs = new JTabbedPane(JTabbedPane.TOP);
+        panel_1.add(accountTabs);
+
+        JPanel profilePane = new JPanel();
+        accountTabs.addTab("Profile", null, profilePane, null);
+        profilePane.setBorder(new EmptyBorder(16, 16, 16, 16));
+        profilePane.setLayout(new BoxLayout(profilePane, BoxLayout.Y_AXIS));
+
+        JLabel username = new JLabel("Username");
+        profilePane.add(username);
+        username.setFont(new Font("SansSerif", Font.BOLD, 24));
+
+        userTable = new JTable();
+        profilePane.add(userTable);
+        userTable.setAlignmentX(Component.LEFT_ALIGNMENT);
+        userTable.setShowHorizontalLines(true);
+        
+        profilePane.add(new JLabel(" "));
+        
+        JButton btnLogOut = new JButton("Log out");
+        btnLogOut.setEnabled(false);
+        profilePane.add(btnLogOut);
+
+        JPanel settingsPane = new JPanel();
+        settingsPane.setBorder(new EmptyBorder(16, 16, 16, 16));
+        accountTabs.addTab("Settings", null, settingsPane, null);
+        settingsPane.setLayout(new BoxLayout(settingsPane, BoxLayout.Y_AXIS));
+
+        JPanel visPanel = new JPanel();
+        visPanel.setBorder(new TitledBorder(null, "Visibility", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        settingsPane.add(visPanel);
+        visPanel.setLayout(new BoxLayout(visPanel, BoxLayout.Y_AXIS));
+
+        JCheckBox visibleCheck = new JCheckBox("Allow others to view my profile");
+        visPanel.add(visibleCheck);
+
+        JCheckBox chckbxSaveMyScores = new JCheckBox("Save my scores in leaderboards");
+        visPanel.add(chckbxSaveMyScores);
+
+        JPanel secPanel = new JPanel();
+        secPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        secPanel.setBorder(new TitledBorder(null, "Security", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        settingsPane.add(secPanel);
+        secPanel.setLayout(new BoxLayout(secPanel, BoxLayout.Y_AXIS));
+
+        JButton btnLogOutFrom = new JButton("Log out from all devices");
+        btnLogOutFrom.setEnabled(false);
+        secPanel.add(btnLogOutFrom);
+
+        secPanel.add(new JLabel(" "));
+
+        JButton btnChangePassword = new JButton("Change password");
+        btnChangePassword.setEnabled(false);
+        secPanel.add(btnChangePassword);
+
+        secPanel.add(new JLabel(" "));
+
+        JButton btnDeleteAccount = new JButton("Delete account");
+        btnDeleteAccount.setEnabled(false);
+        btnDeleteAccount.setForeground(new Color(139, 0, 0));
+        secPanel.add(btnDeleteAccount);
+
+        settingsPane.add(new JLabel(" "));
+        
+                JButton btnSave = new JButton("Save");
+                settingsPane.add(btnSave);
+                btnSave.setEnabled(false);
     }
 
     public void fetchAll() throws Exception {
         meta = app.getWebClient().getMeta();
-        String[][] data = new String[3][2];
-        data[0][0] = "Difficulty";
-        data[1][0] = "Equations";
-        data[2][0] = "Last updated";
+        DefaultTableModel metaModel = new DefaultTableModel(new String[2], 0);
+        metaModel.addRow(new String[] {
+                "Difficulty", meta.difficulty
+        });
+        metaModel.addRow(new String[] {
+                "Equations", Integer.toString(meta.count)
+        });
+        metaModel.addRow(new String[] {
+                "Last updated", DATE_FORMAT.format(new Date(meta.time))
+        });
 
-        if (meta != null) {
-            data[0][1] = meta.difficulty;
-            data[1][1] = Integer.toString(meta.count);
-            data[2][1] = DATE_FORMAT.format(new Date(meta.time));
-        }
+        metaTable.setModel(new UneditableTableModel(metaModel));
 
-        table.setModel(new UneditableTableModel(new DefaultTableModel(data, new String[2])));
+        DefaultTableModel userModel = new DefaultTableModel(new String[2], 0);
+        userModel.addRow(new String[] {
+                "Joined", ""
+        });
+        userModel.addRow(new String[] {
+                "Solved daily challenges", "0"
+        });
+        userModel.addRow(new String[] {
+                "Best time", "0.0s"
+        });
+        userModel.addRow(new String[] {
+                "Best streak", "0"
+        });
+        userModel.addRow(new String[] {
+                "Current streak", "0"
+        });
+        userModel.addRow(new String[] {
+                "Daily place", "#1"
+        });
+        userModel.addRow(new String[] {
+                "All time place", "#1"
+        });
+        userTable.setModel(new UneditableTableModel(userModel));
     }
 }

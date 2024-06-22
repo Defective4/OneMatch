@@ -89,7 +89,9 @@ public class WebClient {
 
     public ChallengesMeta getMeta() throws IOException {
         try (Reader reader = new InputStreamReader(URI.create(rootURL + "/api/daily/meta").toURL().openStream())) {
-            return new Gson().fromJson(reader, ChallengesMeta.class);
+            ChallengesMeta meta = new Gson().fromJson(reader, ChallengesMeta.class);
+            if(meta == null) throw new IOException("Object is null");
+            return meta;
         }
     }
 
