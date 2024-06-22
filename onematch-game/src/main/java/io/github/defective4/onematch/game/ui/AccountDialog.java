@@ -322,7 +322,16 @@ public class AccountDialog extends JDialog {
         profilePane.add(new JLabel(" "));
 
         JButton btnLogOut = new JButton("Log out");
-        btnLogOut.setEnabled(false);
+        btnLogOut.addActionListener(e -> {
+            if (JOptionPane
+                    .showConfirmDialog(this, "Are you sure you want to log out?", "Logging out",
+                            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                app.setWebToken(null);
+                app.saveConfig(app.getOptions());
+                dispose();
+                SwingUtilities.invokeLater(() -> app.getMenu().getBtnAccount().doClick());
+            }
+        });
         profilePane.add(btnLogOut);
 
         JPanel settingsPane = new JPanel();
