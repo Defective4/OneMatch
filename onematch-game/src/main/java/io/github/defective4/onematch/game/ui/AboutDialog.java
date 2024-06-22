@@ -16,6 +16,7 @@ import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import io.github.defective4.onematch.game.data.Version;
+import io.github.defective4.onematch.game.ui.components.JCopyButton;
 import io.github.defective4.onematch.game.ui.components.JLinkLabel;
 
 public class AboutDialog extends JDialog {
@@ -33,7 +34,7 @@ public class AboutDialog extends JDialog {
         setModal(true);
         setResizable(false);
 
-        setBounds(100, 100, 330, 194);
+        setBounds(100, 100, 330, 215);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -57,6 +58,18 @@ public class AboutDialog extends JDialog {
         JLinkLabel linkLabel = new JLinkLabel("Github repository", "https://github.com/Defective4/OneMatch");
         linkLabel.setIcon(new ImageIcon(AboutDialog.class.getResource("/icons/github.png")));
         contentPanel.add(linkLabel);
+
+        JPanel discord = new JPanel();
+        discord.setAlignmentX(Component.LEFT_ALIGNMENT);
+        contentPanel.add(discord);
+        discord.setLayout(new BoxLayout(discord, BoxLayout.X_AXIS));
+
+        JLabel lblDiscord = new JLabel("Discord   ");
+        discord.add(lblDiscord);
+        lblDiscord.setIcon(new ImageIcon(AboutDialog.class.getResource("/icons/discord.png")));
+
+        JCopyButton copyButton = new JCopyButton((String) null, (Window) null);
+        discord.add(copyButton);
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
         getContentPane().add(buttonPane, BorderLayout.SOUTH);
