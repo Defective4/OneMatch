@@ -21,6 +21,7 @@ import io.github.defective4.onematch.game.Application;
 
 public class MainMenu extends JFrame {
     private final JButton btnDaily;
+    private final JButton btnAccount;
 
     /**
      * Create the frame.
@@ -75,11 +76,11 @@ public class MainMenu extends JFrame {
 
         btnDaily = new JButton("Daily Challenges");
         btnDaily.addActionListener(e -> AsyncProgressDialog.run(this, "Fetching daily challenges details", d -> {
-            DailyDialog accountDialog = new DailyDialog(this, app);
+            DailyDialog dailyDialog = new DailyDialog(this, app);
             try {
-                accountDialog.fetchAll(this);
+                dailyDialog.fetchAll(this);
                 d.dispose();
-                SwingUtils.showAndCenter(accountDialog);
+                SwingUtils.showAndCenter(dailyDialog);
             } catch (Exception e2) {
                 e2.printStackTrace();
                 d.dispose();
@@ -90,6 +91,23 @@ public class MainMenu extends JFrame {
 
         JButton btnOptions = new JButton("Options");
         btnOptions.addActionListener(e -> SwingUtils.showAndCenter(new OptionsDialog(this, app)));
+
+        btnAccount = new JButton("");
+
+        btnAccount.addActionListener(e -> AsyncProgressDialog.run(this, "Fetching account details", d -> {
+            AccountDialog accountDialog = new AccountDialog(this, app);
+            try {
+                accountDialog.fetchAll(this);
+                d.dispose();
+                SwingUtils.showAndCenter(accountDialog);
+            } catch (Exception e2) {
+                e2.printStackTrace();
+                d.dispose();
+                ExceptionDialog.show(this, e2, "Couldn't connect with the server.");
+            }
+        }));
+        btnAccount.setIcon(new ImageIcon(MainMenu.class.getResource("/icons/user.png")));
+        panel.add(btnAccount);
         btnOptions.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(btnOptions);
 
@@ -106,6 +124,10 @@ public class MainMenu extends JFrame {
         });
         panel.add(btnExit);
 
+    }
+
+    public JButton getBtnAccount() {
+        return btnAccount;
     }
 
     public JButton getBtnDaily() {
