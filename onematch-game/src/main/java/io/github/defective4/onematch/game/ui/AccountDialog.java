@@ -49,7 +49,7 @@ public class AccountDialog extends JDialog {
         setResizable(false);
         setModal(true);
         setTitle("OneMatch - Account");
-        setBounds(100, 100, 328, 330);
+        setBounds(100, 100, 328, 350);
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
 
         accountPane = new JPanel();
@@ -57,7 +57,7 @@ public class AccountDialog extends JDialog {
         getContentPane().add(accountPane);
 
         JPanel loginPane = new JPanel();
-        loginPane.setBorder(new EmptyBorder(16, 32, 64, 32));
+        loginPane.setBorder(new EmptyBorder(16, 32, 84, 32));
         loginPane.setLayout(new BoxLayout(loginPane, BoxLayout.Y_AXIS));
 
         JLabel lblLogIn = new JLabel("Log in");
@@ -320,6 +320,13 @@ public class AccountDialog extends JDialog {
         userTable.setShowHorizontalLines(true);
 
         profilePane.add(new JLabel(" "));
+        JLinkButton dailyButton = new JLinkButton("Daily challenges");
+        dailyButton.setActionListener(e -> {
+            dispose();
+            SwingUtilities.invokeLater(() -> { app.getMenu().getBtnDaily().doClick(); });
+        });
+        profilePane.add(dailyButton);
+        profilePane.add(new JLabel(" "));
 
         JButton btnLogOut = new JButton("Log out");
         btnLogOut.addActionListener(e -> {
@@ -368,10 +375,22 @@ public class AccountDialog extends JDialog {
 
         secPanel.add(new JLabel(" "));
 
+        JPanel panel = new JPanel();
+        panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        secPanel.add(panel);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+
         JButton btnDeleteAccount = new JButton("Delete account");
+        panel.add(btnDeleteAccount);
         btnDeleteAccount.setEnabled(false);
         btnDeleteAccount.setForeground(new Color(139, 0, 0));
-        secPanel.add(btnDeleteAccount);
+
+        panel.add(new JLabel("   "));
+
+        JButton btnClearScores = new JButton("Clear scores");
+        btnClearScores.setEnabled(false);
+        btnClearScores.setForeground(new Color(139, 0, 0));
+        panel.add(btnClearScores);
 
         settingsPane.add(new JLabel(" "));
 
