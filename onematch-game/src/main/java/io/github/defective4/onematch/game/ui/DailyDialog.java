@@ -20,6 +20,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 
 import io.github.defective4.onematch.core.SHA256;
@@ -28,6 +29,7 @@ import io.github.defective4.onematch.game.ui.components.JLinkButton;
 import io.github.defective4.onematch.game.ui.components.UneditableTableModel;
 import io.github.defective4.onematch.net.Challenge;
 import io.github.defective4.onematch.net.ChallengesMeta;
+import io.github.defective4.onematch.net.UserProfile;
 import io.github.defective4.onematch.net.WebClient.WebResponse;
 
 public class DailyDialog extends JDialog {
@@ -39,6 +41,16 @@ public class DailyDialog extends JDialog {
 
     private final Application app;
     private JTable userTable;
+
+    private JPanel accountPane;
+
+    private JButton btnPlay;
+
+    private JPanel playPane;
+
+    private JTabbedPane accountTabs;
+
+    private JLabel username;
 
     /**
      * Create the dialog.
@@ -88,7 +100,8 @@ public class DailyDialog extends JDialog {
         dailyPane.add(buttonPane);
         buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.X_AXIS));
 
-        JButton btnPlay = new JButton("Play");
+        btnPlay = new JButton("Play");
+        btnPlay.setEnabled(false);
         btnPlay.addActionListener(e -> {
             if (JOptionPane.showOptionDialog(this, new JLabel[] {
                     new JLabel("You are about to attempt today's daily challenge."),
@@ -132,7 +145,6 @@ public class DailyDialog extends JDialog {
             }
         });
         buttonPane.add(btnPlay);
-        btnPlay.setEnabled(token != null);
 
         buttonPane.add(new JLabel(" "));
 
@@ -153,20 +165,18 @@ public class DailyDialog extends JDialog {
 
         dailyPane.add(new JLabel(" "));
 
-        JPanel playPane = new JPanel();
+        playPane = new JPanel();
         playPane.setAlignmentX(Component.LEFT_ALIGNMENT);
         dailyPane.add(playPane);
         playPane.setLayout(new BoxLayout(playPane, BoxLayout.X_AXIS));
 
-        if (token == null) {
-            playPane.add(new JLabel("To participate you have to "));
+        playPane.add(new JLabel("To participate you have to "));
 
-            JLinkButton lblSignIn = new JLinkButton("Sign In");
-            lblSignIn.setActionListener(e -> tabbedPane.setSelectedIndex(1));
-            playPane.add(lblSignIn);
-        }
+        JLinkButton lblSignIn = new JLinkButton("Sign In");
+        lblSignIn.setActionListener(e -> tabbedPane.setSelectedIndex(1));
+        playPane.add(lblSignIn);
 
-        JPanel accountPane = new JPanel();
+        accountPane = new JPanel();
         accountPane.setLayout(new BoxLayout(accountPane, BoxLayout.Y_AXIS));
 
         JPanel loginPane = new JPanel();
@@ -427,30 +437,25 @@ public class DailyDialog extends JDialog {
         bottomButtonPane.add(okButton);
 
         tabbedPane.addTab("Account", null, accountPane, null);
-
-        JPanel panel_1 = new JPanel();
-        tabbedPane.addTab("Account", null, panel_1, null);
-        panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
-
-        JTabbedPane accountTabs = new JTabbedPane(JTabbedPane.TOP);
-        panel_1.add(accountTabs);
+        accountTabs = new JTabbedPane(SwingConstants.TOP);
 
         JPanel profilePane = new JPanel();
         accountTabs.addTab("Profile", null, profilePane, null);
         profilePane.setBorder(new EmptyBorder(16, 16, 16, 16));
         profilePane.setLayout(new BoxLayout(profilePane, BoxLayout.Y_AXIS));
 
-        JLabel username = new JLabel("Username");
+        username = new JLabel("Username");
         profilePane.add(username);
+        profilePane.add(new JLabel(" "));
         username.setFont(new Font("SansSerif", Font.BOLD, 24));
 
         userTable = new JTable();
         profilePane.add(userTable);
         userTable.setAlignmentX(Component.LEFT_ALIGNMENT);
         userTable.setShowHorizontalLines(true);
-        
+
         profilePane.add(new JLabel(" "));
-        
+
         JButton btnLogOut = new JButton("Log out");
         btnLogOut.setEnabled(false);
         profilePane.add(btnLogOut);
@@ -495,13 +500,13 @@ public class DailyDialog extends JDialog {
         secPanel.add(btnDeleteAccount);
 
         settingsPane.add(new JLabel(" "));
-        
-                JButton btnSave = new JButton("Save");
-                settingsPane.add(btnSave);
-                btnSave.setEnabled(false);
+
+        JButton btnSave = new JButton("Save");
+        settingsPane.add(btnSave);
+        btnSave.setEnabled(false);
     }
 
-    public void fetchAll() throws Exception {
+    public void fetchAll(Window parent) throws Exception {
         meta = app.getWebClient().getMeta();
         DefaultTableModel metaModel = new DefaultTableModel(new String[2], 0);
         metaModel.addRow(new String[] {
@@ -516,28 +521,44 @@ public class DailyDialog extends JDialog {
 
         metaTable.setModel(new UneditableTableModel(metaModel));
 
-        DefaultTableModel userModel = new DefaultTableModel(new String[2], 0);
-        userModel.addRow(new String[] {
-                "Joined", ""
-        });
-        userModel.addRow(new String[] {
-                "Solved daily challenges", "0"
-        });
-        userModel.addRow(new String[] {
-                "Best time", "0.0s"
-        });
-        userModel.addRow(new String[] {
-                "Best streak", "0"
-        });
-        userModel.addRow(new String[] {
-                "Current streak", "0"
-        });
-        userModel.addRow(new String[] {
-                "Daily place", "#1"
-        });
-        userModel.addRow(new String[] {
-                "All time place", "#1"
-        });
-        userTable.setModel(new UneditableTableModel(userModel));
+        WebResponse profileResponse = app.getWebToken() == null ? null
+                : app.getWebClient().getUserProfile(app.getWebToken());
+        if (profileResponse != null && profileResponse.getCode() == 200) {
+            UserProfile profile = new Gson().fromJson(profileResponse.getResponseString(), UserProfile.class);
+            if (profile == null) throw new IllegalStateException("Received null profile data");
+            DefaultTableModel userModel = new DefaultTableModel(new String[2], 0);
+            userModel.addRow(new String[] {
+                    "Joined date", "N/A"
+            });
+            userModel.addRow(new String[] {
+                    "Solved daily challenges", Integer.toString(profile.solvedChallenges)
+            });
+            userModel.addRow(new String[] {
+                    "Best time", profile.bestTime
+            });
+            userModel.addRow(new String[] {
+                    "Best streak", Integer.toString(profile.bestStreak)
+            });
+            userModel.addRow(new String[] {
+                    "Current streak", Integer.toString(profile.currentStreak)
+            });
+            userModel.addRow(new String[] {
+                    "Daily place", profile.dailyPlace > 0 ? "#" + profile.dailyPlace : "None"
+            });
+            userModel.addRow(new String[] {
+                    "All time place", profile.allTimePlace > 0 ? "#" + profile.allTimePlace : "None"
+            });
+            userTable.setModel(new UneditableTableModel(userModel));
+            playPane.setVisible(false);
+            btnPlay.setEnabled(true);
+            username.setText(profile.name);
+
+            accountPane.removeAll();
+            accountPane.add(accountTabs);
+            accountPane.revalidate();
+            accountPane.repaint();
+        } else if (profileResponse != null) {
+            ErrorDialog.show(parent, profileResponse.getResponseString(), "Couldn't access your account");
+        }
     }
 }

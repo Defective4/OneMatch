@@ -77,7 +77,7 @@ public class MainMenu extends JFrame {
         btnDaily.addActionListener(e -> AsyncProgressDialog.run(this, "Fetching daily challenges details", d -> {
             DailyDialog accountDialog = new DailyDialog(this, app);
             try {
-                accountDialog.fetchAll();
+                accountDialog.fetchAll(this);
                 d.dispose();
                 SwingUtils.showAndCenter(accountDialog);
             } catch (Exception e2) {

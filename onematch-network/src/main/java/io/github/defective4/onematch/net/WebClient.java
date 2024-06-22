@@ -58,6 +58,10 @@ public class WebClient {
         }
     }
 
+    public WebResponse getUserProfile(String token) throws IOException {
+        return get("api/user/profile", token);
+    }
+
     public WebResponse submit(List<Challenge> solved, String token) throws IOException {
         JsonArray challenges = new JsonArray();
         for (Challenge challenge : solved) challenges.add(challenge.toJson());
@@ -90,7 +94,7 @@ public class WebClient {
     public ChallengesMeta getMeta() throws IOException {
         try (Reader reader = new InputStreamReader(URI.create(rootURL + "/api/daily/meta").toURL().openStream())) {
             ChallengesMeta meta = new Gson().fromJson(reader, ChallengesMeta.class);
-            if(meta == null) throw new IOException("Object is null");
+            if (meta == null) throw new IOException("Object is null");
             return meta;
         }
     }
