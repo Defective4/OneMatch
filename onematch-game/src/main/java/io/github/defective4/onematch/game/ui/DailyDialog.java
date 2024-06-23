@@ -204,6 +204,7 @@ public class DailyDialog extends JDialog {
             playPane.setVisible(false);
             btnPlay.setEnabled(true);
         } else if (profileResponse != null) {
+            if (profileResponse.getCode() == 401) app.setWebToken(null);
             ErrorDialog.show(parent, profileResponse.getResponseString(), "Couldn't access your account");
         }
     }

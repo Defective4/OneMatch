@@ -468,7 +468,6 @@ public class AccountDialog extends JDialog {
                     .showConfirmDialog(this, "Are you sure you want to log out?", "Logging out",
                             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                 app.setWebToken(null);
-                app.saveConfig(app.getOptions());
                 dispose();
                 SwingUtilities.invokeLater(() -> app.getMenu().getBtnAccount().doClick());
             }
@@ -610,6 +609,7 @@ public class AccountDialog extends JDialog {
             accountPane.revalidate();
             accountPane.repaint();
         } else if (profileResponse != null) {
+            if (profileResponse.getCode() == 401) app.setWebToken(null);
             ErrorDialog.show(parent, profileResponse.getResponseString(), "Couldn't access your account");
         }
     }
