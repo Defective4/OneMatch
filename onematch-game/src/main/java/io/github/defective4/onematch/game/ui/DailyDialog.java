@@ -36,7 +36,7 @@ import io.github.defective4.onematch.net.WebClient.WebResponse;
 
 public class DailyDialog extends JDialog {
 
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH);
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd MMMM yyyy HH:mm", Locale.ENGLISH);
 
     private ChallengesMeta meta;
     private final JTable metaTable;
@@ -191,7 +191,7 @@ public class DailyDialog extends JDialog {
                 "Equations", Integer.toString(meta.count)
         });
         metaModel.addRow(new String[] {
-                "Last updated", DATE_FORMAT.format(new Date(meta.time))
+                "Next reset", DATE_FORMAT.format(new Date(meta.time))
         });
 
         metaTable.setModel(new UneditableTableModel(metaModel));
