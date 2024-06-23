@@ -371,7 +371,7 @@ public class AccountDialog extends JDialog {
             JPasswordField confirmPass = new JPasswordField();
 
             passPane.add(new JLabel("Enter your password to confirm:   "));
-            passPane.add(confirmPassword);
+            passPane.add(confirmPass);
 
             if (JOptionPane.showConfirmDialog(this, new Object[] {
                     "Are you sure that you want to log out on all devices except your current one?\n"
@@ -383,7 +383,7 @@ public class AccountDialog extends JDialog {
                         WebResponse response = app
                                 .getWebClient()
                                 .logoutEverywhere(app.getWebToken(),
-                                        SHA256.hash(new String(confirmPassword.getPassword())));
+                                        SHA256.hash(new String(confirmPass.getPassword())));
                         if (response.getCode() == 200) {
                             app.setWebToken(response.getResponseString());
                             dispose();
