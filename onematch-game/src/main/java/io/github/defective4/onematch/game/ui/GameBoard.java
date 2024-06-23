@@ -34,16 +34,13 @@ import io.github.defective4.onematch.game.ui.components.MatchButton.Orientation;
 
 public class GameBoard extends JFrame {
 
-    private final Timer timer = new Timer(true);
-    private TimerTask timerTask;
-    private int time;
     private final JPanel board;
-
     private final JButton btnExit;
-
     private final JButton btnSubmit;
     private final JLabel label_1;
+
     private final JLabel label_2;
+
     private final JLabel label_p2;
     private MatchButton lastMoved;
     private final JLabel lblOne;
@@ -55,10 +52,10 @@ public class GameBoard extends JFrame {
     private MatchButton seg1_2;
     private MatchButton seg1_2_2;
     private MatchButton seg1_3;
-
     private MatchButton seg1_3_2;
     private MatchButton seg1_4;
     private MatchButton seg1_4_2;
+
     private MatchButton seg1_5;
     private MatchButton seg1_5_2;
     private MatchButton seg1_6;
@@ -70,10 +67,10 @@ public class GameBoard extends JFrame {
     private MatchButton seg2_2;
     private MatchButton seg2_2_2;
     private MatchButton seg2_3;
-
     private MatchButton seg2_3_2;
     private MatchButton seg2_4;
     private MatchButton seg2_4_2;
+
     private MatchButton seg2_5;
     private MatchButton seg2_5_2;
     private MatchButton seg2_6;
@@ -85,27 +82,30 @@ public class GameBoard extends JFrame {
     private MatchButton seg3_2;
     private MatchButton seg3_2_2;
     private MatchButton seg3_3;
-
     private MatchButton seg3_3_2;
-
     private MatchButton seg3_4;
     private MatchButton seg3_4_2;
+
     private MatchButton seg3_5;
 
     private MatchButton seg3_5_2;
     private MatchButton seg3_6;
     private MatchButton seg3_6_2;
+
     private MatchButton seg3_7;
     private MatchButton seg3_7_2;
     private MatchButton segPlus;
-
     private MatchButton segU_1;
-
     private MatchButton segU_2;
-
     private MatchButton segU_3;
 
+    private int time;
+
+    private final Timer timer = new Timer(true);
+
     private final JLabel timerLabel;
+
+    private TimerTask timerTask;
 
     public GameBoard() {
         setTitle("OneMatch game board");
@@ -192,31 +192,6 @@ public class GameBoard extends JFrame {
         timerLabel = new JLabel("");
         timerLabel.setVisible(false);
         panel.add(timerLabel);
-    }
-
-    public void startTimer() {
-        if (timerTask == null) {
-            time = 0;
-            timerLabel.setVisible(true);
-            timerTask = new TimerTask() {
-
-                @Override
-                public void run() {
-                    time += 1;
-                    timerLabel.setText(time / 10d + "s");
-                }
-            };
-            timer.scheduleAtFixedRate(timerTask, 100, 100);
-        }
-    }
-
-    public void stopTimer() {
-        if (timerTask != null) {
-            timerTask.cancel();
-            timerTask = null;
-        }
-        timerLabel.setText("");
-        timerLabel.setVisible(false);
     }
 
     public List<MatchButton> getAllButtons() {
@@ -535,6 +510,31 @@ public class GameBoard extends JFrame {
         lblTwo.setText("Click on any match to begin");
 
         matrix = new GameMatrix(segPlus, getSegments(1), getSegments(2), getSegments(3));
+    }
+
+    public void startTimer() {
+        if (timerTask == null) {
+            time = 0;
+            timerLabel.setVisible(true);
+            timerTask = new TimerTask() {
+
+                @Override
+                public void run() {
+                    time += 1;
+                    timerLabel.setText(time / 10d + "s");
+                }
+            };
+            timer.scheduleAtFixedRate(timerTask, 100, 100);
+        }
+    }
+
+    public void stopTimer() {
+        if (timerTask != null) {
+            timerTask.cancel();
+            timerTask = null;
+        }
+        timerLabel.setText("");
+        timerLabel.setVisible(false);
     }
 
     public boolean validateSolution() {

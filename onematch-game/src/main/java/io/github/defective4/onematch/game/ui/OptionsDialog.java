@@ -18,13 +18,13 @@ import io.github.defective4.onematch.game.data.UserDatabase;
 
 public class OptionsDialog extends JDialog {
 
+    private final Application app;
+    private JCheckBox checkDailyTimer;
+    private JCheckBox checkNormalTimer;
     private final JPanel contentPanel = new JPanel();
     private final JSlider difficulty;
     private final JCheckBox uniqueCheck;
     private JComboBox<Boolean> uniquenessBox;
-    private final Application app;
-    private JCheckBox checkDailyTimer;
-    private JCheckBox checkNormalTimer;
 
     /**
      * Create the dialog.

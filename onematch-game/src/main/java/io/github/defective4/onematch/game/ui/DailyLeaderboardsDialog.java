@@ -24,16 +24,16 @@ import io.github.defective4.onematch.net.Leaderboards.AllTimeEntry;
 
 public class DailyLeaderboardsDialog extends JDialog {
 
-    private final DefaultTableModel dailyModel = new DefaultTableModel(new String[] {
-            "#", "User", "Time"
-    }, 0);
-
     private final DefaultTableModel allModel = new DefaultTableModel(new String[] {
             "#", "User", "Solved ch.", "Best time", "Streak"
     }, 0);
-    private final JTable allTable;
 
+    private final JTable allTable;
     private final Application app;
+
+    private final DefaultTableModel dailyModel = new DefaultTableModel(new String[] {
+            "#", "User", "Time"
+    }, 0);
 
     /**
      * Create the dialog.

@@ -33,10 +33,10 @@ import io.github.defective4.onematch.net.WebClient.WebResponse;
 
 public class CaptchaDialog extends JDialog {
 
-    private boolean canContinue;
     private Clip audioPlayer;
-    private CaptchaDisplay captchaDisplay;
     private byte[] cachedAudio;
+    private boolean canContinue;
+    private CaptchaDisplay captchaDisplay;
 
     /**
      * Create the dialog.
@@ -214,7 +214,7 @@ public class CaptchaDialog extends JDialog {
 
         answerField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void removeUpdate(DocumentEvent e) {
+            public void changedUpdate(DocumentEvent e) {
                 update();
             }
 
@@ -224,7 +224,7 @@ public class CaptchaDialog extends JDialog {
             }
 
             @Override
-            public void changedUpdate(DocumentEvent e) {
+            public void removeUpdate(DocumentEvent e) {
                 update();
             }
 

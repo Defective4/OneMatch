@@ -58,33 +58,8 @@ public class WebClient {
         }
     }
 
-    public WebResponse logoutEverywhere(String token, String hashedPassword) throws IOException {
-        return post("api/user/logout", token, "password", hashedPassword);
-    }
-
-    public WebResponse getUserProfile(String token) throws IOException {
-        return get("api/user/profile", token);
-    }
-
-    public WebResponse submit(List<Challenge> solved, String token) throws IOException {
-        JsonArray challenges = new JsonArray();
-        for (Challenge challenge : solved) challenges.add(challenge.toJson());
-        JsonObject container = new JsonObject();
-        container.add("solved", challenges);
-        return put("api/daily/submit", token, new Gson().toJson(container).getBytes(StandardCharsets.UTF_8),
-                "application/json");
-    }
-
-    public WebResponse postCaptcha(String answer) throws IOException {
-        return post("api/captcha", null, "answer", answer);
-    }
-
     public WebResponse getAudioCaptcha() throws IOException {
         return get("api/captcha/audio", null);
-    }
-
-    public WebResponse refreshCaptcha() throws IOException {
-        return get("api/captcha/refresh", null);
     }
 
     public WebResponse getCaptchaStatus() throws IOException {
@@ -103,22 +78,37 @@ public class WebClient {
         }
     }
 
+    public WebResponse getUserProfile(String token) throws IOException {
+        return get("api/user/profile", token);
+    }
+
     public WebResponse login(String username, String hashedPassword) throws IOException {
         return post("api/login", null, "user", username, "password", hashedPassword);
+    }
+
+    public WebResponse logoutEverywhere(String token, String hashedPassword) throws IOException {
+        return post("api/user/logout", token, "password", hashedPassword);
+    }
+
+    public WebResponse postCaptcha(String answer) throws IOException {
+        return post("api/captcha", null, "answer", answer);
+    }
+
+    public WebResponse refreshCaptcha() throws IOException {
+        return get("api/captcha/refresh", null);
     }
 
     public WebResponse register(String username, String hashedPassword) throws IOException {
         return post("api/register", null, "user", username, "password", hashedPassword);
     }
 
-    private WebResponse put(String suburl, String token, byte[] data, String type) throws IOException {
-        HttpURLConnection connection = makeConnection(RequestMethod.PUT, suburl, token);
-        if (type != null) connection.setRequestProperty("Content-Type", type);
-        connection.connect();
-        try (OutputStream os = connection.getOutputStream()) {
-            os.write(data);
-        }
-        return readResponse(connection);
+    public WebResponse submit(List<Challenge> solved, String token) throws IOException {
+        JsonArray challenges = new JsonArray();
+        for (Challenge challenge : solved) challenges.add(challenge.toJson());
+        JsonObject container = new JsonObject();
+        container.add("solved", challenges);
+        return put("api/daily/submit", token, new Gson().toJson(container).getBytes(StandardCharsets.UTF_8),
+                "application/json");
     }
 
     private WebResponse get(String suburl, String token) throws IOException {
@@ -152,6 +142,16 @@ public class WebClient {
             os.write(String.join("&", argList).getBytes(StandardCharsets.UTF_8));
         }
 
+        return readResponse(connection);
+    }
+
+    private WebResponse put(String suburl, String token, byte[] data, String type) throws IOException {
+        HttpURLConnection connection = makeConnection(RequestMethod.PUT, suburl, token);
+        if (type != null) connection.setRequestProperty("Content-Type", type);
+        connection.connect();
+        try (OutputStream os = connection.getOutputStream()) {
+            os.write(data);
+        }
         return readResponse(connection);
     }
 

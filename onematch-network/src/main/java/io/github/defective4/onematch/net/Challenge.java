@@ -20,21 +20,6 @@ public class Challenge {
         result = third;
     }
 
-    public JsonObject toJson() {
-        JsonObject obj = new JsonObject();
-        JsonArray first = new JsonArray();
-        JsonArray second = new JsonArray();
-        JsonArray result = new JsonArray();
-        for (int i : this.first) first.add(i);
-        for (int i : this.second) second.add(i);
-        for (int i : this.result) result.add(i);
-        obj.add("first", first);
-        obj.add("second", second);
-        obj.add("result", result);
-        obj.addProperty("plus", plus);
-        return obj;
-    }
-
     public int[] getFirst() {
         return first;
     }
@@ -49,6 +34,21 @@ public class Challenge {
 
     public boolean isPlus() {
         return plus;
+    }
+
+    public JsonObject toJson() {
+        JsonObject obj = new JsonObject();
+        JsonArray first = new JsonArray();
+        JsonArray second = new JsonArray();
+        JsonArray result = new JsonArray();
+        for (int i : this.first) first.add(i);
+        for (int i : this.second) second.add(i);
+        for (int i : this.result) result.add(i);
+        obj.add("first", first);
+        obj.add("second", second);
+        obj.add("result", result);
+        obj.addProperty("plus", plus);
+        return obj;
     }
 
     @Override

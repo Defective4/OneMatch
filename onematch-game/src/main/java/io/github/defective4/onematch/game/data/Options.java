@@ -5,10 +5,10 @@ import io.github.defective4.onematch.core.NumberLogic.Difficulty;
 public class Options {
     public int difficulty = 1;
     public boolean invalidUniqueness = true;
-    public boolean unique = true;
     public boolean showTimerDaily = true;
     public boolean showTimerNormal = false;
     public String token = null;
+    public boolean unique = true;
 
     public Difficulty getDifficulty() {
         return Difficulty.getForID(difficulty);

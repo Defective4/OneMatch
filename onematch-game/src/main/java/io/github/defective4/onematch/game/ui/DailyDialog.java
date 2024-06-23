@@ -38,12 +38,12 @@ public class DailyDialog extends JDialog {
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd MMMM yyyy HH:mm", Locale.ENGLISH);
 
-    private ChallengesMeta meta;
-    private final JTable metaTable;
-
     private final Application app;
-
     private final JButton btnPlay;
+
+    private ChallengesMeta meta;
+
+    private final JTable metaTable;
 
     private final JPanel playPane;
 

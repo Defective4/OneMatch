@@ -8,11 +8,11 @@ public class Version extends Properties {
         return getProperty("api", "http://localhost");
     }
 
-    public String getVersion() {
-        return getProperty("version", "Unknown");
-    }
-
     public String getAPIVersion() {
         return getProperty("api_version", "0");
+    }
+
+    public String getVersion() {
+        return getProperty("version", "Unknown");
     }
 }

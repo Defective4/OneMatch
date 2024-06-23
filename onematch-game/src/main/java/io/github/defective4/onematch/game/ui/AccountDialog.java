@@ -29,14 +29,14 @@ public class AccountDialog extends JDialog {
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH);
 
-    private final Application app;
-    private JTable userTable;
-
     private JPanel accountPane;
-
     private JTabbedPane accountTabs;
 
+    private final Application app;
+
     private JLabel username;
+
+    private JTable userTable;
 
     /**
      * Create the dialog.

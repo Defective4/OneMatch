@@ -20,8 +20,8 @@ import io.github.defective4.onematch.core.NumberLogic.Difficulty;
 import io.github.defective4.onematch.game.Application;
 
 public class MainMenu extends JFrame {
-    private final JButton btnDaily;
     private final JButton btnAccount;
+    private final JButton btnDaily;
 
     /**
      * Create the frame.
