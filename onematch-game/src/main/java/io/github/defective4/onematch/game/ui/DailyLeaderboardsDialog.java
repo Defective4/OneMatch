@@ -24,8 +24,8 @@ import io.github.defective4.onematch.net.Leaderboards.AllTimeEntry;
 
 public class DailyLeaderboardsDialog extends JDialog {
 
-    private final DefaultTableModel allModel = new DefaultTableModel(new String[] {
-            "#", "User", "Solved ch.", "Best time", "Streak"
+    private final DefaultTableModel allModel = new DefaultTableModel(new Object[] {
+            "#", "User", "Solved ch.", "Best time", "Streak (cur/best)"
     }, 0);
 
     private final JTable allTable;
@@ -106,7 +106,7 @@ public class DailyLeaderboardsDialog extends JDialog {
             AllTimeEntry allTimeEntry = entry.getValue();
             allModel.addRow(new String[] {
                     Integer.toString(++place), entry.getKey(), Integer.toString(allTimeEntry.solved), allTimeEntry.time,
-                    Integer.toString(allTimeEntry.streak)
+                    allTimeEntry.streak + "/" + allTimeEntry.best_streak
             });
         }
     }
