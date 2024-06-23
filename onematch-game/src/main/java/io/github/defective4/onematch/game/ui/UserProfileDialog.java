@@ -23,8 +23,8 @@ import io.github.defective4.onematch.net.UserProfile;
 import io.github.defective4.onematch.net.WebClient.WebResponse;
 
 public class UserProfileDialog extends JDialog {
-    private final JTable table;
     private final Application app;
+    private final JTable table;
     private final JLabel username;
 
     /**

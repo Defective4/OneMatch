@@ -51,6 +51,10 @@ public class WebClient {
         this.apiVersion = apiVersion;
     }
 
+    public WebResponse changePassword(String token, String oldPassword, String newPassword) throws IOException {
+        return post("api/user/password", token, "oldPass", oldPassword, "newPass", newPassword);
+    }
+
     public Leaderboards getAllLeaderboards() throws IOException {
         try (Reader reader = new InputStreamReader(
                 URI.create(rootURL + "/api/daily/leaderboards").toURL().openStream())) {
@@ -76,10 +80,6 @@ public class WebClient {
             if (meta == null) throw new IOException("Object is null");
             return meta;
         }
-    }
-
-    public WebResponse changePassword(String token, String oldPassword, String newPassword) throws IOException {
-        return post("api/user/password", token, "oldPass", oldPassword, "newPass", newPassword);
     }
 
     public WebResponse getOtherUserProfile(String user) throws IOException {

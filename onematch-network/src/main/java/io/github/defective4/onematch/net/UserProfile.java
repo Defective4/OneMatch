@@ -6,6 +6,8 @@ public class UserProfile {
     public long joinedDate;
     public String name = "Username";
 
+    public UserProfile() {}
+
     public UserProfile(int bestStreak, int currentStreak, int dailyPlace, int allTimePlace, int solvedChallenges,
             String bestTime, long joinedDate, String name) {
         this.bestStreak = bestStreak;
@@ -17,6 +19,4 @@ public class UserProfile {
         this.joinedDate = joinedDate;
         this.name = name;
     }
-
-    public UserProfile() {}
 }

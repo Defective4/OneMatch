@@ -31,15 +31,11 @@ public class AccountDialog extends JDialog {
 
     private static class ChangePasswordDialog extends JDialog {
 
+        private JPasswordField confirmPassword;
         private JPasswordField currentPassword;
         private JPasswordField newPassword;
-        private JPasswordField confirmPassword;
-        private int result = 0;
         private char[] password;
-
-        public String getPassword() {
-            return new String(password);
-        }
+        private int result = 0;
 
         private ChangePasswordDialog(Window parent) {
             super(parent);
@@ -93,7 +89,7 @@ public class AccountDialog extends JDialog {
             DocumentListener dl = new DocumentListener() {
 
                 @Override
-                public void removeUpdate(DocumentEvent e) {
+                public void changedUpdate(DocumentEvent e) {
                     update();
                 }
 
@@ -103,7 +99,7 @@ public class AccountDialog extends JDialog {
                 }
 
                 @Override
-                public void changedUpdate(DocumentEvent e) {
+                public void removeUpdate(DocumentEvent e) {
                     update();
                 }
 
@@ -152,12 +148,16 @@ public class AccountDialog extends JDialog {
             return confirmPassword;
         }
 
+        public JPasswordField getCurrentPassword() {
+            return currentPassword;
+        }
+
         public JPasswordField getNewPassword() {
             return newPassword;
         }
 
-        public JPasswordField getCurrentPassword() {
-            return currentPassword;
+        public String getPassword() {
+            return new String(password);
         }
     }
 
@@ -574,6 +574,23 @@ public class AccountDialog extends JDialog {
         btnSave.setEnabled(false);
     }
 
+    public void fetchAll(Window parent) throws Exception {
+        WebResponse profileResponse = app.getWebToken() == null ? null
+                : app.getWebClient().getUserProfile(app.getWebToken());
+        if (profileResponse != null && profileResponse.getCode() == 200) {
+            UserProfile profile = new Gson().fromJson(profileResponse.getResponseString(), UserProfile.class);
+            makeProfileModel(profile, userTable);
+            username.setText(profile.name);
+
+            accountPane.removeAll();
+            accountPane.add(accountTabs);
+            accountPane.revalidate();
+            accountPane.repaint();
+        } else if (profileResponse != null) {
+            ErrorDialog.show(parent, profileResponse.getResponseString(), "Couldn't access your account");
+        }
+    }
+
     public static void makeProfileModel(UserProfile profile, JTable table) {
         if (profile == null) throw new IllegalStateException("Received null profile data");
         DefaultTableModel userModel = new DefaultTableModel(new String[2], 0);
@@ -599,22 +616,5 @@ public class AccountDialog extends JDialog {
                 "All time place", profile.allTimePlace > 0 ? "#" + profile.allTimePlace : "None"
         });
         table.setModel(new UneditableTableModel(userModel));
-    }
-
-    public void fetchAll(Window parent) throws Exception {
-        WebResponse profileResponse = app.getWebToken() == null ? null
-                : app.getWebClient().getUserProfile(app.getWebToken());
-        if (profileResponse != null && profileResponse.getCode() == 200) {
-            UserProfile profile = new Gson().fromJson(profileResponse.getResponseString(), UserProfile.class);
-            makeProfileModel(profile, userTable);
-            username.setText(profile.name);
-
-            accountPane.removeAll();
-            accountPane.add(accountTabs);
-            accountPane.revalidate();
-            accountPane.repaint();
-        } else if (profileResponse != null) {
-            ErrorDialog.show(parent, profileResponse.getResponseString(), "Couldn't access your account");
-        }
     }
 }
