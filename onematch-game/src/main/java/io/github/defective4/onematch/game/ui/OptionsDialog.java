@@ -173,8 +173,6 @@ public class OptionsDialog extends JDialog {
         uniquenessBoxPane.add(uniqBoxHelpButton);
         uniqueCheckListener.actionPerformed(null);
 
-        SwingUtils.deepAttach(contentPanel, e -> btnConfirm.setEnabled(true));
-
         JPanel timerPanel = new JPanel();
         timerPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         timerPanel.setBorder(new TitledBorder(null, "Timer", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -198,6 +196,7 @@ public class OptionsDialog extends JDialog {
         checkNormalTimer.setSelected(ops.showTimerNormal);
         timerChecksPanel.add(checkNormalTimer);
         uniqueCheck.addActionListener(uniqueCheckListener);
+        SwingUtils.deepAttach(contentPanel, e -> btnConfirm.setEnabled(true));
     }
 
     private void saveSettings(Options ops) {
