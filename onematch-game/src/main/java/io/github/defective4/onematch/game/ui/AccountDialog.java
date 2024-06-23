@@ -542,7 +542,27 @@ public class AccountDialog extends JDialog {
             ChangePasswordDialog cp = new ChangePasswordDialog(this);
             SwingUtils.showAndCenter(cp);
             if (cp.result == 1) {
-                // TODO
+                AsyncProgressDialog.run(this, "Changing password...", dial -> {
+                    try {
+                        WebResponse response = app
+                                .getWebClient()
+                                .changePassword(app.getWebToken(),
+                                        SHA256.hash(new String(cp.currentPassword.getPassword())),
+                                        SHA256.hash(new String(cp.password)));
+                        dial.dispose();
+                        if (response.getCode() == 204) {
+                            JOptionPane
+                                    .showMessageDialog(this, "Password changed!", "Success",
+                                            JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            ErrorDialog.show(this, response.getResponseString(), "Couldn't change password");
+                        }
+                    } catch (Exception e3) {
+                        dial.dispose();
+                        e3.printStackTrace();
+                        ExceptionDialog.show(this, e3, "Couldn't change password");
+                    }
+                });
             }
         });
         secPanel.add(btnChangePassword);

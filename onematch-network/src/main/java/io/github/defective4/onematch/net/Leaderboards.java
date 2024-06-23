@@ -12,6 +12,7 @@ public class Leaderboards {
         public String time = "";
 
         public AllTimeEntry() {}
+
         public AllTimeEntry(int solved, int streak, String time) {
             this.solved = solved;
             this.streak = streak;

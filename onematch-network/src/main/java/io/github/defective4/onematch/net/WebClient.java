@@ -78,6 +78,10 @@ public class WebClient {
         }
     }
 
+    public WebResponse changePassword(String token, String oldPassword, String newPassword) throws IOException {
+        return post("api/user/password", token, "oldPass", oldPassword, "newPass", newPassword);
+    }
+
     public WebResponse getUserProfile(String token) throws IOException {
         return get("api/user/profile", token);
     }
