@@ -1,7 +1,9 @@
 package io.github.defective4.onematch.game.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Window;
 import java.io.IOException;
@@ -26,6 +28,138 @@ import io.github.defective4.onematch.net.UserProfile;
 import io.github.defective4.onematch.net.WebClient.WebResponse;
 
 public class AccountDialog extends JDialog {
+
+    private static class ChangePasswordDialog extends JDialog {
+
+        private JPasswordField currentPassword;
+        private JPasswordField newPassword;
+        private JPasswordField confirmPassword;
+        private int result = 0;
+        private char[] password;
+
+        public String getPassword() {
+            return new String(password);
+        }
+
+        private ChangePasswordDialog(Window parent) {
+            super(parent);
+            setModal(true);
+            setResizable(false);
+            setTitle("OneMatch - Changing password");
+            setBounds(100, 100, 308, 309);
+            getContentPane().setLayout(new BorderLayout());
+            JPanel contentPanel = new JPanel();
+            contentPanel.setBorder(new EmptyBorder(16, 16, 32, 16));
+            getContentPane().add(contentPanel, BorderLayout.CENTER);
+            contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+
+            JLabel lblChangingPassword = new JLabel("Changing password");
+            lblChangingPassword.setFont(new Font("SansSerif", Font.BOLD, 24));
+            contentPanel.add(lblChangingPassword);
+
+            contentPanel.add(new JLabel(" "));
+
+            contentPanel.add(new JLabel("Your current password"));
+
+            currentPassword = new JPasswordField();
+            currentPassword.setAlignmentX(Component.LEFT_ALIGNMENT);
+            contentPanel.add(currentPassword);
+
+            contentPanel.add(new JLabel(" "));
+
+            contentPanel.add(new JLabel("New password"));
+
+            newPassword = new JPasswordField();
+            newPassword.setAlignmentX(Component.LEFT_ALIGNMENT);
+            contentPanel.add(newPassword);
+
+            contentPanel.add(new JLabel(" "));
+
+            contentPanel.add(new JLabel("Confirm new password"));
+
+            confirmPassword = new JPasswordField();
+            confirmPassword.setAlignmentX(Component.LEFT_ALIGNMENT);
+            contentPanel.add(confirmPassword);
+
+            JPanel buttonPane = new JPanel();
+            buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+            getContentPane().add(buttonPane, BorderLayout.SOUTH);
+
+            JButton okButton = new JButton("Change");
+            okButton.setEnabled(false);
+            buttonPane.add(okButton);
+            getRootPane().setDefaultButton(okButton);
+
+            DocumentListener dl = new DocumentListener() {
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    update();
+                }
+
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    update();
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    update();
+                }
+
+                private void update() {
+                    okButton
+                            .setEnabled(!new String(currentPassword.getPassword()).isBlank()
+                                    && !new String(newPassword.getPassword()).isBlank()
+                                    && !new String(confirmPassword.getPassword()).isBlank());
+                }
+            };
+
+            currentPassword.getDocument().addDocumentListener(dl);
+            newPassword.getDocument().addDocumentListener(dl);
+            confirmPassword.getDocument().addDocumentListener(dl);
+
+            okButton.addActionListener(e -> {
+                if (!new String(newPassword.getPassword()).equals(new String(confirmPassword.getPassword()))) {
+                    JOptionPane
+                            .showOptionDialog(this, "The passwords don't match!", "Passwords aren't the same",
+                                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[] {
+                                            "Ok"
+                    }, null);
+                    return;
+                }
+
+                if (newPassword.getPassword().length <= 4) {
+                    JOptionPane
+                            .showOptionDialog(this, "Your password is too short!", "Short password",
+                                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[] {
+                                            "Ok"
+                    }, null);
+                    return;
+                }
+
+                password = newPassword.getPassword();
+                result = 1;
+                dispose();
+            });
+
+            JButton cancelButton = new JButton("Cancel");
+            cancelButton.addActionListener(e -> dispose());
+            buttonPane.add(cancelButton);
+        }
+
+        public JPasswordField getConfirmPasswordField() {
+            return confirmPassword;
+        }
+
+        public JPasswordField getNewPassword() {
+            return newPassword;
+        }
+
+        public JPasswordField getCurrentPassword() {
+            return currentPassword;
+        }
+    }
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH);
 
@@ -404,7 +538,13 @@ public class AccountDialog extends JDialog {
         secPanel.add(new JLabel(" "));
 
         JButton btnChangePassword = new JButton("Change password");
-        btnChangePassword.setEnabled(false);
+        btnChangePassword.addActionListener(e -> {
+            ChangePasswordDialog cp = new ChangePasswordDialog(this);
+            SwingUtils.showAndCenter(cp);
+            if (cp.result == 1) {
+                // TODO
+            }
+        });
         secPanel.add(btnChangePassword);
 
         secPanel.add(new JLabel(" "));
