@@ -8,6 +8,7 @@ import java.awt.Window;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import javax.swing.*;
@@ -581,7 +582,7 @@ public class AccountDialog extends JDialog {
             if (profile == null) throw new IllegalStateException("Received null profile data");
             DefaultTableModel userModel = new DefaultTableModel(new String[2], 0);
             userModel.addRow(new String[] {
-                    "Joined date", "N/A"
+                    "Joined date", DATE_FORMAT.format(new Date(profile.joinedDate))
             });
             userModel.addRow(new String[] {
                     "Solved daily challenges", Integer.toString(profile.solvedChallenges)
