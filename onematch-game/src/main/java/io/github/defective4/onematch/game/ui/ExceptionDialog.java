@@ -10,7 +10,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import io.github.defective4.onematch.game.ui.components.JCopyButton;
-import io.github.defective4.onematch.game.ui.components.JLinkButton;
+import io.github.defective4.onematch.game.ui.components.JLinkLabel;
 
 public class ExceptionDialog extends JDialog {
 
@@ -61,7 +61,7 @@ public class ExceptionDialog extends JDialog {
         exception.setLineWrap(true);
         exception.setEditable(false);
 
-        JLinkButton straceButton = new JLinkButton("New label");
+        JLinkLabel straceButton = new JLinkLabel("New label");
         straceButton.setText("Show stack trace");
         straceButton.setActionListener(e -> tabbedPane.setSelectedIndex(1));
         panel.add(straceButton);

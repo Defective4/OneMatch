@@ -1,8 +1,11 @@
 package io.github.defective4.onematch.game.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Window;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.Map;
 
@@ -14,10 +17,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import io.github.defective4.onematch.game.Application;
+import io.github.defective4.onematch.game.ui.components.JLinkLabel;
 import io.github.defective4.onematch.game.ui.components.UneditableTableModel;
 import io.github.defective4.onematch.net.Leaderboards;
 import io.github.defective4.onematch.net.Leaderboards.AllTimeEntry;
@@ -40,6 +46,7 @@ public class DailyLeaderboardsDialog extends JDialog {
      */
     public DailyLeaderboardsDialog(Window parent, Application app) {
         super(parent);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.app = app;
         setModal(true);
         setTitle("OneMatch - Daily Leaderboards");
@@ -79,6 +86,41 @@ public class DailyLeaderboardsDialog extends JDialog {
                 .getColumnModel()
                 .getColumn(0)
                 .setPreferredWidth(allTable.getFontMetrics(allTable.getFont()).stringWidth("9999"));
+        allTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                    boolean hasFocus, int row, int column) {
+                if (column != 1)
+                    return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                return new JLinkLabel(value.toString());
+            }
+        });
+        allTable.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (allTable.columnAtPoint(e.getPoint()) == 1) {
+                    int row = allTable.rowAtPoint(e.getPoint());
+                    if (row != -1 && row < allTable.getRowCount()) {
+                        String value = allTable.getModel().getValueAt(row, 1).toString();
+                        AsyncProgressDialog.run(DailyLeaderboardsDialog.this, "Downloading user's profile", dial -> {
+                            UserProfileDialog profileDialog = new UserProfileDialog(DailyLeaderboardsDialog.this, app);
+                            try {
+                                boolean success = profileDialog.fetch(value, DailyLeaderboardsDialog.this);
+                                dial.dispose();
+                                if (success) SwingUtils.showAndCenter(profileDialog);
+                            } catch (Exception e2) {
+                                dial.dispose();
+                                e2.printStackTrace();
+                                ExceptionDialog
+                                        .show(DailyLeaderboardsDialog.this, e2, "Couldn't download user's profile");
+                            }
+                        });
+                    }
+                }
+            }
+
+        });
         allTimesPane.setViewportView(allTable);
 
         JPanel buttonPane = new JPanel();
@@ -110,4 +152,5 @@ public class DailyLeaderboardsDialog extends JDialog {
             });
         }
     }
+
 }

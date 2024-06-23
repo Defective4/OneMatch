@@ -22,6 +22,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.UndoableEditEvent;
@@ -43,6 +44,7 @@ public class CaptchaDialog extends JDialog {
      */
     private CaptchaDialog(Window parent, Application app) {
         super(parent);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
 
             @Override

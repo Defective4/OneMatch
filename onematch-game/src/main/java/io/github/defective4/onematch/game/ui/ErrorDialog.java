@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.WindowConstants;
 
 public class ErrorDialog extends JDialog {
 
@@ -21,6 +22,7 @@ public class ErrorDialog extends JDialog {
 
     private ErrorDialog(Window parent, String message, String secondaryMessage) {
         super(parent);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setModal(true);
         setResizable(false);
         setBounds(100, 100, 300, 176);

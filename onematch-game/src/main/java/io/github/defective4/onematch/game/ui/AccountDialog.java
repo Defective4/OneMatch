@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 
 import io.github.defective4.onematch.core.SHA256;
 import io.github.defective4.onematch.game.Application;
-import io.github.defective4.onematch.game.ui.components.JLinkButton;
+import io.github.defective4.onematch.game.ui.components.JLinkLabel;
 import io.github.defective4.onematch.game.ui.components.UneditableTableModel;
 import io.github.defective4.onematch.net.UserProfile;
 import io.github.defective4.onematch.net.WebClient.WebResponse;
@@ -179,6 +179,7 @@ public class AccountDialog extends JDialog {
      */
     public AccountDialog(Window parent, Application app) {
         super(parent);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.app = app;
         setResizable(false);
         setModal(true);
@@ -232,7 +233,7 @@ public class AccountDialog extends JDialog {
 
         registerLinkPane.add(new JLabel("Don't have an account? "));
 
-        JLinkButton lblRegisterNow = new JLinkButton("Register now!");
+        JLinkLabel lblRegisterNow = new JLinkLabel("Register now!");
         registerLinkPane.add(lblRegisterNow);
 
         JPanel registerPane = new JPanel();
@@ -282,7 +283,7 @@ public class AccountDialog extends JDialog {
 
         loginLinkPane.add(new JLabel("Already have an account? "));
 
-        JLinkButton lblLogin = new JLinkButton("Log in instead!");
+        JLinkLabel lblLogin = new JLinkLabel("Log in instead!");
         loginLinkPane.add(lblLogin);
 
         registerPane.add(loginLinkPane);
@@ -454,7 +455,7 @@ public class AccountDialog extends JDialog {
         userTable.setShowHorizontalLines(true);
 
         profilePane.add(new JLabel(" "));
-        JLinkButton dailyButton = new JLinkButton("Daily challenges");
+        JLinkLabel dailyButton = new JLinkLabel("Daily challenges");
         dailyButton.setActionListener(e -> {
             dispose();
             SwingUtilities.invokeLater(() -> { app.getMenu().getBtnDaily().doClick(); });
@@ -573,35 +574,39 @@ public class AccountDialog extends JDialog {
         btnSave.setEnabled(false);
     }
 
+    public static void makeProfileModel(UserProfile profile, JTable table) {
+        if (profile == null) throw new IllegalStateException("Received null profile data");
+        DefaultTableModel userModel = new DefaultTableModel(new String[2], 0);
+        userModel.addRow(new String[] {
+                "Joined date", DATE_FORMAT.format(new Date(profile.joinedDate))
+        });
+        userModel.addRow(new String[] {
+                "Solved daily challenges", Integer.toString(profile.solvedChallenges)
+        });
+        userModel.addRow(new String[] {
+                "Best time", profile.bestTime
+        });
+        userModel.addRow(new String[] {
+                "Best streak", Integer.toString(profile.bestStreak)
+        });
+        userModel.addRow(new String[] {
+                "Current streak", Integer.toString(profile.currentStreak)
+        });
+        userModel.addRow(new String[] {
+                "Daily place", profile.dailyPlace > 0 ? "#" + profile.dailyPlace : "None"
+        });
+        userModel.addRow(new String[] {
+                "All time place", profile.allTimePlace > 0 ? "#" + profile.allTimePlace : "None"
+        });
+        table.setModel(new UneditableTableModel(userModel));
+    }
+
     public void fetchAll(Window parent) throws Exception {
         WebResponse profileResponse = app.getWebToken() == null ? null
                 : app.getWebClient().getUserProfile(app.getWebToken());
         if (profileResponse != null && profileResponse.getCode() == 200) {
             UserProfile profile = new Gson().fromJson(profileResponse.getResponseString(), UserProfile.class);
-            if (profile == null) throw new IllegalStateException("Received null profile data");
-            DefaultTableModel userModel = new DefaultTableModel(new String[2], 0);
-            userModel.addRow(new String[] {
-                    "Joined date", DATE_FORMAT.format(new Date(profile.joinedDate))
-            });
-            userModel.addRow(new String[] {
-                    "Solved daily challenges", Integer.toString(profile.solvedChallenges)
-            });
-            userModel.addRow(new String[] {
-                    "Best time", profile.bestTime
-            });
-            userModel.addRow(new String[] {
-                    "Best streak", Integer.toString(profile.bestStreak)
-            });
-            userModel.addRow(new String[] {
-                    "Current streak", Integer.toString(profile.currentStreak)
-            });
-            userModel.addRow(new String[] {
-                    "Daily place", profile.dailyPlace > 0 ? "#" + profile.dailyPlace : "None"
-            });
-            userModel.addRow(new String[] {
-                    "All time place", profile.allTimePlace > 0 ? "#" + profile.allTimePlace : "None"
-            });
-            userTable.setModel(new UneditableTableModel(userModel));
+            makeProfileModel(profile, userTable);
             username.setText(profile.name);
 
             accountPane.removeAll();
@@ -609,7 +614,6 @@ public class AccountDialog extends JDialog {
             accountPane.revalidate();
             accountPane.repaint();
         } else if (profileResponse != null) {
-            if (profileResponse.getCode() == 401) app.setWebToken(null);
             ErrorDialog.show(parent, profileResponse.getResponseString(), "Couldn't access your account");
         }
     }

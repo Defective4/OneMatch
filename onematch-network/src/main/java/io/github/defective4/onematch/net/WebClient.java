@@ -82,6 +82,10 @@ public class WebClient {
         return post("api/user/password", token, "oldPass", oldPassword, "newPass", newPassword);
     }
 
+    public WebResponse getOtherUserProfile(String user) throws IOException {
+        return get("api/user/profile/" + URLEncoder.encode(user, StandardCharsets.UTF_8), user);
+    }
+
     public WebResponse getUserProfile(String token) throws IOException {
         return get("api/user/profile", token);
     }

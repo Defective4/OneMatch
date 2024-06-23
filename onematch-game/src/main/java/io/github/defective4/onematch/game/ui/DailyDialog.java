@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
@@ -27,7 +28,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 
 import io.github.defective4.onematch.game.Application;
-import io.github.defective4.onematch.game.ui.components.JLinkButton;
+import io.github.defective4.onematch.game.ui.components.JLinkLabel;
 import io.github.defective4.onematch.game.ui.components.UneditableTableModel;
 import io.github.defective4.onematch.net.Challenge;
 import io.github.defective4.onematch.net.ChallengesMeta;
@@ -54,6 +55,7 @@ public class DailyDialog extends JDialog {
      */
     public DailyDialog(Window parent, Application app) {
         super(parent);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.app = app;
         setResizable(false);
         setModal(true);
@@ -162,7 +164,7 @@ public class DailyDialog extends JDialog {
 
         playPane.add(new JLabel("To participate you have to "));
 
-        JLinkButton lblSignIn = new JLinkButton("Sign In");
+        JLinkLabel lblSignIn = new JLinkLabel("Sign In");
         lblSignIn.setActionListener(e -> {
             dispose();
             SwingUtilities.invokeLater(() -> { app.getMenu().getBtnAccount().doClick(); });

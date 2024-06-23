@@ -17,7 +17,7 @@ import javax.swing.border.EmptyBorder;
 
 import io.github.defective4.onematch.game.data.Version;
 import io.github.defective4.onematch.game.ui.components.JCopyButton;
-import io.github.defective4.onematch.game.ui.components.JLinkLabel;
+import io.github.defective4.onematch.game.ui.components.JURLLabel;
 
 public class AboutDialog extends JDialog {
 
@@ -55,7 +55,7 @@ public class AboutDialog extends JDialog {
 
         contentPanel.add(new JLabel(" "));
 
-        JLinkLabel linkLabel = new JLinkLabel("Github repository", "https://github.com/Defective4/OneMatch");
+        JURLLabel linkLabel = new JURLLabel("Github repository", "https://github.com/Defective4/OneMatch");
         linkLabel.setIcon(new ImageIcon(AboutDialog.class.getResource("/icons/github.png")));
         contentPanel.add(linkLabel);
 
@@ -77,7 +77,7 @@ public class AboutDialog extends JDialog {
         cancelButton.addActionListener(e -> dispose());
 
         JLabel lblReportAnIssue;
-        lblReportAnIssue = new JLinkLabel("Report an issue", "https://github.com/Defective4/OneMatch/issues/new");
+        lblReportAnIssue = new JURLLabel("Report an issue", "https://github.com/Defective4/OneMatch/issues/new");
         buttonPane.add(lblReportAnIssue);
         buttonPane.add(cancelButton);
     }
