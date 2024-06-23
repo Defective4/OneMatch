@@ -1,7 +1,6 @@
 package io.github.defective4.onematch.game.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -566,25 +565,6 @@ public class AccountDialog extends JDialog {
             }
         });
         secPanel.add(btnChangePassword);
-
-        secPanel.add(new JLabel(" "));
-
-        JPanel panel = new JPanel();
-        panel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        secPanel.add(panel);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-
-        JButton btnDeleteAccount = new JButton("Delete account");
-        panel.add(btnDeleteAccount);
-        btnDeleteAccount.setEnabled(false);
-        btnDeleteAccount.setForeground(new Color(139, 0, 0));
-
-        panel.add(new JLabel("   "));
-
-        JButton btnClearScores = new JButton("Clear scores");
-        btnClearScores.setEnabled(false);
-        btnClearScores.setForeground(new Color(139, 0, 0));
-        panel.add(btnClearScores);
 
         settingsPane.add(new JLabel(" "));
 
