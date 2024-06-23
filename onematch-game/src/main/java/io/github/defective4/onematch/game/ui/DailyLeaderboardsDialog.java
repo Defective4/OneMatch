@@ -30,6 +30,46 @@ import io.github.defective4.onematch.net.Leaderboards.AllTimeEntry;
 
 public class DailyLeaderboardsDialog extends JDialog {
 
+    private final class TableUserProfileHandler extends MouseAdapter {
+        private final Application app;
+
+        private TableUserProfileHandler(Application app) {
+            this.app = app;
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (allTable.columnAtPoint(e.getPoint()) == 1) {
+                int row = allTable.rowAtPoint(e.getPoint());
+                if (row != -1 && row < allTable.getRowCount()) {
+                    String value = allTable.getModel().getValueAt(row, 1).toString();
+                    AsyncProgressDialog.run(DailyLeaderboardsDialog.this, "Downloading user's profile", dial -> {
+                        UserProfileDialog profileDialog = new UserProfileDialog(DailyLeaderboardsDialog.this, app);
+                        try {
+                            boolean success = profileDialog.fetch(value, DailyLeaderboardsDialog.this);
+                            dial.dispose();
+                            if (success) SwingUtils.showAndCenter(profileDialog);
+                        } catch (Exception e2) {
+                            dial.dispose();
+                            e2.printStackTrace();
+                            ExceptionDialog.show(DailyLeaderboardsDialog.this, e2, "Couldn't download user's profile");
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    private final class TableUserProfileRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+                int row, int column) {
+            if (column != 1)
+                return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            return new JLinkLabel(value.toString());
+        }
+    }
+
     private final DefaultTableModel allModel = new DefaultTableModel(new Object[] {
             "#", "User", "Solved ch.", "Best time", "Streak (cur/best)"
     }, 0);
@@ -68,6 +108,9 @@ public class DailyLeaderboardsDialog extends JDialog {
         JScrollPane dailyPane = new JScrollPane();
         dailyRootPane.add(dailyPane);
 
+        TableUserProfileRenderer userProfileRenderer = new TableUserProfileRenderer();
+        TableUserProfileHandler userProfileHandler = new TableUserProfileHandler(app);
+
         JTable dailyTable = new JTable();
         dailyTable.setShowHorizontalLines(true);
         dailyTable.setModel(new UneditableTableModel(dailyModel));
@@ -75,6 +118,8 @@ public class DailyLeaderboardsDialog extends JDialog {
                 .getColumnModel()
                 .getColumn(0)
                 .setPreferredWidth(dailyTable.getFontMetrics(dailyTable.getFont()).stringWidth("999"));
+        dailyTable.setDefaultRenderer(Object.class, userProfileRenderer);
+        dailyTable.addMouseListener(userProfileHandler);
         dailyPane.setViewportView(dailyTable);
 
         JScrollPane allTimesPane = new JScrollPane();
@@ -86,41 +131,8 @@ public class DailyLeaderboardsDialog extends JDialog {
                 .getColumnModel()
                 .getColumn(0)
                 .setPreferredWidth(allTable.getFontMetrics(allTable.getFont()).stringWidth("9999"));
-        allTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                    boolean hasFocus, int row, int column) {
-                if (column != 1)
-                    return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                return new JLinkLabel(value.toString());
-            }
-        });
-        allTable.addMouseListener(new MouseAdapter() {
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (allTable.columnAtPoint(e.getPoint()) == 1) {
-                    int row = allTable.rowAtPoint(e.getPoint());
-                    if (row != -1 && row < allTable.getRowCount()) {
-                        String value = allTable.getModel().getValueAt(row, 1).toString();
-                        AsyncProgressDialog.run(DailyLeaderboardsDialog.this, "Downloading user's profile", dial -> {
-                            UserProfileDialog profileDialog = new UserProfileDialog(DailyLeaderboardsDialog.this, app);
-                            try {
-                                boolean success = profileDialog.fetch(value, DailyLeaderboardsDialog.this);
-                                dial.dispose();
-                                if (success) SwingUtils.showAndCenter(profileDialog);
-                            } catch (Exception e2) {
-                                dial.dispose();
-                                e2.printStackTrace();
-                                ExceptionDialog
-                                        .show(DailyLeaderboardsDialog.this, e2, "Couldn't download user's profile");
-                            }
-                        });
-                    }
-                }
-            }
-
-        });
+        allTable.setDefaultRenderer(Object.class, userProfileRenderer);
+        allTable.addMouseListener(userProfileHandler);
         allTimesPane.setViewportView(allTable);
 
         JPanel buttonPane = new JPanel();
