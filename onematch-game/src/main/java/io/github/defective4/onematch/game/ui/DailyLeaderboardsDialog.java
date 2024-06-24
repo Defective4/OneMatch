@@ -153,6 +153,7 @@ public class DailyLeaderboardsDialog extends JDialog {
         TableUserProfileRenderer userProfileRenderer = new TableUserProfileRenderer();
 
         JHoverableTable dailyTable = new JHoverableTable();
+        dailyTable.setRowSelectionAllowed(false);
         dailyTable.setShowHorizontalLines(true);
         dailyTable.setModel(new UneditableTableModel(dailyModel));
         dailyTable
@@ -175,6 +176,7 @@ public class DailyLeaderboardsDialog extends JDialog {
                 .getColumn(0)
                 .setPreferredWidth(allTable.getFontMetrics(allTable.getFont()).stringWidth("9999"));
         allTable.setDefaultRenderer(Object.class, userProfileRenderer);
+        allTable.setRowSelectionAllowed(false);
         allTable.getTableHeader().setDefaultRenderer(new DefaultTableCellRenderer() {
 
             @Override
