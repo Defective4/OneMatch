@@ -51,6 +51,10 @@ public class WebClient {
         this.apiVersion = apiVersion;
     }
 
+    public WebResponse updateUserPreferences(String token, UserPreferences preferences) throws IOException {
+        return put("api/user/prefs", token, preferences.getBody(), "application/json");
+    }
+
     public WebResponse changePassword(String token, String oldPassword, String newPassword) throws IOException {
         return post("api/user/password", token, "oldPass", oldPassword, "newPass", newPassword);
     }

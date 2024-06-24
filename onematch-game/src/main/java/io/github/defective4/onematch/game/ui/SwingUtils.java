@@ -29,9 +29,14 @@ public class SwingUtils {
     }
 
     public static void deepAttach(Container container, InteractionListener ls) {
+        deepAttach(container, ls, AbstractButton.class);
+    }
+
+    public static void deepAttach(Container container, InteractionListener ls,
+            Class<? extends AbstractButton> buttonClass) {
         for (Component cpt : container.getComponents()) {
-            if (cpt instanceof Container) deepAttach((Container) cpt, ls);
-            if (cpt instanceof AbstractButton && ((AbstractButton) cpt).getActionListeners().length == 0)
+            if (cpt instanceof Container) deepAttach((Container) cpt, ls, buttonClass);
+            if (buttonClass.isInstance(cpt) && ((AbstractButton) cpt).getActionListeners().length == 0)
                 ((AbstractButton) cpt).addActionListener(e -> ls.interacted(cpt));
             else if (cpt instanceof JSlider) ((JSlider) cpt).addChangeListener(e -> {
                 if (!((JSlider) cpt).getValueIsAdjusting()) ls.interacted(cpt);

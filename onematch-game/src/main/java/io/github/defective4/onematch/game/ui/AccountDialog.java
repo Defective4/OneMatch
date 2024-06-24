@@ -24,6 +24,7 @@ import io.github.defective4.onematch.core.SHA256;
 import io.github.defective4.onematch.game.Application;
 import io.github.defective4.onematch.game.ui.components.JLinkLabel;
 import io.github.defective4.onematch.game.ui.components.UneditableTableModel;
+import io.github.defective4.onematch.net.UserPreferences;
 import io.github.defective4.onematch.net.UserProfile;
 import io.github.defective4.onematch.net.WebClient.WebResponse;
 
@@ -574,8 +575,32 @@ public class AccountDialog extends JDialog {
         settingsPane.add(new JLabel(" "));
 
         JButton btnSave = new JButton("Save");
-        settingsPane.add(btnSave);
         btnSave.setEnabled(false);
+        settingsPane.add(btnSave);
+
+        btnSave.addActionListener(e -> {
+            UserPreferences prefs = new UserPreferences(visibleCheck.isSelected(), saveScoresCheck.isSelected());
+            AsyncProgressDialog.run(this, "Updating settings...", dial -> {
+                try {
+                    WebResponse response = app.getWebClient().updateUserPreferences(app.getWebToken(), prefs);
+                    dial.dispose();
+                    if (response.getCode() == 204) {
+                        SwingUtilities.invokeLater(() -> btnSave.setEnabled(false));
+                        JOptionPane
+                                .showMessageDialog(this, "Preferences updated!", "Success",
+                                        JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        ErrorDialog.show(this, response.getResponseString(), "Couldn't update preferences");
+                    }
+                } catch (Exception e4) {
+                    dial.dispose();
+                    e4.printStackTrace();
+                    ExceptionDialog.show(this, e4, "Couldn't update preferences");
+                }
+            });
+        });
+
+        SwingUtils.deepAttach(settingsPane, cpt -> { btnSave.setEnabled(true); }, JCheckBox.class);
     }
 
     public void fetchAll(Window parent) throws Exception {
