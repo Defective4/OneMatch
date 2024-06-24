@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 import io.github.defective4.onematch.game.Application;
+import io.github.defective4.onematch.game.ui.components.JHoverableTable;
 import io.github.defective4.onematch.game.ui.components.JLinkLabel;
 import io.github.defective4.onematch.game.ui.components.UneditableTableModel;
 import io.github.defective4.onematch.net.Leaderboards;
@@ -65,7 +66,14 @@ public class DailyLeaderboardsDialog extends JDialog {
                 int row, int column) {
             if (column != 1)
                 return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            return new JLinkLabel(value.toString());
+            JLinkLabel label = new JLinkLabel(value.toString());
+            if (table instanceof JHoverableTable) {
+                JHoverableTable hover = (JHoverableTable) table;
+                if (hover.getHoverColumn() == 1 && hover.getHoverRow() == row) {
+                    label.mouseEntered();
+                }
+            }
+            return label;
         }
     }
 
@@ -144,7 +152,7 @@ public class DailyLeaderboardsDialog extends JDialog {
 
         TableUserProfileRenderer userProfileRenderer = new TableUserProfileRenderer();
 
-        JTable dailyTable = new JTable();
+        JHoverableTable dailyTable = new JHoverableTable();
         dailyTable.setShowHorizontalLines(true);
         dailyTable.setModel(new UneditableTableModel(dailyModel));
         dailyTable
@@ -160,7 +168,7 @@ public class DailyLeaderboardsDialog extends JDialog {
         JScrollPane allTimesPane = new JScrollPane();
         tabbedPane.addTab("All times", null, allTimesPane, null);
 
-        JTable allTable = new JTable();
+        JHoverableTable allTable = new JHoverableTable();
         allTable.setModel(new UneditableTableModel(allModel));
         allTable
                 .getColumnModel()
@@ -172,7 +180,14 @@ public class DailyLeaderboardsDialog extends JDialog {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                     boolean hasFocus, int row, int column) {
-                if (column == 4) { return new JLinkLabel(value.toString()); }
+                if (column == 4) {
+                    JLinkLabel link = new JLinkLabel(value.toString());
+                    if (table instanceof JHoverableTable) {
+                        JHoverableTable hover = (JHoverableTable) table;
+                        if (hover.getHoverHeaderColumn() == 4) link.mouseEntered();
+                    }
+                    return link;
+                }
                 return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             }
 
