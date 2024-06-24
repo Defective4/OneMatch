@@ -585,10 +585,7 @@ public class AccountDialog extends JDialog {
                     WebResponse response = app.getWebClient().updateUserPreferences(app.getWebToken(), prefs);
                     dial.dispose();
                     if (response.getCode() == 204) {
-                        SwingUtilities.invokeLater(() -> btnSave.setEnabled(false));
-                        JOptionPane
-                                .showMessageDialog(this, "Preferences updated!", "Success",
-                                        JOptionPane.INFORMATION_MESSAGE);
+                        btnSave.setEnabled(false);
                     } else {
                         ErrorDialog.show(this, response.getResponseString(), "Couldn't update preferences");
                     }

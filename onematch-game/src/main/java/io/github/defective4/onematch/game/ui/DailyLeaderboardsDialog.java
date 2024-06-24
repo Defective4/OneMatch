@@ -11,18 +11,11 @@ import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
 import java.util.Map;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import io.github.defective4.onematch.game.Application;
 import io.github.defective4.onematch.game.ui.components.JLinkLabel;
@@ -80,26 +73,42 @@ public class DailyLeaderboardsDialog extends JDialog {
         private static final Cursor POINTER_CURSOR = new Cursor(Cursor.HAND_CURSOR);
         private static final Cursor DEFAULT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR);
         private final JTable table;
+        private final JTableHeader header;
+        private final int index;
 
-        public TableUserCursorHandler(JTable table) {
+        public TableUserCursorHandler(JTable table, int index) {
             this.table = table;
+            this.index = index;
+            header = null;
+        }
+
+        public TableUserCursorHandler(JTableHeader header, int index) {
+            this.header = header;
+            table = null;
+            this.index = index;
         }
 
         @Override
         public void mouseMoved(MouseEvent e) {
             Cursor toSet;
-            toSet = table.columnAtPoint(e.getPoint()) == 1 && table.rowAtPoint(e.getPoint()) >= 0 ? POINTER_CURSOR
-                    : DEFAULT_CURSOR;
-            if (table.getCursor() != toSet) table.setCursor(toSet);
+            if (table != null) {
+                toSet = table.columnAtPoint(e.getPoint()) == index && table.rowAtPoint(e.getPoint()) >= 0
+                        ? POINTER_CURSOR
+                        : DEFAULT_CURSOR;
+                if (table.getCursor() != toSet) table.setCursor(toSet);
+            } else if (header != null) {
+                toSet = header.columnAtPoint(e.getPoint()) == index ? POINTER_CURSOR : DEFAULT_CURSOR;
+                if (header.getCursor() != toSet) header.setCursor(toSet);
+
+            }
         }
 
     }
 
     private final DefaultTableModel allModel = new DefaultTableModel(new Object[] {
-            "#", "User", "Solved ch.", "Best time", "Streak (cur/best)"
+            "#", "User", "Solved ch.", "Best time", "Streak"
     }, 0);
 
-    private final JTable allTable;
     private final Application app;
 
     private final DefaultTableModel dailyModel = new DefaultTableModel(new String[] {
@@ -144,21 +153,44 @@ public class DailyLeaderboardsDialog extends JDialog {
                 .setPreferredWidth(dailyTable.getFontMetrics(dailyTable.getFont()).stringWidth("999"));
         dailyTable.setDefaultRenderer(Object.class, userProfileRenderer);
         dailyTable.addMouseListener(new TableUserProfileHandler(app, dailyTable, parent));
-        dailyTable.addMouseMotionListener(new TableUserCursorHandler(dailyTable));
+        dailyTable.addMouseMotionListener(new TableUserCursorHandler(dailyTable, 1));
+        dailyTable.getTableHeader().setReorderingAllowed(false);
         dailyPane.setViewportView(dailyTable);
 
         JScrollPane allTimesPane = new JScrollPane();
         tabbedPane.addTab("All times", null, allTimesPane, null);
 
-        allTable = new JTable();
+        JTable allTable = new JTable();
         allTable.setModel(new UneditableTableModel(allModel));
         allTable
                 .getColumnModel()
                 .getColumn(0)
                 .setPreferredWidth(allTable.getFontMetrics(allTable.getFont()).stringWidth("9999"));
         allTable.setDefaultRenderer(Object.class, userProfileRenderer);
+        allTable.getTableHeader().setDefaultRenderer(new DefaultTableCellRenderer() {
+
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                    boolean hasFocus, int row, int column) {
+                if (column == 4) { return new JLinkLabel(value.toString()); }
+                return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            }
+
+        });
         allTable.addMouseListener(new TableUserProfileHandler(app, allTable, parent));
-        allTable.addMouseMotionListener(new TableUserCursorHandler(allTable));
+        allTable.addMouseMotionListener(new TableUserCursorHandler(allTable, 1));
+        allTable.getTableHeader().setReorderingAllowed(false);
+        allTable.getTableHeader().addMouseMotionListener(new TableUserCursorHandler(allTable.getTableHeader(), 4));
+        allTable.getTableHeader().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (allTable.columnAtPoint(e.getPoint()) == 4) {
+                    JOptionPane
+                            .showMessageDialog(DailyLeaderboardsDialog.this, "User's streak (current/best)", "Info",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        });
         allTimesPane.setViewportView(allTable);
 
         JPanel buttonPane = new JPanel();
