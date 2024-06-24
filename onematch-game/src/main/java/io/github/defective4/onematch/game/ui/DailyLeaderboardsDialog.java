@@ -30,29 +30,33 @@ import io.github.defective4.onematch.net.Leaderboards.AllTimeEntry;
 
 public class DailyLeaderboardsDialog extends JDialog {
 
-    private final class TableUserProfileHandler extends MouseAdapter {
+    private static final class TableUserProfileHandler extends MouseAdapter {
         private final Application app;
+        private final JTable table;
+        private final Window parent;
 
-        private TableUserProfileHandler(Application app) {
+        private TableUserProfileHandler(Application app, JTable table, Window parent) {
             this.app = app;
+            this.table = table;
+            this.parent = parent;
         }
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            if (allTable.columnAtPoint(e.getPoint()) == 1) {
-                int row = allTable.rowAtPoint(e.getPoint());
-                if (row != -1 && row < allTable.getRowCount()) {
-                    String value = allTable.getModel().getValueAt(row, 1).toString();
-                    AsyncProgressDialog.run(DailyLeaderboardsDialog.this, "Downloading user's profile", dial -> {
-                        UserProfileDialog profileDialog = new UserProfileDialog(DailyLeaderboardsDialog.this, app);
+            if (table.columnAtPoint(e.getPoint()) == 1) {
+                int row = table.rowAtPoint(e.getPoint());
+                if (row != -1 && row < table.getRowCount()) {
+                    String value = table.getModel().getValueAt(row, 1).toString();
+                    AsyncProgressDialog.run(parent, "Downloading user's profile", dial -> {
+                        UserProfileDialog profileDialog = new UserProfileDialog(parent, app);
                         try {
-                            boolean success = profileDialog.fetch(value, DailyLeaderboardsDialog.this);
+                            boolean success = profileDialog.fetch(value, parent);
                             dial.dispose();
                             if (success) SwingUtils.showAndCenter(profileDialog);
                         } catch (Exception e2) {
                             dial.dispose();
                             e2.printStackTrace();
-                            ExceptionDialog.show(DailyLeaderboardsDialog.this, e2, "Couldn't download user's profile");
+                            ExceptionDialog.show(parent, e2, "Couldn't download user's profile");
                         }
                     });
                 }
@@ -60,7 +64,7 @@ public class DailyLeaderboardsDialog extends JDialog {
         }
     }
 
-    private final class TableUserProfileRenderer extends DefaultTableCellRenderer {
+    private static final class TableUserProfileRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
                 int row, int column) {
@@ -109,7 +113,6 @@ public class DailyLeaderboardsDialog extends JDialog {
         dailyRootPane.add(dailyPane);
 
         TableUserProfileRenderer userProfileRenderer = new TableUserProfileRenderer();
-        TableUserProfileHandler userProfileHandler = new TableUserProfileHandler(app);
 
         JTable dailyTable = new JTable();
         dailyTable.setShowHorizontalLines(true);
@@ -119,7 +122,7 @@ public class DailyLeaderboardsDialog extends JDialog {
                 .getColumn(0)
                 .setPreferredWidth(dailyTable.getFontMetrics(dailyTable.getFont()).stringWidth("999"));
         dailyTable.setDefaultRenderer(Object.class, userProfileRenderer);
-        dailyTable.addMouseListener(userProfileHandler);
+        dailyTable.addMouseListener(new TableUserProfileHandler(app, dailyTable, parent));
         dailyPane.setViewportView(dailyTable);
 
         JScrollPane allTimesPane = new JScrollPane();
@@ -132,7 +135,7 @@ public class DailyLeaderboardsDialog extends JDialog {
                 .getColumn(0)
                 .setPreferredWidth(allTable.getFontMetrics(allTable.getFont()).stringWidth("9999"));
         allTable.setDefaultRenderer(Object.class, userProfileRenderer);
-        allTable.addMouseListener(userProfileHandler);
+        allTable.addMouseListener(new TableUserProfileHandler(app, allTable, parent));
         allTimesPane.setViewportView(allTable);
 
         JPanel buttonPane = new JPanel();
