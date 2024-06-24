@@ -5,6 +5,7 @@ public class UserProfile {
     public String bestTime = "Unknown";
     public long joinedDate;
     public String name = "Username";
+    public UserPreferences prefs;
 
     public UserProfile() {}
 

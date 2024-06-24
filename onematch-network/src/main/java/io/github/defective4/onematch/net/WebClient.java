@@ -74,6 +74,10 @@ public class WebClient {
         return get("api/daily", token);
     }
 
+    public WebResponse getUserPreferences(String token) throws IOException {
+        return get("api/user/prefs", token);
+    }
+
     public ChallengesMeta getMeta() throws IOException {
         try (Reader reader = new InputStreamReader(URI.create(rootURL + "/api/daily/meta").toURL().openStream())) {
             ChallengesMeta meta = new Gson().fromJson(reader, ChallengesMeta.class);

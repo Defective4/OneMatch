@@ -172,6 +172,10 @@ public class AccountDialog extends JDialog {
 
     private JTable userTable;
 
+    private JCheckBox visibleCheck;
+
+    private JCheckBox saveScoresCheck;
+
     /**
      * Create the dialog.
      *
@@ -485,11 +489,11 @@ public class AccountDialog extends JDialog {
         settingsPane.add(visPanel);
         visPanel.setLayout(new BoxLayout(visPanel, BoxLayout.Y_AXIS));
 
-        JCheckBox visibleCheck = new JCheckBox("Allow others to view my profile");
+        visibleCheck = new JCheckBox("Allow others to view my profile");
         visPanel.add(visibleCheck);
 
-        JCheckBox chckbxSaveMyScores = new JCheckBox("Save my scores in leaderboards");
-        visPanel.add(chckbxSaveMyScores);
+        saveScoresCheck = new JCheckBox("Save my scores in leaderboards");
+        visPanel.add(saveScoresCheck);
 
         JPanel secPanel = new JPanel();
         secPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -581,6 +585,14 @@ public class AccountDialog extends JDialog {
             UserProfile profile = new Gson().fromJson(profileResponse.getResponseString(), UserProfile.class);
             makeProfileModel(profile, userTable);
             username.setText(profile.name);
+
+            if (profile.prefs == null) {
+                visibleCheck.setEnabled(false);
+                saveScoresCheck.setEnabled(false);
+            } else {
+                visibleCheck.setSelected(profile.prefs.hasPublicProfile);
+                saveScoresCheck.setSelected(profile.prefs.saveScores);
+            }
 
             accountPane.removeAll();
             accountPane.add(accountTabs);
