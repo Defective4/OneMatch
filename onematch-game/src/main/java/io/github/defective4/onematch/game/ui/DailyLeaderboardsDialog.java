@@ -2,10 +2,12 @@ package io.github.defective4.onematch.game.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
 import java.util.Map;
 
@@ -74,6 +76,25 @@ public class DailyLeaderboardsDialog extends JDialog {
         }
     }
 
+    private static final class TableUserCursorHandler extends MouseMotionAdapter {
+        private static final Cursor POINTER_CURSOR = new Cursor(Cursor.HAND_CURSOR);
+        private static final Cursor DEFAULT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR);
+        private final JTable table;
+
+        public TableUserCursorHandler(JTable table) {
+            this.table = table;
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+            Cursor toSet;
+            toSet = table.columnAtPoint(e.getPoint()) == 1 && table.rowAtPoint(e.getPoint()) >= 0 ? POINTER_CURSOR
+                    : DEFAULT_CURSOR;
+            if (table.getCursor() != toSet) table.setCursor(toSet);
+        }
+
+    }
+
     private final DefaultTableModel allModel = new DefaultTableModel(new Object[] {
             "#", "User", "Solved ch.", "Best time", "Streak (cur/best)"
     }, 0);
@@ -123,6 +144,7 @@ public class DailyLeaderboardsDialog extends JDialog {
                 .setPreferredWidth(dailyTable.getFontMetrics(dailyTable.getFont()).stringWidth("999"));
         dailyTable.setDefaultRenderer(Object.class, userProfileRenderer);
         dailyTable.addMouseListener(new TableUserProfileHandler(app, dailyTable, parent));
+        dailyTable.addMouseMotionListener(new TableUserCursorHandler(dailyTable));
         dailyPane.setViewportView(dailyTable);
 
         JScrollPane allTimesPane = new JScrollPane();
@@ -136,6 +158,7 @@ public class DailyLeaderboardsDialog extends JDialog {
                 .setPreferredWidth(allTable.getFontMetrics(allTable.getFont()).stringWidth("9999"));
         allTable.setDefaultRenderer(Object.class, userProfileRenderer);
         allTable.addMouseListener(new TableUserProfileHandler(app, allTable, parent));
+        allTable.addMouseMotionListener(new TableUserCursorHandler(allTable));
         allTimesPane.setViewportView(allTable);
 
         JPanel buttonPane = new JPanel();
