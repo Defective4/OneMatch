@@ -170,7 +170,6 @@ public class AccountDialog extends JDialog {
     private final Application app;
 
     private JLabel username;
-
     private JTable userTable;
 
     private JCheckBox visibleCheck;
@@ -456,6 +455,7 @@ public class AccountDialog extends JDialog {
 
         userTable = new JTable();
         profilePane.add(userTable);
+        userTable.setRowSelectionAllowed(false);
         userTable.setAlignmentX(Component.LEFT_ALIGNMENT);
         userTable.setShowHorizontalLines(true);
 

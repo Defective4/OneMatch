@@ -84,6 +84,7 @@ public class DailyDialog extends JDialog {
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
         metaTable = new JTable();
+        metaTable.setRowSelectionAllowed(false);
         metaTable.setShowHorizontalLines(true);
         panel.add(metaTable);
 

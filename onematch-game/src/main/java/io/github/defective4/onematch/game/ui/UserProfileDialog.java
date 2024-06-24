@@ -51,6 +51,7 @@ public class UserProfileDialog extends JDialog {
         contentPanel.add(new JLabel(" "));
 
         table = new JTable();
+        table.setRowSelectionAllowed(false);
         table.setAlignmentX(Component.LEFT_ALIGNMENT);
         table.setShowHorizontalLines(true);
         contentPanel.add(table);
