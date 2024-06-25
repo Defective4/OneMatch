@@ -263,7 +263,7 @@ public class Application {
                                         "Next"
                 }, 0);
             } else {
-                db.insertSolved(lastInvalidEquation, lastValidEquation, Application.this.ops.getDifficulty());
+                db.insertSolved(lastInvalidEquation, lastValidEquation, Application.this.ops.getDifficulty(), time);
                 recentEquations.addEquation(lastValidEquation);
                 JOptionPane
                         .showOptionDialog(board, "Congratulations!\nYour answer is correct!\nSolved in " + time + "s",

@@ -9,11 +9,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import io.github.defective4.onematch.core.Equation;
@@ -41,23 +39,55 @@ public class UserDatabase {
         return file;
     }
 
-    public Map<NumberLogic.Difficulty, Integer> getStats() {
-        Map<NumberLogic.Difficulty, Integer> map = new LinkedHashMap<>();
-        List<Difficulty> diffs = new ArrayList<>(Arrays.asList(Difficulty.values()));
-        diffs.sort((d1, d2) -> d1.getID() - d2.getID());
-        diffs.forEach(diff -> map.put(diff, 0));
+    public static class StatEntry {
+        private final int solved;
+        private final double avgTime, minTime;
 
+        public StatEntry(int solved, double avgTime, double minTime) {
+            this.solved = solved;
+            this.avgTime = avgTime;
+            this.minTime = minTime;
+        }
+
+        public int getSolved() {
+            return solved;
+        }
+
+        public double getAvgTime() {
+            return avgTime;
+        }
+
+        public double getMinTime() {
+            return minTime;
+        }
+
+    }
+
+    public Map<NumberLogic.Difficulty, StatEntry> getStats() {
+        Map<Difficulty, StatEntry> entries = new LinkedHashMap<>();
+        String query = "select " + String.join(", ", Arrays.stream(Difficulty.values()).map(diff -> {
+            int id = diff.getID();
+            return "(select count(*) from `solved` where `difficulty` = " + id + ") as cnt" + id + ", "
+                    + "(select avg(`time`) from `solved` where `difficulty` = " + id + ") avg" + id + ", "
+                    + "(select min(`time`) from `solved` where `difficulty` = " + id + ") min" + id;
+        }).toList().toArray(new String[0]));
         try (Statement st = mkStatement()) {
-            try (ResultSet set = st.executeQuery("select `difficulty` from `solved`")) {
-                while (set.next()) {
-                    Difficulty diff = Difficulty.getForID(set.getInt(1));
-                    map.put(diff, map.get(diff) + 1);
+            try (ResultSet set = st.executeQuery(query)) {
+                if (set.next()) {
+                    for (Difficulty diff : Difficulty.values()) {
+                        int id = diff.getID();
+                        int cnt = set.getInt("cnt" + id);
+                        int avg = set.getInt("avg" + id);
+                        int min = set.getInt("min" + id);
+                        entries.put(diff, new StatEntry(cnt, avg, min));
+                    }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Collections.unmodifiableMap(map);
+
+        return Collections.unmodifiableMap(entries);
     }
 
     public boolean hasAnySolved() {
@@ -85,12 +115,12 @@ public class UserDatabase {
         return false;
     }
 
-    public void insertSolved(Equation invalid, Equation solved, Difficulty diff) {
+    public void insertSolved(Equation invalid, Equation solved, Difficulty diff, double time) {
         try (Statement st = mkStatement()) {
             st
                     .execute(String
-                            .format("insert or ignore into `solved` (`invalid`, `equation`, `difficulty`) values (\"%s\", \"%s\", %s)",
-                                    invalid, solved, diff.getID()));
+                            .format("insert or ignore into `solved` (`invalid`, `equation`, `difficulty`, `time`) values (\"%s\", \"%s\", %s, %s)",
+                                    invalid, solved, diff.getID(), time));
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -18,6 +18,7 @@ import javax.swing.border.EmptyBorder;
 
 import io.github.defective4.onematch.core.NumberLogic.Difficulty;
 import io.github.defective4.onematch.game.Application;
+import io.github.defective4.onematch.game.data.UserDatabase.StatEntry;
 
 public class MainMenu extends JFrame {
     private final JButton btnAccount;
@@ -65,7 +66,7 @@ public class MainMenu extends JFrame {
         JButton button = new JButton();
         button.addActionListener(e -> {
             AsyncProgressDialog.run(this, "Fetching stats...", dial -> {
-                Map<Difficulty, Integer> stats = app.getDatabase().getStats();
+                Map<Difficulty, StatEntry> stats = app.getDatabase().getStats();
                 dial.dispose();
                 SwingUtils.showAndCenter(new StatsDialog(this, stats, app));
             });

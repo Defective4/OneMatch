@@ -17,16 +17,17 @@ import javax.swing.table.DefaultTableModel;
 
 import io.github.defective4.onematch.core.NumberLogic.Difficulty;
 import io.github.defective4.onematch.game.Application;
+import io.github.defective4.onematch.game.data.UserDatabase.StatEntry;
 import io.github.defective4.onematch.game.ui.components.JLinkLabel;
 import io.github.defective4.onematch.game.ui.components.UneditableTableModel;
 
 public class StatsDialog extends JDialog {
     private final JPanel contentPanel = new JPanel();
 
-    public StatsDialog(Window parent, Map<Difficulty, Integer> stats, Application app) {
+    public StatsDialog(Window parent, Map<Difficulty, StatEntry> stats, Application app) {
         super(parent);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        if (stats == null) stats = Map.of(Difficulty.MEDIUM, 0);
+        if (stats == null) stats = Map.of(Difficulty.MEDIUM, new StatEntry(0, 0, 0));
         setTitle("OneMatch - Statistics");
         setResizable(false);
         setModal(true);
@@ -44,8 +45,9 @@ public class StatsDialog extends JDialog {
         }, 0);
         Difficulty[] diffs = stats.keySet().toArray(new Difficulty[0]);
         for (Difficulty diff : diffs) {
-            model.addRow(new String[] {
-                    diff.capitalize(), stats.get(diff) == 0 ? "None yet" : Integer.toString(stats.get(diff))
+            model.addRow(new String[] { // TODO
+                    diff.capitalize(),
+                    stats.get(diff).getSolved() == 0 ? "None yet" : Integer.toString(stats.get(diff).getSolved())
             });
         }
         JTable table = new JTable();
