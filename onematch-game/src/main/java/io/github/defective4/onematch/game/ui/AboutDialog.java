@@ -68,7 +68,7 @@ public class AboutDialog extends JDialog {
         discord.add(lblDiscord);
         lblDiscord.setIcon(new ImageIcon(AboutDialog.class.getResource("/icons/discord.png")));
 
-        JCopyButton copyButton = new JCopyButton((String) null, (Window) null);
+        JCopyButton copyButton = new JCopyButton("java.net.defective", (Window) null);
         discord.add(copyButton);
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
