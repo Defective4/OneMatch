@@ -77,8 +77,10 @@ public class UserDatabase {
                     for (Difficulty diff : Difficulty.values()) {
                         int id = diff.getID();
                         int cnt = set.getInt("cnt" + id);
-                        int avg = set.getInt("avg" + id);
-                        int min = set.getInt("min" + id);
+                        double avg = set.getDouble("avg" + id);
+                        avg = (int) (avg * 10) / 10d;
+                        double min = set.getDouble("min" + id);
+
                         entries.put(diff, new StatEntry(cnt, avg, min));
                     }
                 }
