@@ -13,8 +13,54 @@ import javax.swing.table.TableModel;
 public class JHoverableTable extends JTable {
 
     private int hoverColumn = -1;
-    private int hoverRow = -1;
     private int hoverHeaderColumn = -1;
+    private int hoverRow = -1;
+
+    public JHoverableTable() {
+        register();
+    }
+
+    public JHoverableTable(int numRows, int numColumns) {
+        super(numRows, numColumns);
+        register();
+    }
+
+    public JHoverableTable(Object[][] rowData, Object[] columnNames) {
+        super(rowData, columnNames);
+        register();
+    }
+
+    public JHoverableTable(TableModel dm) {
+        super(dm);
+        register();
+    }
+
+    public JHoverableTable(TableModel dm, TableColumnModel cm) {
+        super(dm, cm);
+        register();
+    }
+
+    public JHoverableTable(TableModel dm, TableColumnModel cm, ListSelectionModel sm) {
+        super(dm, cm, sm);
+        register();
+    }
+
+    public JHoverableTable(Vector<? extends Vector<?>> rowData, Vector<?> columnNames) {
+        super(rowData, columnNames);
+        register();
+    }
+
+    public int getHoverColumn() {
+        return hoverColumn;
+    }
+
+    public int getHoverHeaderColumn() {
+        return hoverHeaderColumn;
+    }
+
+    public int getHoverRow() {
+        return hoverRow;
+    }
 
     private void register() {
         addMouseMotionListener(new MouseMotionAdapter() {
@@ -57,52 +103,6 @@ public class JHoverableTable extends JTable {
                 repaint();
             }
         });
-    }
-
-    public int getHoverColumn() {
-        return hoverColumn;
-    }
-
-    public int getHoverRow() {
-        return hoverRow;
-    }
-
-    public int getHoverHeaderColumn() {
-        return hoverHeaderColumn;
-    }
-
-    public JHoverableTable() {
-        register();
-    }
-
-    public JHoverableTable(int numRows, int numColumns) {
-        super(numRows, numColumns);
-        register();
-    }
-
-    public JHoverableTable(Object[][] rowData, Object[] columnNames) {
-        super(rowData, columnNames);
-        register();
-    }
-
-    public JHoverableTable(TableModel dm, TableColumnModel cm, ListSelectionModel sm) {
-        super(dm, cm, sm);
-        register();
-    }
-
-    public JHoverableTable(TableModel dm, TableColumnModel cm) {
-        super(dm, cm);
-        register();
-    }
-
-    public JHoverableTable(TableModel dm) {
-        super(dm);
-        register();
-    }
-
-    public JHoverableTable(Vector<? extends Vector<?>> rowData, Vector<?> columnNames) {
-        super(rowData, columnNames);
-        register();
     }
 
 }

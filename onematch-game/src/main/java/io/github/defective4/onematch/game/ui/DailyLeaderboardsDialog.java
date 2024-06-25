@@ -26,10 +26,46 @@ import io.github.defective4.onematch.net.Leaderboards.AllTimeEntry;
 
 public class DailyLeaderboardsDialog extends JDialog {
 
+    private static final class TableUserCursorHandler extends MouseMotionAdapter {
+        private static final Cursor DEFAULT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR);
+        private static final Cursor POINTER_CURSOR = new Cursor(Cursor.HAND_CURSOR);
+        private final JTableHeader header;
+        private final int index;
+        private final JTable table;
+
+        public TableUserCursorHandler(JTable table, int index) {
+            this.table = table;
+            this.index = index;
+            header = null;
+        }
+
+        public TableUserCursorHandler(JTableHeader header, int index) {
+            this.header = header;
+            table = null;
+            this.index = index;
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+            Cursor toSet;
+            if (table != null) {
+                toSet = table.columnAtPoint(e.getPoint()) == index && table.rowAtPoint(e.getPoint()) >= 0
+                        ? POINTER_CURSOR
+                        : DEFAULT_CURSOR;
+                if (table.getCursor() != toSet) table.setCursor(toSet);
+            } else if (header != null) {
+                toSet = header.columnAtPoint(e.getPoint()) == index ? POINTER_CURSOR : DEFAULT_CURSOR;
+                if (header.getCursor() != toSet) header.setCursor(toSet);
+
+            }
+        }
+
+    }
+
     private static final class TableUserProfileHandler extends MouseAdapter {
         private final Application app;
-        private final JTable table;
         private final Window parent;
+        private final JTable table;
 
         private TableUserProfileHandler(Application app, JTable table, Window parent) {
             this.app = app;
@@ -75,42 +111,6 @@ public class DailyLeaderboardsDialog extends JDialog {
             }
             return label;
         }
-    }
-
-    private static final class TableUserCursorHandler extends MouseMotionAdapter {
-        private static final Cursor POINTER_CURSOR = new Cursor(Cursor.HAND_CURSOR);
-        private static final Cursor DEFAULT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR);
-        private final JTable table;
-        private final JTableHeader header;
-        private final int index;
-
-        public TableUserCursorHandler(JTable table, int index) {
-            this.table = table;
-            this.index = index;
-            header = null;
-        }
-
-        public TableUserCursorHandler(JTableHeader header, int index) {
-            this.header = header;
-            table = null;
-            this.index = index;
-        }
-
-        @Override
-        public void mouseMoved(MouseEvent e) {
-            Cursor toSet;
-            if (table != null) {
-                toSet = table.columnAtPoint(e.getPoint()) == index && table.rowAtPoint(e.getPoint()) >= 0
-                        ? POINTER_CURSOR
-                        : DEFAULT_CURSOR;
-                if (table.getCursor() != toSet) table.setCursor(toSet);
-            } else if (header != null) {
-                toSet = header.columnAtPoint(e.getPoint()) == index ? POINTER_CURSOR : DEFAULT_CURSOR;
-                if (header.getCursor() != toSet) header.setCursor(toSet);
-
-            }
-        }
-
     }
 
     private final DefaultTableModel allModel = new DefaultTableModel(new Object[] {

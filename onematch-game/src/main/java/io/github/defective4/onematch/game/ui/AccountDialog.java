@@ -169,12 +169,12 @@ public class AccountDialog extends JDialog {
 
     private final Application app;
 
+    private JCheckBox saveScoresCheck;
     private JLabel username;
+
     private JTable userTable;
 
     private JCheckBox visibleCheck;
-
-    private JCheckBox saveScoresCheck;
 
     /**
      * Create the dialog.

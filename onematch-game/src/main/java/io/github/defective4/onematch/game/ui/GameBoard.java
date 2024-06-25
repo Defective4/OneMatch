@@ -99,6 +99,8 @@ public class GameBoard extends JFrame {
     private MatchButton segU_2;
     private MatchButton segU_3;
 
+    private long startTime;
+
     private int time;
 
     private final Timer timer = new Timer(true);
@@ -219,6 +221,12 @@ public class GameBoard extends JFrame {
 
     public MatrixNumber getNumber(int index) {
         return MatrixNumber.getForMatrix(getRawSegments(index));
+    }
+
+    public double getPlayTime() {
+        if (startTime == 0) return 0d;
+        long diff = System.currentTimeMillis() - startTime;
+        return (int) (diff / 100) / 10d;
     }
 
     public int[] getRawSegments(int index) {
@@ -510,14 +518,6 @@ public class GameBoard extends JFrame {
         lblTwo.setText("Click on any match to begin");
 
         matrix = new GameMatrix(segPlus, getSegments(1), getSegments(2), getSegments(3));
-    }
-
-    private long startTime;
-
-    public double getPlayTime() {
-        if (startTime == 0) return 0d;
-        long diff = System.currentTimeMillis() - startTime;
-        return (int) (diff / 100) / 10d;
     }
 
     public void startTimer(boolean show) {

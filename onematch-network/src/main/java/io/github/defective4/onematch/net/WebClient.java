@@ -51,10 +51,6 @@ public class WebClient {
         this.apiVersion = apiVersion;
     }
 
-    public WebResponse updateUserPreferences(String token, UserPreferences preferences) throws IOException {
-        return put("api/user/prefs", token, preferences.getBody(), "application/json");
-    }
-
     public WebResponse changePassword(String token, String oldPassword, String newPassword) throws IOException {
         return post("api/user/password", token, "oldPass", oldPassword, "newPass", newPassword);
     }
@@ -78,10 +74,6 @@ public class WebClient {
         return get("api/daily", token);
     }
 
-    public WebResponse getUserPreferences(String token) throws IOException {
-        return get("api/user/prefs", token);
-    }
-
     public ChallengesMeta getMeta() throws IOException {
         try (Reader reader = new InputStreamReader(URI.create(rootURL + "/api/daily/meta").toURL().openStream())) {
             ChallengesMeta meta = new Gson().fromJson(reader, ChallengesMeta.class);
@@ -92,6 +84,10 @@ public class WebClient {
 
     public WebResponse getOtherUserProfile(String user) throws IOException {
         return get("api/user/profile/" + URLEncoder.encode(user, StandardCharsets.UTF_8), user);
+    }
+
+    public WebResponse getUserPreferences(String token) throws IOException {
+        return get("api/user/prefs", token);
     }
 
     public WebResponse getUserProfile(String token) throws IOException {
@@ -125,6 +121,10 @@ public class WebClient {
         container.add("solved", challenges);
         return put("api/daily/submit", token, new Gson().toJson(container).getBytes(StandardCharsets.UTF_8),
                 "application/json");
+    }
+
+    public WebResponse updateUserPreferences(String token, UserPreferences preferences) throws IOException {
+        return put("api/user/prefs", token, preferences.getBody(), "application/json");
     }
 
     private WebResponse get(String suburl, String token) throws IOException {

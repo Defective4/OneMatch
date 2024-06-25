@@ -19,7 +19,31 @@ import io.github.defective4.onematch.core.NumberLogic;
 import io.github.defective4.onematch.core.NumberLogic.Difficulty;
 
 public class UserDatabase {
+    public static class StatEntry {
+        private final double avgTime, minTime;
+        private final int solved;
+
+        public StatEntry(int solved, double avgTime, double minTime) {
+            this.solved = solved;
+            this.avgTime = avgTime;
+            this.minTime = minTime;
+        }
+
+        public double getAvgTime() {
+            return avgTime;
+        }
+
+        public double getMinTime() {
+            return minTime;
+        }
+
+        public int getSolved() {
+            return solved;
+        }
+
+    }
     private Connection connection;
+
     private final File file;
 
     public UserDatabase(File file) throws Exception {
@@ -37,30 +61,6 @@ public class UserDatabase {
 
     public File getFile() {
         return file;
-    }
-
-    public static class StatEntry {
-        private final int solved;
-        private final double avgTime, minTime;
-
-        public StatEntry(int solved, double avgTime, double minTime) {
-            this.solved = solved;
-            this.avgTime = avgTime;
-            this.minTime = minTime;
-        }
-
-        public int getSolved() {
-            return solved;
-        }
-
-        public double getAvgTime() {
-            return avgTime;
-        }
-
-        public double getMinTime() {
-            return minTime;
-        }
-
     }
 
     public Map<NumberLogic.Difficulty, StatEntry> getStats() {

@@ -42,16 +42,16 @@ public class JLinkLabel extends JLabel {
         });
     }
 
+    public ActionListener getActionListener() {
+        return actionListener;
+    }
+
     public void mouseEntered() {
         JLinkLabel.super.setFont(originalFont.deriveFont(Map.of(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON)));
     }
 
     public void mouseExitted() {
         JLinkLabel.super.setFont(originalFont);
-    }
-
-    public ActionListener getActionListener() {
-        return actionListener;
     }
 
     public void setActionListener(ActionListener actionListener) {
