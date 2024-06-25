@@ -512,9 +512,20 @@ public class GameBoard extends JFrame {
         matrix = new GameMatrix(segPlus, getSegments(1), getSegments(2), getSegments(3));
     }
 
-    public void startTimer() {
-        if (timerTask == null) {
-            time = 0;
+    private long startTime;
+
+    public double getPlayTime() {
+        if (startTime == 0) return 0d;
+        long diff = System.currentTimeMillis();
+        return (int) (diff / 100) / 10d;
+    }
+
+    public void startTimer(boolean show) {
+        if (timerTask != null) {
+            timerTask.cancel();
+        }
+        time = 0;
+        if (show) {
             timerLabel.setVisible(true);
             timerTask = new TimerTask() {
 
@@ -529,6 +540,7 @@ public class GameBoard extends JFrame {
     }
 
     public void stopTimer() {
+        startTime = 0;
         if (timerTask != null) {
             timerTask.cancel();
             timerTask = null;

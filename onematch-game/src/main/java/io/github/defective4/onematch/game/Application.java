@@ -195,7 +195,7 @@ public class Application {
         board.getMatrix().draw();
         board.rearrange();
         board.repaint();
-        if (ops.showTimerDaily) board.startTimer();
+        board.startTimer(ops.showTimerDaily);
     }
 
     public void startDailyChallenges(List<Challenge> chal) {
@@ -287,7 +287,7 @@ public class Application {
         board.getMatrix().draw();
         board.rearrange();
         board.repaint();
-        if (ops.showTimerNormal) board.startTimer();
+        board.startTimer(ops.showTimerNormal);
     }
 
     public static Application getInstance() {
