@@ -251,6 +251,7 @@ public class Application {
         for (ActionListener ls : submit.getActionListeners()) submit.removeActionListener(ls);
 
         submit.addActionListener(e -> {
+            double time = board.getPlayTime();
             board.stopTimer();
             submit.setEnabled(false);
             boolean valid = board.validateSolution();
@@ -265,8 +266,9 @@ public class Application {
                 db.insertSolved(lastInvalidEquation, lastValidEquation, Application.this.ops.getDifficulty());
                 recentEquations.addEquation(lastValidEquation);
                 JOptionPane
-                        .showOptionDialog(board, "Congratulations!\nYour answer is correct!", "Correct answer",
-                                JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[] {
+                        .showOptionDialog(board, "Congratulations!\nYour answer is correct!\nSolved in " + time + "s",
+                                "Correct answer", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
+                                new String[] {
                                         "Next"
                 }, 0);
             }

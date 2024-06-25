@@ -516,15 +516,16 @@ public class GameBoard extends JFrame {
 
     public double getPlayTime() {
         if (startTime == 0) return 0d;
-        long diff = System.currentTimeMillis();
+        long diff = System.currentTimeMillis() - startTime;
         return (int) (diff / 100) / 10d;
     }
 
     public void startTimer(boolean show) {
+        startTime = System.currentTimeMillis();
+        time = 0;
         if (timerTask != null) {
             timerTask.cancel();
         }
-        time = 0;
         if (show) {
             timerLabel.setVisible(true);
             timerTask = new TimerTask() {
