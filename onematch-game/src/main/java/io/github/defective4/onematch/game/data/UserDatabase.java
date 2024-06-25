@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 import io.github.defective4.onematch.core.Equation;
@@ -64,7 +64,7 @@ public class UserDatabase {
     }
 
     public Map<NumberLogic.Difficulty, StatEntry> getStats() {
-        Map<Difficulty, StatEntry> entries = new LinkedHashMap<>();
+        Map<Difficulty, StatEntry> entries = new HashMap<>();
         String query = "select " + String.join(", ", Arrays.stream(Difficulty.values()).map(diff -> {
             int id = diff.getID();
             return "(select count(*) from `solved` where `difficulty` = " + id + ") as cnt" + id + ", "

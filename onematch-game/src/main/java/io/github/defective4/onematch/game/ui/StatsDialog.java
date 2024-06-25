@@ -3,6 +3,7 @@ package io.github.defective4.onematch.game.ui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Window;
+import java.util.Arrays;
 import java.util.Map;
 
 import javax.swing.BoxLayout;
@@ -31,7 +32,7 @@ public class StatsDialog extends JDialog {
         setTitle("OneMatch - Statistics");
         setResizable(false);
         setModal(true);
-        setBounds(100, 100, 298, 211);
+        setBounds(100, 100, 309, 211);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -41,16 +42,20 @@ public class StatsDialog extends JDialog {
         contentPanel.add(scrollPane);
 
         DefaultTableModel model = new DefaultTableModel(new String[] {
-                "Difficulty", "Solved equations"
+                "Difficulty", "Solved", "Avg. Time", "Best Time"
         }, 0);
         Difficulty[] diffs = stats.keySet().toArray(new Difficulty[0]);
+        Arrays.sort(diffs, (d1, d2) -> d1.getID() - d2.getID());
         for (Difficulty diff : diffs) {
-            model.addRow(new String[] { // TODO
-                    diff.capitalize(),
-                    stats.get(diff).getSolved() == 0 ? "None yet" : Integer.toString(stats.get(diff).getSolved())
+            StatEntry stat = stats.get(diff);
+            model.addRow(new String[] {
+                    diff.capitalize(), stat.getSolved() == 0 ? "None yet" : Integer.toString(stat.getSolved()),
+                    stat.getAvgTime() > 0 ? Double.toString(stat.getAvgTime()) + "s" : "",
+                    stat.getMinTime() > 0 ? Double.toString(stat.getMinTime()) + "s" : ""
             });
         }
         JTable table = new JTable();
+        table.getTableHeader().setReorderingAllowed(false);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         table.setShowHorizontalLines(true);
         table.setModel(new UneditableTableModel(model));
