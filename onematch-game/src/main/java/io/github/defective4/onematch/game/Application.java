@@ -79,7 +79,7 @@ public class Application {
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
             try (InputStream is = getClass().getResourceAsStream("/fonts/OpenSans.ttf")) {
-                Font opensans = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(11f);
+                Font opensans = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(12f);
                 UIDefaults defaults = UIManager.getLookAndFeelDefaults();
                 defaults
                         .entrySet()

@@ -25,7 +25,7 @@ public class ErrorDialog extends JDialog {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setModal(true);
         setResizable(false);
-        setBounds(100, 100, 300, 176);
+        setBounds(100, 100, 300, 175);
         setTitle("Error");
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));

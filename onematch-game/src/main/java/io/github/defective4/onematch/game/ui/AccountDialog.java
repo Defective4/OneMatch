@@ -43,7 +43,7 @@ public class AccountDialog extends JDialog {
             setModal(true);
             setResizable(false);
             setTitle("OneMatch - Changing password");
-            setBounds(100, 100, 308, 309);
+            setBounds(100, 100, 310, 315);
             getContentPane().setLayout(new BorderLayout());
             JPanel contentPanel = new JPanel();
             contentPanel.setBorder(new EmptyBorder(16, 16, 32, 16));
@@ -188,7 +188,7 @@ public class AccountDialog extends JDialog {
         setResizable(false);
         setModal(true);
         setTitle("OneMatch - Account");
-        setBounds(100, 100, 328, 350);
+        setBounds(100, 100, 330, 360);
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
 
         accountPane = new JPanel();

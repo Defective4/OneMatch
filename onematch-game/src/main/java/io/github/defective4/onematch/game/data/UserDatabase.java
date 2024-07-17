@@ -42,6 +42,7 @@ public class UserDatabase {
         }
 
     }
+
     private Connection connection;
 
     private final File file;

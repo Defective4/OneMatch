@@ -133,7 +133,7 @@ public class DailyLeaderboardsDialog extends JDialog {
         setModal(true);
         setTitle("OneMatch - Daily Leaderboards");
         setResizable(false);
-        setBounds(100, 100, 358, 300);
+        setBounds(100, 100, 360, 300);
         getContentPane().setLayout(new BorderLayout());
         JPanel contentPanel = new JPanel();
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));

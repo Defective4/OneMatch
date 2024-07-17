@@ -112,7 +112,7 @@ public class GameBoard extends JFrame {
     public GameBoard() {
         setTitle("OneMatch game board");
         setResizable(false);
-        setBounds(100, 100, 726, 284);
+        setBounds(100, 100, 725, 300);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
 

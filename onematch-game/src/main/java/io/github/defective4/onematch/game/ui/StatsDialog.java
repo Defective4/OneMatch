@@ -32,7 +32,7 @@ public class StatsDialog extends JDialog {
         setTitle("OneMatch - Statistics");
         setResizable(false);
         setModal(true);
-        setBounds(100, 100, 309, 211);
+        setBounds(100, 100, 310, 215);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);

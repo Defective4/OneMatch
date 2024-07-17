@@ -60,7 +60,7 @@ public class DailyDialog extends JDialog {
         setResizable(false);
         setModal(true);
         setTitle("OneMatch - Daily Challenges");
-        setBounds(100, 100, 328, 316);
+        setBounds(100, 100, 330, 340);
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
 
         JPanel dailyPane = new JPanel();

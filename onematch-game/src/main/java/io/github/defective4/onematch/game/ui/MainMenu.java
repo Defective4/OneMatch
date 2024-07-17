@@ -30,7 +30,7 @@ public class MainMenu extends JFrame {
     public MainMenu(Application app) {
         setTitle("OneMatch - Main Menu");
         setResizable(false);
-        setBounds(100, 100, 378, 257);
+        setBounds(100, 100, 380, 265);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 

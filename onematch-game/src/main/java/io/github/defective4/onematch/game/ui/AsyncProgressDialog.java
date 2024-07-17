@@ -27,7 +27,7 @@ public class AsyncProgressDialog extends JDialog {
         setTitle("Please wait...");
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setModal(true);
-        setBounds(100, 100, 323, 100);
+        setBounds(100, 100, 325, 100);
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
 
         JPanel panel = new JPanel();

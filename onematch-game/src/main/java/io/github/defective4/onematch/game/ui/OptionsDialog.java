@@ -36,7 +36,7 @@ public class OptionsDialog extends JDialog {
         setTitle("OneMatch - Options");
         setModal(true);
         setResizable(false);
-        setBounds(100, 100, 296, 288);
+        setBounds(100, 100, 295, 290);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
