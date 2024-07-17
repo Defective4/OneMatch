@@ -53,10 +53,10 @@ public class MainMenu extends JFrame {
         });
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 15));
 
-        JLabel lblNewLabel = new JLabel("OneMatch");
-        lblNewLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
-        lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        panel.add(lblNewLabel);
+        JLabel lblTitle = new JLabel("OneMatch");
+        lblTitle.setFont(lblTitle.getFont().deriveFont(Font.BOLD).deriveFont(24f));
+        lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(lblTitle);
 
         JLabel label = new JLabel(" ");
         panel.add(label);

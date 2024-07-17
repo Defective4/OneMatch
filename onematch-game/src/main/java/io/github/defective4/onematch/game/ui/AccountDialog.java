@@ -51,7 +51,7 @@ public class AccountDialog extends JDialog {
             contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
             JLabel lblChangingPassword = new JLabel("Changing password");
-            lblChangingPassword.setFont(new Font("SansSerif", Font.BOLD, 24));
+            lblChangingPassword.setFont(lblChangingPassword.getFont().deriveFont(Font.BOLD).deriveFont(24f));
             contentPanel.add(lblChangingPassword);
 
             contentPanel.add(new JLabel(" "));
@@ -200,7 +200,7 @@ public class AccountDialog extends JDialog {
         loginPane.setLayout(new BoxLayout(loginPane, BoxLayout.Y_AXIS));
 
         JLabel lblLogIn = new JLabel("Log in");
-        lblLogIn.setFont(new Font("SansSerif", Font.BOLD, 24));
+        lblLogIn.setFont(lblLogIn.getFont().deriveFont(Font.BOLD).deriveFont(24f));
         loginPane.add(lblLogIn);
 
         loginPane.add(new JLabel("to access account details"));
@@ -245,7 +245,7 @@ public class AccountDialog extends JDialog {
         registerPane.setLayout(new BoxLayout(registerPane, BoxLayout.Y_AXIS));
 
         JLabel lblRegister = new JLabel("Register");
-        lblRegister.setFont(new Font("SansSerif", Font.BOLD, 24));
+        lblRegister.setFont(lblRegister.getFont().deriveFont(Font.BOLD).deriveFont(24f));
         registerPane.add(lblRegister);
 
         registerPane.add(new JLabel(" "));
@@ -451,7 +451,7 @@ public class AccountDialog extends JDialog {
         username = new JLabel("Username");
         profilePane.add(username);
         profilePane.add(new JLabel(" "));
-        username.setFont(new Font("SansSerif", Font.BOLD, 24));
+        username.setFont(username.getFont().deriveFont(Font.BOLD).deriveFont(24f));
 
         userTable = new JTable();
         profilePane.add(userTable);

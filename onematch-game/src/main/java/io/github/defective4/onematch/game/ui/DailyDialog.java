@@ -69,7 +69,7 @@ public class DailyDialog extends JDialog {
         dailyPane.setLayout(new BoxLayout(dailyPane, BoxLayout.Y_AXIS));
 
         JLabel lblDailyChallenges = new JLabel("Daily challenges");
-        lblDailyChallenges.setFont(new Font("SansSerif", Font.BOLD, 24));
+        lblDailyChallenges.setFont(lblDailyChallenges.getFont().deriveFont(Font.BOLD).deriveFont(24f));
         dailyPane.add(lblDailyChallenges);
 
         dailyPane.add(new JLabel(" "));

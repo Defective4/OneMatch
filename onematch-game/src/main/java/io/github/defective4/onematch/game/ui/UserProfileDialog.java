@@ -45,7 +45,7 @@ public class UserProfileDialog extends JDialog {
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
         username = new JLabel("Username");
-        username.setFont(new Font("SansSerif", Font.BOLD, 24));
+        username.setFont(username.getFont().deriveFont(Font.BOLD).deriveFont(24f));
         contentPanel.add(username);
 
         contentPanel.add(new JLabel(" "));

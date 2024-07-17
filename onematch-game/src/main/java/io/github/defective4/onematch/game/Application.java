@@ -1,5 +1,6 @@
 package io.github.defective4.onematch.game;
 
+import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileReader;
@@ -14,8 +15,10 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.FontUIResource;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.google.gson.Gson;
@@ -75,6 +78,15 @@ public class Application {
     public Application() throws Exception {
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
+            try (InputStream is = getClass().getResourceAsStream("/fonts/OpenSans.ttf")) {
+                Font opensans = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(11f);
+                UIDefaults defaults = UIManager.getLookAndFeelDefaults();
+                defaults
+                        .entrySet()
+                        .stream()
+                        .filter(e -> e.getValue() instanceof FontUIResource)
+                        .forEach(e -> defaults.put(e.getKey(), new FontUIResource(opensans)));
+            }
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
             ExceptionDialog.show(null, e, "Couldn't set application's look and feel");

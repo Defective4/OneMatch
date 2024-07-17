@@ -40,7 +40,7 @@ public class AboutDialog extends JDialog {
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         JLabel lblAboutOnematch = new JLabel("About OneMatch");
-        lblAboutOnematch.setFont(new Font("SansSerif", Font.BOLD, 24));
+        lblAboutOnematch.setFont(lblAboutOnematch.getFont().deriveFont(Font.BOLD).deriveFont(24f));
         contentPanel.add(lblAboutOnematch);
         contentPanel.add(new JLabel("Version v" + v.getVersion()));
 
