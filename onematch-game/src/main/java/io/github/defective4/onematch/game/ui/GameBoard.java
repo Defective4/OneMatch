@@ -344,6 +344,7 @@ public class GameBoard extends JFrame {
     }
 
     public void start() {
+        movingMode = false;
         board.removeAll();
         // First number
 
