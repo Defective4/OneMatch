@@ -6,11 +6,13 @@ import java.net.URI;
 import javax.swing.JOptionPane;
 
 import io.github.defective4.onematch.game.ui.ExceptionDialog;
+import io.github.defective4.onematch.game.ui.Icons;
 
 public class JURLLabel extends JLinkLabel {
 
     public JURLLabel(String text, String link) {
         super(text);
+        setIcon(Icons.LINK);
         setActionListener(e -> {
             try {
                 if (!Desktop.isDesktopSupported()) throw new IllegalStateException();

@@ -18,4 +18,5 @@ public final class Icons {
     public static ImageIcon REFRESH = new ImageIcon(Icons.class.getResource("/icons/refresh.png"));
     public static ImageIcon STATS = new ImageIcon(Icons.class.getResource("/icons/stats.png"));
     public static ImageIcon USER = new ImageIcon(Icons.class.getResource("/icons/user.png"));
+    public static ImageIcon LINK = new ImageIcon(Icons.class.getResource("/icons/link.png"));
 }

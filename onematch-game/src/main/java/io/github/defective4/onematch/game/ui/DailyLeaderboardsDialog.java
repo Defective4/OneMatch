@@ -20,6 +20,7 @@ import javax.swing.table.JTableHeader;
 import io.github.defective4.onematch.game.Application;
 import io.github.defective4.onematch.game.ui.components.JHoverableTable;
 import io.github.defective4.onematch.game.ui.components.JLinkLabel;
+import io.github.defective4.onematch.game.ui.components.JURLLabel;
 import io.github.defective4.onematch.game.ui.components.UneditableTableModel;
 import io.github.defective4.onematch.net.Leaderboards;
 import io.github.defective4.onematch.net.Leaderboards.AllTimeEntry;
@@ -141,6 +142,7 @@ public class DailyLeaderboardsDialog extends JDialog {
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
+        tabbedPane.setAlignmentX(Component.RIGHT_ALIGNMENT);
         contentPanel.add(tabbedPane);
 
         JPanel dailyRootPane = new JPanel();
@@ -210,6 +212,11 @@ public class DailyLeaderboardsDialog extends JDialog {
             }
         });
         allTimesPane.setViewportView(allTable);
+
+        JURLLabel lblOnlineLeaderboards = new JURLLabel("Online leaderboards",
+                app.getVersion().getAPI() + "/api/daily/leaderboards");
+        lblOnlineLeaderboards.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        contentPanel.add(lblOnlineLeaderboards);
 
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
