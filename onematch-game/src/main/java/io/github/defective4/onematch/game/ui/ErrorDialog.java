@@ -22,6 +22,7 @@ public class ErrorDialog extends JDialog {
 
     private ErrorDialog(Window parent, String message, String secondaryMessage) {
         super(parent);
+        setIconImage(Icons.APP_ICON);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setModal(true);
         setResizable(false);

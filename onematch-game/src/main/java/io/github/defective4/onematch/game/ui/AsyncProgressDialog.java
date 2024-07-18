@@ -22,6 +22,7 @@ public class AsyncProgressDialog extends JDialog {
      */
     private AsyncProgressDialog(Window parent, String messageText) {
         super(parent);
+        setIconImage(Icons.APP_ICON);
         setResizable(false);
         setAlwaysOnTop(true);
         setTitle("Please wait...");

@@ -32,6 +32,7 @@ public class UserProfileDialog extends JDialog {
      */
     public UserProfileDialog(Window parent, Application app) {
         super(parent);
+        setIconImage(Icons.APP_ICON);
         this.app = app;
         setModal(true);
         setResizable(false);

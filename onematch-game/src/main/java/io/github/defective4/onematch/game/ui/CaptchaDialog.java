@@ -16,7 +16,6 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -44,6 +43,7 @@ public class CaptchaDialog extends JDialog {
      */
     private CaptchaDialog(Window parent, Application app) {
         super(parent);
+        setIconImage(Icons.APP_ICON);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
 
@@ -85,7 +85,7 @@ public class CaptchaDialog extends JDialog {
 
         JButton refreshButton = new JButton("");
         refreshButton.setToolTipText("Refresh");
-        refreshButton.setIcon(new ImageIcon(CaptchaDialog.class.getResource("/icons/refresh.png")));
+        refreshButton.setIcon(Icons.REFRESH);
         if (app != null)
             refreshButton.addActionListener(e -> AsyncProgressDialog.run(this, "Refreshing captcha...", dial -> {
                 answerField.grabFocus();
@@ -114,7 +114,7 @@ public class CaptchaDialog extends JDialog {
 
         JButton audioButton = new JButton("");
         audioButton.setToolTipText("Play");
-        audioButton.setIcon(new ImageIcon(CaptchaDialog.class.getResource("/icons/audio.png")));
+        audioButton.setIcon(Icons.AUDIO);
         if (app != null)
             audioButton.addActionListener(e -> AsyncProgressDialog.run(this, "Downloading audio sample...", dial -> {
                 answerField.grabFocus();

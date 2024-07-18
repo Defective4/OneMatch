@@ -57,14 +57,14 @@ public class Application {
     private final NumberLogic logic = new NumberLogic();
 
     private final MainMenu menu;
-    private final Options ops;
+    private String newVersion;
 
+    private final Options ops;
     private final RecentEquations recentEquations = new RecentEquations(10);
+
     private final Version version;
 
     private final WebClient webClient;
-
-    private String newVersion;
 
     static {
         Application instance;
@@ -162,6 +162,12 @@ public class Application {
 
     public Options getOptions() {
         return ops;
+    }
+
+    public String getUpdate() {
+        if (newVersion == null) return null;
+        if (!("v" + version.getVersion()).equals(newVersion)) { return newVersion; }
+        return null;
     }
 
     public Version getVersion() {
@@ -307,16 +313,6 @@ public class Application {
         board.startTimer(ops.showTimerNormal);
     }
 
-    public static Application getInstance() {
-        return INSTANCE;
-    }
-
-    public String getUpdate() {
-        if (newVersion == null) return null;
-        if (!("v" + version.getVersion()).equals(newVersion)) { return newVersion; }
-        return null;
-    }
-
     private void checkForUpdates() {
         System.err.println("Checking for updates...");
         newVersion = GithubAPI.getLatestRelease();
@@ -330,6 +326,10 @@ public class Application {
                 } catch (InterruptedException e) {}
             }
         }
+    }
+
+    public static Application getInstance() {
+        return INSTANCE;
     }
 
     public static void main(String[] args) {

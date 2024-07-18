@@ -128,6 +128,7 @@ public class DailyLeaderboardsDialog extends JDialog {
      */
     public DailyLeaderboardsDialog(Window parent, Application app) {
         super(parent);
+        setIconImage(Icons.APP_ICON);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.app = app;
         setModal(true);

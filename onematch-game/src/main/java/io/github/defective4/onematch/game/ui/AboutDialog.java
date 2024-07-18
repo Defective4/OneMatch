@@ -1,5 +1,7 @@
 package io.github.defective4.onematch.game.ui;
 
+import static io.github.defective4.onematch.game.ui.Icons.*;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -7,7 +9,6 @@ import java.awt.Font;
 import java.awt.Window;
 
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -28,6 +29,7 @@ public class AboutDialog extends JDialog {
      */
     public AboutDialog(Window parent, Version v) {
         super(parent);
+        setIconImage(Icons.APP_ICON);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         setTitle("OneMatch - About");
@@ -50,13 +52,13 @@ public class AboutDialog extends JDialog {
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
         panel.add(new JLabel("Made with "));
-        panel.add(new JLabel(new ImageIcon(AboutDialog.class.getResource("/icons/heart_small.png"))));
+        panel.add(new JLabel(HEART));
         panel.add(new JLabel(" by Defective4"));
 
         contentPanel.add(new JLabel(" "));
 
         JURLLabel linkLabel = new JURLLabel("Github repository", "https://github.com/Defective4/OneMatch");
-        linkLabel.setIcon(new ImageIcon(AboutDialog.class.getResource("/icons/github.png")));
+        linkLabel.setIcon(GITHUB);
         contentPanel.add(linkLabel);
 
         JPanel discord = new JPanel();
@@ -66,7 +68,7 @@ public class AboutDialog extends JDialog {
 
         JLabel lblDiscord = new JLabel("Discord   ");
         discord.add(lblDiscord);
-        lblDiscord.setIcon(new ImageIcon(AboutDialog.class.getResource("/icons/discord.png")));
+        lblDiscord.setIcon(DISCORD);
 
         JCopyButton copyButton = new JCopyButton("java.net.defective", (Window) null);
         discord.add(copyButton);

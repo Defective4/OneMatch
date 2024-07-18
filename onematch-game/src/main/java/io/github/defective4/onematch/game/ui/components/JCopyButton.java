@@ -5,9 +5,10 @@ import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+
+import io.github.defective4.onematch.game.ui.Icons;
 
 public class JCopyButton extends JButton {
 
@@ -15,7 +16,7 @@ public class JCopyButton extends JButton {
 
     public JCopyButton(String text, Window ownerWindow) {
         this.text = text;
-        setIcon(new ImageIcon(getClass().getResource("/icons/copy.png")));
+        setIcon(Icons.COPY);
         addActionListener(e -> {
             Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             systemClipboard.setContents(new StringSelection(text), null);

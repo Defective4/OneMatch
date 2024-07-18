@@ -6,7 +6,6 @@ import java.awt.Font;
 import java.util.Map;
 
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,6 +27,7 @@ public class MainMenu extends JFrame {
      * Create the frame.
      */
     public MainMenu(Application app) {
+        setIconImage(Icons.APP_ICON);
         setTitle("OneMatch - Main Menu");
         setResizable(false);
         setBounds(100, 100, 380, 265);
@@ -72,7 +72,7 @@ public class MainMenu extends JFrame {
             });
         });
         button.setToolTipText("Stats");
-        button.setIcon(new ImageIcon(MainMenu.class.getResource("/icons/stats.png")));
+        button.setIcon(Icons.STATS);
         panel.add(button);
 
         btnDaily = new JButton("Daily Challenges");
@@ -107,7 +107,7 @@ public class MainMenu extends JFrame {
                 ExceptionDialog.show(this, e2, "Couldn't connect with the server.");
             }
         }));
-        btnAccount.setIcon(new ImageIcon(MainMenu.class.getResource("/icons/user.png")));
+        btnAccount.setIcon(Icons.USER);
         panel.add(btnAccount);
         btnOptions.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(btnOptions);

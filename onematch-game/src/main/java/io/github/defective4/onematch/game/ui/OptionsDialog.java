@@ -35,6 +35,7 @@ public class OptionsDialog extends JDialog {
      */
     public OptionsDialog(Window parent, Application app) {
         super(parent);
+        setIconImage(Icons.APP_ICON);
         this.app = app;
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("OneMatch - Options");

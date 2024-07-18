@@ -25,6 +25,7 @@ public class ExceptionDialog extends JDialog {
      */
     public ExceptionDialog(Window parent, Exception ex, String msgText) {
         super(parent);
+        setIconImage(Icons.APP_ICON);
         this.ex = ex;
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setModal(true);

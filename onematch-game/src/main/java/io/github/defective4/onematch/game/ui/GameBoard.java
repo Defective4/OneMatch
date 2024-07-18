@@ -110,6 +110,7 @@ public class GameBoard extends JFrame {
     private TimerTask timerTask;
 
     public GameBoard() {
+        setIconImage(Icons.APP_ICON);
         setTitle("OneMatch game board");
         setResizable(false);
         setBounds(100, 100, 725, 300);

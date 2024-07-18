@@ -55,6 +55,7 @@ public class DailyDialog extends JDialog {
      */
     public DailyDialog(Window parent, Application app) {
         super(parent);
+        setIconImage(Icons.APP_ICON);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.app = app;
         setResizable(false);

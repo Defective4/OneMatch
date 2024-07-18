@@ -28,6 +28,7 @@ public class UpdateWindow extends JFrame {
      */
     public UpdateWindow(String currentVersion, String newVersion, Object lock) {
         setTitle("OneMatch - Update available!");
+        setIconImage(Icons.APP_ICON);
         setResizable(false);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setBounds(100, 100, 271, 195);

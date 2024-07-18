@@ -40,6 +40,7 @@ public class AccountDialog extends JDialog {
 
         private ChangePasswordDialog(Window parent) {
             super(parent);
+            setIconImage(Icons.APP_ICON);
             setModal(true);
             setResizable(false);
             setTitle("OneMatch - Changing password");

@@ -27,6 +27,7 @@ public class StatsDialog extends JDialog {
 
     public StatsDialog(Window parent, Map<Difficulty, StatEntry> stats, Application app) {
         super(parent);
+        setIconImage(Icons.APP_ICON);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         if (stats == null) stats = Map.of(Difficulty.MEDIUM, new StatEntry(0, 0, 0));
         setTitle("OneMatch - Statistics");
