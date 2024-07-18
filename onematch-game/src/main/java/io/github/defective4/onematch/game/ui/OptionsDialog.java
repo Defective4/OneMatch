@@ -2,9 +2,11 @@ package io.github.defective4.onematch.game.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.FlowLayout;
 import java.awt.Window;
 import java.awt.event.ActionListener;
+import java.net.URI;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -13,18 +15,20 @@ import javax.swing.border.TitledBorder;
 import io.github.defective4.onematch.core.NumberLogic;
 import io.github.defective4.onematch.core.NumberLogic.Difficulty;
 import io.github.defective4.onematch.game.Application;
+import io.github.defective4.onematch.game.GithubAPI;
 import io.github.defective4.onematch.game.data.Options;
 import io.github.defective4.onematch.game.data.UserDatabase;
 
 public class OptionsDialog extends JDialog {
 
     private final Application app;
-    private JCheckBox checkDailyTimer;
-    private JCheckBox checkNormalTimer;
+    private final JCheckBox checkDailyTimer;
+    private final JCheckBox checkNormalTimer;
     private final JPanel contentPanel = new JPanel();
     private final JSlider difficulty;
     private final JCheckBox uniqueCheck;
-    private JComboBox<Boolean> uniquenessBox;
+    private final JComboBox<Boolean> uniquenessBox;
+    private final JCheckBox updatesCheck;
 
     /**
      * Create the dialog.
@@ -36,7 +40,7 @@ public class OptionsDialog extends JDialog {
         setTitle("OneMatch - Options");
         setModal(true);
         setResizable(false);
-        setBounds(100, 100, 295, 290);
+        setBounds(100, 100, 295, 380);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -184,7 +188,7 @@ public class OptionsDialog extends JDialog {
         JPanel timerChecksPanel = new JPanel();
         timerChecksPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         timerPanel.add(timerChecksPanel);
-        timerChecksPanel.setLayout(new BoxLayout(timerChecksPanel, BoxLayout.X_AXIS));
+        timerChecksPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
         checkDailyTimer = new JCheckBox("Daily challenges");
         checkDailyTimer.setSelected(ops.showTimerDaily);
@@ -196,6 +200,45 @@ public class OptionsDialog extends JDialog {
         checkNormalTimer.setSelected(ops.showTimerNormal);
         timerChecksPanel.add(checkNormalTimer);
         uniqueCheck.addActionListener(uniqueCheckListener);
+
+        JPanel updatesPanel = new JPanel();
+        updatesPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        updatesPanel.setBorder(new TitledBorder(null, "Updates", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        contentPanel.add(updatesPanel);
+        updatesPanel.setLayout(new BoxLayout(updatesPanel, BoxLayout.Y_AXIS));
+
+        updatesCheck = new JCheckBox("Enable update checking");
+        updatesCheck.setSelected(ops.enableUpdates);
+        updatesPanel.add(updatesCheck);
+
+        JPanel uBtnPanel = new JPanel();
+        uBtnPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        updatesPanel.add(uBtnPanel);
+        uBtnPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+
+        JButton btnUpdate = new JButton("Update");
+        btnUpdate.addActionListener(e -> {
+            try {
+                if (!Desktop.isDesktopSupported()) throw new IllegalStateException();
+                Desktop.getDesktop().browse(new URI("https://github.com/" + GithubAPI.repo + "/releases/latest"));
+                JOptionPane
+                        .showOptionDialog(null, "Link opened in your default web browser", "Browser opened",
+                                JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[] {
+                                        "Ok"
+                }, 0);
+            } catch (Exception e2) {
+                e2.printStackTrace();
+                ExceptionDialog
+                        .show(null, e2, "Couldn't open https://github.com/\n" + GithubAPI.repo + "/releases/latest"
+                                + "\nin your default browser.");
+            }
+        });
+        uBtnPanel.add(btnUpdate);
+        btnUpdate.setEnabled(app.getUpdate() != null);
+
+        uBtnPanel
+                .add(new JLabel(
+                        app.getUpdate() == null ? "Already at latest version!" : "New version: " + app.getUpdate()));
         SwingUtils.deepAttach(contentPanel, e -> btnConfirm.setEnabled(true));
     }
 
@@ -205,6 +248,7 @@ public class OptionsDialog extends JDialog {
         ops.invalidUniqueness = (boolean) uniquenessBox.getSelectedItem();
         ops.showTimerDaily = checkDailyTimer.isSelected();
         ops.showTimerNormal = checkNormalTimer.isSelected();
+        ops.enableUpdates = updatesCheck.isSelected();
         app.saveConfig(ops);
     }
 }

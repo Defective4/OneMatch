@@ -36,6 +36,7 @@ import io.github.defective4.onematch.game.ui.ExceptionDialog;
 import io.github.defective4.onematch.game.ui.GameBoard;
 import io.github.defective4.onematch.game.ui.MainMenu;
 import io.github.defective4.onematch.game.ui.SwingUtils;
+import io.github.defective4.onematch.game.ui.UpdateWindow;
 import io.github.defective4.onematch.net.Challenge;
 import io.github.defective4.onematch.net.WebClient;
 import io.github.defective4.onematch.net.WebClient.WebResponse;
@@ -62,6 +63,8 @@ public class Application {
     private final Version version;
 
     private final WebClient webClient;
+
+    private String newVersion;
 
     static {
         Application instance;
@@ -308,8 +311,33 @@ public class Application {
         return INSTANCE;
     }
 
+    public String getUpdate() {
+        if (newVersion == null) return null;
+        if (!("v" + version.getVersion()).equals(newVersion)) { return newVersion; }
+        return null;
+    }
+
+    private void checkForUpdates() {
+        System.err.println("Checking for updates...");
+        newVersion = GithubAPI.getLatestRelease();
+        ops.newVersion = newVersion;
+        saveConfig(ops);
+        if (getUpdate() != null) {
+            SwingUtils.showAndCenter(new UpdateWindow("v" + version.getVersion(), newVersion, this));
+            synchronized (this) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {}
+            }
+        }
+    }
+
     public static void main(String[] args) {
-        if (INSTANCE != null) INSTANCE.showMainMenu();
+        if (INSTANCE != null) {
+            if (INSTANCE.ops.enableUpdates) INSTANCE.checkForUpdates();
+            else INSTANCE.newVersion = INSTANCE.ops.newVersion;
+            INSTANCE.showMainMenu();
+        }
     }
 
 }

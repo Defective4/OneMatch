@@ -9,6 +9,9 @@ public class Options {
     public boolean showTimerNormal = false;
     public String token = null;
     public boolean unique = true;
+    public boolean enableUpdates = true;
+
+    public String newVersion = null;
 
     public Difficulty getDifficulty() {
         return Difficulty.getForID(difficulty);
