@@ -95,13 +95,6 @@ public class Application {
             ExceptionDialog.show(null, e, "Couldn't set application's look and feel");
         }
 
-        version = new Version();
-        try (InputStream is = getClass().getResourceAsStream("/version.properties")) {
-            version.load(is);
-        }
-
-        webClient = new WebClient(version.getAPI(), version.getAPIVersion());
-
         configDir = new File(System.getProperty("user.home"));
         if (new File(configDir, ".config").isDirectory() || new File(configDir, "AppData/Roaming").isDirectory())
             configDir = new File(configDir, ".config");
@@ -126,6 +119,14 @@ public class Application {
         }
 
         this.ops = ops;
+
+        version = new Version();
+        try (InputStream is = getClass().getResourceAsStream("/version.properties")) {
+            version.load(is);
+        }
+
+        webClient = new WebClient(ops.apiOverride == null ? version.getAPI() : ops.apiOverride,
+                version.getAPIVersion());
 
         try {
             db = new UserDatabase(new File(configDir, "db.sqlite"));

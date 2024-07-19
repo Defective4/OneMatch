@@ -11,6 +11,9 @@ import java.awt.event.WindowEvent;
 import javax.swing.AbstractButton;
 import javax.swing.JComboBox;
 import javax.swing.JSlider;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class SwingUtils {
 
@@ -43,6 +46,24 @@ public class SwingUtils {
             });
             else if (cpt instanceof JComboBox<?>) {
                 ((JComboBox<?>) cpt).addActionListener(e -> ls.interacted(cpt));
+            }
+            if (cpt instanceof JTextField) {
+                ((JTextField) cpt).getDocument().addDocumentListener(new DocumentListener() {
+                    @Override
+                    public void changedUpdate(DocumentEvent e) {
+                        ls.interacted(cpt);
+                    }
+
+                    @Override
+                    public void insertUpdate(DocumentEvent e) {
+                        ls.interacted(cpt);
+                    }
+
+                    @Override
+                    public void removeUpdate(DocumentEvent e) {
+                        ls.interacted(cpt);
+                    }
+                });
             }
         }
     }

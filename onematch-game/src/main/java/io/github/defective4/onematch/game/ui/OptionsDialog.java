@@ -7,6 +7,8 @@ import java.awt.FlowLayout;
 import java.awt.Window;
 import java.awt.event.ActionListener;
 import java.net.URI;
+import java.net.URL;
+import java.util.Objects;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -18,11 +20,11 @@ import io.github.defective4.onematch.game.Application;
 import io.github.defective4.onematch.game.GithubAPI;
 import io.github.defective4.onematch.game.data.Options;
 import io.github.defective4.onematch.game.data.UserDatabase;
-import io.github.defective4.onematch.game.ui.SwingUtils.InteractionListener;
 import io.github.defective4.onematch.game.ui.components.JLinkLabel;
 
 public class OptionsDialog extends JDialog {
 
+    private JTextField apiURLField;
     private final Application app;
     private final JCheckBox checkDailyTimer;
     private final JCheckBox checkNormalTimer;
@@ -282,12 +284,38 @@ public class OptionsDialog extends JDialog {
         uniqueCheckListener.actionPerformed(null);
 
         getRootPane().setDefaultButton(okButton);
-        InteractionListener ls = e -> btnConfirm.setEnabled(true);
-        SwingUtils.deepAttach(tabbedPane, ls);
+
+        JPanel devPanel = new JPanel();
+        tabbedPane.addTab("Dev. settings", null, devPanel, null);
+        devPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+
+        devPanel.add(new JLabel("Override API address"));
+
+        apiURLField = new JTextField();
+        apiURLField.setText(ops.apiOverride == null ? "" : ops.apiOverride);
+
+        devPanel.add(apiURLField);
+        apiURLField.setColumns(10);
         uniqueCheck.addActionListener(uniqueCheckListener);
+        SwingUtils.deepAttach(tabbedPane, e -> btnConfirm.setEnabled(true));
     }
 
     private void saveSettings(Options ops) {
+        String oldOverride = ops.apiOverride;
+        try {
+            if (apiURLField.getText().isBlank()) ops.apiOverride = null;
+            URL url = new URI(apiURLField.getText()).toURL();
+            if (!url.getProtocol().toLowerCase().startsWith("http")) throw new IllegalArgumentException();
+            ops.apiOverride = url.toString();
+            apiURLField.setText(ops.apiOverride);
+        } catch (Exception e) {
+            apiURLField.setText(ops.apiOverride);
+        }
+        if (oldOverride != ops.apiOverride && !Objects.equals(oldOverride, ops.apiOverride)) {
+            JOptionPane
+                    .showMessageDialog(this, "Some changes require full game restart to take effect.",
+                            "Restart required", JOptionPane.WARNING_MESSAGE);
+        }
         ops.difficulty = difficulty.getValue();
         ops.unique = uniqueCheck.isSelected();
         ops.invalidUniqueness = (boolean) uniquenessBox.getSelectedItem();
