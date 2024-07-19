@@ -78,6 +78,7 @@ public class StatsDialog extends JDialog {
         });
         buttonPane.add(resetStatsLabel);
         buttonPane.add(closeBtn);
+        getRootPane().setDefaultButton(closeBtn);
     }
 
 }

@@ -124,7 +124,7 @@ public class MainMenu extends JFrame {
                 System.exit(0);
         });
         panel.add(btnExit);
-
+        getRootPane().setDefaultButton(btnNewGame);
     }
 
     public JButton getBtnAccount() {

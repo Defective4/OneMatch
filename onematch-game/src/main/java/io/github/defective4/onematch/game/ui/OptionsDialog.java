@@ -18,6 +18,8 @@ import io.github.defective4.onematch.game.Application;
 import io.github.defective4.onematch.game.GithubAPI;
 import io.github.defective4.onematch.game.data.Options;
 import io.github.defective4.onematch.game.data.UserDatabase;
+import io.github.defective4.onematch.game.ui.SwingUtils.InteractionListener;
+import io.github.defective4.onematch.game.ui.components.JLinkLabel;
 
 public class OptionsDialog extends JDialog {
 
@@ -41,7 +43,7 @@ public class OptionsDialog extends JDialog {
         setTitle("OneMatch - Options");
         setModal(true);
         setResizable(false);
-        setBounds(100, 100, 295, 380);
+        setBounds(100, 100, 295, 260);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -50,7 +52,16 @@ public class OptionsDialog extends JDialog {
         Options ops = app.getOptions();
         UserDatabase database = app.getDatabase();
 
+        JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
+        contentPanel.add(tabbedPane);
+
+        JPanel gamePanel = new JPanel();
+        gamePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+        tabbedPane.addTab("Game", null, gamePanel, null);
+        gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.Y_AXIS));
+
         difficulty = new JSlider();
+        gamePanel.add(difficulty);
         difficulty.setSnapToTicks(true);
         difficulty.setPaintTicks(true);
         difficulty.setPaintLabels(true);
@@ -58,39 +69,12 @@ public class OptionsDialog extends JDialog {
         difficulty.setAlignmentX(Component.LEFT_ALIGNMENT);
         difficulty.setValue(ops.difficulty);
         difficulty.setMaximum(Difficulty.values().length - 1);
-        difficulty.setLabelTable(NumberLogic.Difficulty.makeSliderLabels());
-        contentPanel.add(difficulty);
-
-        JPanel buttonPane = new JPanel();
-        buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        getContentPane().add(buttonPane, BorderLayout.SOUTH);
-
-        JButton okButton = new JButton("OK");
-        okButton.addActionListener(e -> {
-            saveSettings(ops);
-            dispose();
-        });
-        buttonPane.add(okButton);
-        getRootPane().setDefaultButton(okButton);
-
-        JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(e -> dispose());
-        cancelButton.setActionCommand("Cancel");
-        buttonPane.add(cancelButton);
-
-        JButton btnConfirm = new JButton("Confirm");
-        btnConfirm.addActionListener(e -> {
-            saveSettings(ops);
-            btnConfirm.setEnabled(false);
-        });
-        btnConfirm.setEnabled(false);
-        buttonPane.add(btnConfirm);
 
         JPanel uniquenessPane = new JPanel();
+        gamePanel.add(uniquenessPane);
         uniquenessPane
                 .setBorder(new TitledBorder(null, "Problem uniqueness", TitledBorder.LEADING, TitledBorder.TOP, null,
                         null));
-        contentPanel.add(uniquenessPane);
         uniquenessPane.setLayout(new BoxLayout(uniquenessPane, BoxLayout.Y_AXIS));
 
         JPanel uniqueCheckPane = new JPanel();
@@ -176,12 +160,11 @@ public class OptionsDialog extends JDialog {
                                         "Ok"
                                 }, 0));
         uniquenessBoxPane.add(uniqBoxHelpButton);
-        uniqueCheckListener.actionPerformed(null);
 
         JPanel timerPanel = new JPanel();
+        timerPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+        tabbedPane.addTab("Timer", null, timerPanel, null);
         timerPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        timerPanel.setBorder(new TitledBorder(null, "Timer", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        contentPanel.add(timerPanel);
         timerPanel.setLayout(new BoxLayout(timerPanel, BoxLayout.Y_AXIS));
 
         timerPanel.add(new JLabel(" Show timer in:"));
@@ -200,12 +183,11 @@ public class OptionsDialog extends JDialog {
         checkNormalTimer = new JCheckBox("Normal game");
         checkNormalTimer.setSelected(ops.showTimerNormal);
         timerChecksPanel.add(checkNormalTimer);
-        uniqueCheck.addActionListener(uniqueCheckListener);
 
         JPanel updatesPanel = new JPanel();
+        updatesPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+        tabbedPane.addTab("Updates", null, updatesPanel, null);
         updatesPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        updatesPanel.setBorder(new TitledBorder(null, "Updates", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        contentPanel.add(updatesPanel);
         updatesPanel.setLayout(new BoxLayout(updatesPanel, BoxLayout.Y_AXIS));
 
         updatesCheck = new JCheckBox("Enable update checking");
@@ -240,7 +222,51 @@ public class OptionsDialog extends JDialog {
         uBtnPanel
                 .add(new JLabel(
                         app.getUpdate() == null ? "Already at latest version!" : "New version: " + app.getUpdate()));
-        SwingUtils.deepAttach(contentPanel, e -> btnConfirm.setEnabled(true));
+
+        JPanel panel = new JPanel();
+        panel.setBorder(new EmptyBorder(5, 16, 0, 0));
+        tabbedPane.addTab("Account", null, panel, null);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        JLinkLabel accountLabel = new JLinkLabel((String) null);
+        accountLabel.setText("Manage account");
+        accountLabel.setActionListener(e -> {
+            dispose();
+            SwingUtilities.invokeLater(() -> app.getMenu().getBtnAccount().doClick());
+        });
+        panel.add(accountLabel);
+        difficulty.setLabelTable(NumberLogic.Difficulty.makeSliderLabels());
+
+        JPanel buttonPane = new JPanel();
+        buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        getContentPane().add(buttonPane, BorderLayout.SOUTH);
+
+        JButton okButton = new JButton("OK");
+        okButton.addActionListener(e -> {
+            saveSettings(ops);
+            dispose();
+        });
+        buttonPane.add(okButton);
+        getRootPane().setDefaultButton(okButton);
+
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(e -> dispose());
+        cancelButton.setActionCommand("Cancel");
+        buttonPane.add(cancelButton);
+
+        JButton btnConfirm = new JButton("Confirm");
+        btnConfirm.addActionListener(e -> {
+            saveSettings(ops);
+            btnConfirm.setEnabled(false);
+        });
+        btnConfirm.setEnabled(false);
+        buttonPane.add(btnConfirm);
+        uniqueCheckListener.actionPerformed(null);
+
+        getRootPane().setDefaultButton(okButton);
+        InteractionListener ls = e -> btnConfirm.setEnabled(true);
+        SwingUtils.deepAttach(tabbedPane, ls);
+        uniqueCheck.addActionListener(uniqueCheckListener);
     }
 
     private void saveSettings(Options ops) {
