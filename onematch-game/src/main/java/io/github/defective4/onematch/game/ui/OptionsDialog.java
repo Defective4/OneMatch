@@ -43,7 +43,7 @@ public class OptionsDialog extends JDialog {
         setTitle("OneMatch - Options");
         setModal(true);
         setResizable(false);
-        setBounds(100, 100, 295, 260);
+        setBounds(100, 100, 330, 260);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -52,7 +52,8 @@ public class OptionsDialog extends JDialog {
         Options ops = app.getOptions();
         UserDatabase database = app.getDatabase();
 
-        JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
+        JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.LEFT);
+        tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         contentPanel.add(tabbedPane);
 
         JPanel gamePanel = new JPanel();
@@ -223,10 +224,10 @@ public class OptionsDialog extends JDialog {
                 .add(new JLabel(
                         app.getUpdate() == null ? "Already at latest version!" : "New version: " + app.getUpdate()));
 
-        JPanel panel = new JPanel();
-        panel.setBorder(new EmptyBorder(5, 16, 0, 0));
-        tabbedPane.addTab("Account", null, panel, null);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        JPanel accountPanel = new JPanel();
+        accountPanel.setBorder(new EmptyBorder(5, 16, 0, 0));
+        tabbedPane.addTab("Account", null, accountPanel, null);
+        accountPanel.setLayout(new BoxLayout(accountPanel, BoxLayout.Y_AXIS));
 
         JLinkLabel accountLabel = new JLinkLabel((String) null);
         accountLabel.setText("Manage account");
@@ -234,7 +235,24 @@ public class OptionsDialog extends JDialog {
             dispose();
             SwingUtilities.invokeLater(() -> app.getMenu().getBtnAccount().doClick());
         });
-        panel.add(accountLabel);
+        accountPanel.add(accountLabel);
+
+        accountPanel.add(new JLabel(" "));
+
+        JButton btnAccClear = new JButton("Clear local data");
+        btnAccClear.setEnabled(app.getOptions().token != null);
+        btnAccClear.addActionListener(e -> {
+            if (JOptionPane
+                    .showConfirmDialog(this,
+                            "Are you sure you want to clear local accout data?\nThis will log you out of your account.",
+                            "Clearing local data", JOptionPane.OK_CANCEL_OPTION,
+                            JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
+                ops.token = null;
+                app.saveConfig(ops);
+                btnAccClear.setEnabled(false);
+            }
+        });
+        accountPanel.add(btnAccClear);
         difficulty.setLabelTable(NumberLogic.Difficulty.makeSliderLabels());
 
         JPanel buttonPane = new JPanel();
