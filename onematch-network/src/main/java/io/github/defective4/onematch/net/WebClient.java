@@ -46,6 +46,10 @@ public class WebClient {
 
     private final String rootURL, apiVersion;
 
+    public String getRootURL() {
+        return rootURL;
+    }
+
     public WebClient(String rootURL, String apiVersion) {
         this.rootURL = rootURL;
         this.apiVersion = apiVersion;

@@ -214,7 +214,7 @@ public class DailyLeaderboardsDialog extends JDialog {
         allTimesPane.setViewportView(allTable);
 
         JURLLabel lblOnlineLeaderboards = new JURLLabel("Online leaderboards",
-                app.getVersion().getAPI() + "/api/daily/leaderboards/html");
+                app.getWebClient().getRootURL() + "/api/daily/leaderboards/html");
         lblOnlineLeaderboards.setAlignmentX(Component.RIGHT_ALIGNMENT);
         contentPanel.add(lblOnlineLeaderboards);
 
