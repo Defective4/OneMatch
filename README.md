@@ -9,11 +9,11 @@ A simple number game
 ![sample1](/readme/sample1.gif)
 
 # Features
-- Completely randomly generated puzzles
-- **Five** different difficulty levels, from `Easier` to `Hardest`
-- Configurable puzzle uniqueness - never encounter the same puzzle again!
-- Statistics - solved equations, minimum and average times per difficulty
-- **Daily challenges** and **online leaderboards**
+- 🧩 Completely randomly generated puzzles
+- 🎚️ **Five** different difficulty levels, from `Easier` to `Hardest`
+- 🎱 Configurable puzzle uniqueness - never encounter the same puzzle again!
+- 📊 Statistics - solved equations, minimum and average times per difficulty
+- 🌐 **Daily challenges** and **online leaderboards**
 
 # Download
 To download the game, see the [Releases](https://github.com/Defective4/OneMatch/releases) page
