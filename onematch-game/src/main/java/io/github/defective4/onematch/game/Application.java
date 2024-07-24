@@ -168,6 +168,7 @@ public class Application {
     public String getUpdate() {
         if (newVersion == null) return null;
         if (!("v" + version.getVersion()).equals(newVersion)) { return newVersion; }
+        ops.newVersion = null;
         return null;
     }
 
