@@ -10,7 +10,7 @@ A simple number game
 
 # Features
 - 🧩 Completely randomly generated puzzles
-- 🎚️ **Five** different difficulty levels, from `Easier` to `Hardest`
+- 🎚️ **Five** different difficulty levels, from `Easier` to `Harder`
 - 🎱 Configurable puzzle uniqueness - never encounter the same puzzle again!
 - 📊 Statistics - solved equations, minimum and average times per difficulty
 - 🌐 **Daily challenges** and **online leaderboards**
