@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
-import java.util.Map;
+import java.util.Collections;
 
 import javax.swing.JLabel;
 
@@ -47,7 +47,7 @@ public class JLinkLabel extends JLabel {
     }
 
     public void mouseEntered() {
-        JLinkLabel.super.setFont(originalFont.deriveFont(Map.of(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON)));
+        JLinkLabel.super.setFont(originalFont.deriveFont(Collections.singletonMap(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON)));
     }
 
     public void mouseExitted() {

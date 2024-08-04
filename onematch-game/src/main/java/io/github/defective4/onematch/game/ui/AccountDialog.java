@@ -107,9 +107,9 @@ public class AccountDialog extends JDialog {
 
                 private void update() {
                     okButton
-                            .setEnabled(!new String(currentPassword.getPassword()).isBlank()
-                                    && !new String(newPassword.getPassword()).isBlank()
-                                    && !new String(confirmPassword.getPassword()).isBlank());
+                            .setEnabled(!new String(currentPassword.getPassword()).replace(" ", "").isEmpty()
+                                    && !new String(newPassword.getPassword()).replace(" ", "").isEmpty()
+                                    && !new String(confirmPassword.getPassword()).replace(" ", "").isEmpty());
                 }
             };
 
@@ -328,9 +328,9 @@ public class AccountDialog extends JDialog {
 
             private void update() {
                 btnRegister
-                        .setEnabled(!registerUsername.getText().isBlank()
-                                && !new String(registerPassword.getPassword()).isBlank()
-                                && !new String(confirmPassword.getPassword()).isBlank());
+                        .setEnabled(!registerUsername.getText().replace(" ", "").isEmpty()
+                                && !new String(registerPassword.getPassword()).replace(" ", "").isEmpty()
+                                && !new String(confirmPassword.getPassword()).replace(" ", "").isEmpty());
             }
         };
 
@@ -357,8 +357,8 @@ public class AccountDialog extends JDialog {
 
             private void update() {
                 btnLogIn
-                        .setEnabled(!loginUsername.getText().isBlank()
-                                && !new String(loginPassword.getPassword()).isBlank());
+                        .setEnabled(!loginUsername.getText().replace(" ", "").isEmpty()
+                                && !new String(loginPassword.getPassword()).replace(" ", "").isEmpty());
             }
         };
 

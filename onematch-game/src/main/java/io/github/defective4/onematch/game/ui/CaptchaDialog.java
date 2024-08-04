@@ -231,7 +231,7 @@ public class CaptchaDialog extends JDialog {
             }
 
             private void update() {
-                okButton.setEnabled(!answerField.getText().isBlank());
+                okButton.setEnabled(!answerField.getText().replace(" ", "").isEmpty());
             }
         });
     }

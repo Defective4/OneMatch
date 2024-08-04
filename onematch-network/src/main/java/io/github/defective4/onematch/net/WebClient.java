@@ -87,7 +87,7 @@ public class WebClient {
     }
 
     public WebResponse getOtherUserProfile(String user) throws IOException {
-        return get("api/user/profile/" + URLEncoder.encode(user, StandardCharsets.UTF_8), user);
+        return get("api/user/profile/" + URLEncoder.encode(user, StandardCharsets.UTF_8.name()), user);
     }
 
     public WebResponse getUserPreferences(String token) throws IOException {
@@ -153,7 +153,7 @@ public class WebClient {
         HttpURLConnection connection = makeConnection(RequestMethod.POST, suburl, token);
         String[] argList = new String[args.length / 2];
         for (int x = 0; x < args.length; x += 2) {
-            argList[x / 2] = args[x] + "=" + URLEncoder.encode(args[x + 1], StandardCharsets.UTF_8);
+            argList[x / 2] = args[x] + "=" + URLEncoder.encode(args[x + 1], StandardCharsets.UTF_8.name());
         }
 
         connection.connect();

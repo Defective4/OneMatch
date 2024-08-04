@@ -303,7 +303,7 @@ public class OptionsDialog extends JDialog {
     private void saveSettings(Options ops) {
         String oldOverride = ops.apiOverride;
         try {
-            if (apiURLField.getText().isBlank()) ops.apiOverride = null;
+            if (apiURLField.getText().replace(" ", "").isEmpty()) ops.apiOverride = null;
             URL url = new URI(apiURLField.getText()).toURL();
             if (!url.getProtocol().toLowerCase().startsWith("http")) throw new IllegalArgumentException();
             ops.apiOverride = url.toString();

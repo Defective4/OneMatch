@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Window;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 
 import javax.swing.BoxLayout;
@@ -29,7 +30,7 @@ public class StatsDialog extends JDialog {
         super(parent);
         setIconImage(Icons.APP_ICON);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        if (stats == null) stats = Map.of(Difficulty.MEDIUM, new StatEntry(0, 0, 0));
+        if (stats == null) stats = Collections.singletonMap(Difficulty.MEDIUM, new StatEntry(0, 0, 0));
         setTitle("OneMatch - Statistics");
         setResizable(false);
         setModal(true);

@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import io.github.defective4.onematch.core.Equation;
 import io.github.defective4.onematch.core.NumberLogic;
@@ -49,7 +50,7 @@ public class UserDatabase {
 
     public UserDatabase(File file) throws Exception {
         this.file = file;
-        for (String cmd : readSchema("/schema.sql")) if (!cmd.isBlank()) try (Statement st = mkStatement()) {
+        for (String cmd : readSchema("/schema.sql")) if (!cmd.replace(" ", "").isEmpty()) try (Statement st = mkStatement()) {
             st.execute(cmd);
         }
     }
@@ -71,7 +72,7 @@ public class UserDatabase {
             return "(select count(*) from `solved` where `difficulty` = " + id + ") as cnt" + id + ", "
                     + "(select avg(`time`) from `solved` where `difficulty` = " + id + ") avg" + id + ", "
                     + "(select min(`time`) from `solved` where `difficulty` = " + id + ") min" + id;
-        }).toList().toArray(new String[0]));
+        }).collect(Collectors.toList()).toArray(new String[0]));
         try (Statement st = mkStatement()) {
             try (ResultSet set = st.executeQuery(query)) {
                 if (set.next()) {

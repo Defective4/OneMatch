@@ -2,6 +2,7 @@ package io.github.defective4.onematch.core;
 
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class GameMatrix {
     private final Match[] first, second, result;
@@ -186,9 +187,9 @@ public class GameMatrix {
                 toMod2.add(rnd);
             }
 
-            if (!firstTwo) firstL = firstL.stream().map(val -> val + 7).toList();
-            if (!secondTwo) secondL = secondL.stream().map(val -> val + 7).toList();
-            if (!resultTwo) resultL = resultL.stream().map(val -> val + 7).toList();
+            if (!firstTwo) firstL = firstL.stream().map(val -> val + 7).collect(Collectors.toList());
+            if (!secondTwo) secondL = secondL.stream().map(val -> val + 7).collect(Collectors.toList());
+            if (!resultTwo) resultL = resultL.stream().map(val -> val + 7).collect(Collectors.toList());
 
             first = MatrixNumber.getForMatrix(toArray(firstL));
             second = MatrixNumber.getForMatrix(toArray(secondL));
