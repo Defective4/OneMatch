@@ -10,6 +10,13 @@
 	<description>A simple game where you have to move one "match" to make the
 		equation true</description>
 
+	<distributionManagement>
+		<repository>
+			<id>sonatype-nexus-staging</id>
+			<url>https://s01.oss.sonatype.org/content/repositories/releases</url>
+		</repository>
+	</distributionManagement>
+
 	<build>
 		<resources>
 			<resource>
@@ -21,6 +28,14 @@
 			</resource>
 		</resources>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
